@@ -7,6 +7,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:model="clr-namespace:car_pal.Models"
+	xmlns:car_pal_Views_Converters="clr-namespace:car_pal.Views.Converters" 
 	mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
 	x:Class="car_pal.LogbookPage"
 	FontFamily="{StaticResource PhoneFontFamilyNormal}"
@@ -15,6 +16,7 @@
 	SupportedOrientations="Portrait" Orientation="Portrait"
 	shell:SystemTray.IsVisible="True">
 	<phone:PhoneApplicationPage.Resources>
+		<car_pal_Views_Converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 		<DataTemplate x:Key="ReminderTemplate">
 			<Grid Width="450">
 				<Grid.RowDefinitions>
@@ -23,14 +25,17 @@
 					<RowDefinition Height="0.455*"/>
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="0.009*"/>
-					<ColumnDefinition Width="0.528*"/>
-					<ColumnDefinition Width="0.463*"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="0.517*"/>
+					<ColumnDefinition Width="0.46*"/>
 				</Grid.ColumnDefinitions>
-				<TextBlock Grid.Column="1" Margin="8,0" TextWrapping="Wrap" Text="{Binding ReminderTitle, FallbackValue=No value}" VerticalAlignment="Bottom" FontSize="37.333"/>
-				<TextBlock Grid.Column="1" Margin="8,0,0,0" TextWrapping="Wrap" Grid.Row="1" FontSize="18.667" Foreground="#FFB8B8B8" Text="{Binding DueDate}"/>
-				<TextBlock Grid.Column="2" TextWrapping="Wrap" Margin="0" Foreground="White" FontSize="16" Grid.Row="1" TextAlignment="Right" VerticalAlignment="Bottom"/>
-				<Rectangle Fill="#FF3A89D2" HorizontalAlignment="Left" Margin="0" Grid.RowSpan="2" Stroke="Black" Width="5"/>
+				<TextBlock Grid.Column="1" Margin="10,0,8,0" TextWrapping="Wrap" Text="{Binding ReminderTitle, FallbackValue=No value}" VerticalAlignment="Bottom" FontSize="37.333"/>
+				<TextBlock Grid.Column="1" Margin="10,0,0,0" TextWrapping="Wrap" Grid.Row="1" FontSize="18.667" Text="{Binding DueDate}"/>
+				<Rectangle HorizontalAlignment="Left" Grid.RowSpan="2" Width="10">
+					<Rectangle.Fill>
+						<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
+					</Rectangle.Fill>
+				</Rectangle>
 				<Button x:Name="EditButton" Content="" Margin="0" BorderThickness="0" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Width="72" Height="72" Click="EditButton_Click">
 					<Button.Foreground>
 						<SolidColorBrush Color="{StaticResource PhoneContrastForegroundColor}"/>
@@ -42,8 +47,16 @@
 						<ImageBrush Stretch="None" ImageSource="/car_pal;component/icons/edit.rest.large.png"/>
 					</Button.OpacityMask>
 				</Button>
-				<TextBlock TextWrapping="Wrap" TextAlignment="Right" FontSize="26.667" Margin="0" Grid.Column="2" VerticalAlignment="Bottom" Text="{Binding DueRemaining}"/>
-				<TextBlock TextWrapping="Wrap" Margin="0" Foreground="White" FontSize="18.667" Text="{Binding DueStatus}" TextAlignment="Right" Grid.Column="2" Grid.Row="1" d:LayoutOverrides="Height" VerticalAlignment="Top"/>
+				<TextBlock TextWrapping="Wrap" Margin="0" FontSize="18.667" Text="{Binding DueStatus}" TextAlignment="Right" Grid.Column="2" Grid.Row="1" d:LayoutOverrides="Height" VerticalAlignment="Top"/>
+				<StackPanel x:Name="DueRemaining" Grid.Column="2" Margin="0" Orientation="Horizontal" HorizontalAlignment="Right">
+					<TextBlock x:Name="month" TextWrapping="Wrap" Text="{Binding DateDueMonthsRemaining}" FontSize="29.333" VerticalAlignment="Bottom" Visibility="{Binding ShowDateRemaining, Converter={StaticResource BoolToVisibilityConverter}}" Foreground="{Binding DateDueRemainingColor}"/>
+					<TextBlock x:Name="monthText" TextWrapping="Wrap" Text=" months " VerticalAlignment="Bottom" Visibility="{Binding ShowDateRemaining, Converter={StaticResource BoolToVisibilityConverter}}"/>
+					<TextBlock x:Name="day" TextWrapping="Wrap" Text="{Binding DateDueDaysRemaining}" FontSize="29.333" VerticalAlignment="Bottom" Visibility="{Binding ShowDateRemaining, Converter={StaticResource BoolToVisibilityConverter}}" Foreground="{Binding DateDueRemainingColor}"/>
+					<TextBlock x:Name="dayText" TextWrapping="Wrap" Text=" days " VerticalAlignment="Bottom" Visibility="{Binding ShowDateRemaining, Converter={StaticResource BoolToVisibilityConverter}}"/>
+					<TextBlock x:Name="mileage" TextWrapping="Wrap" Text="{Binding MileageDueMileageRemaining}" FontSize="29.333" VerticalAlignment="Bottom" Visibility="{Binding ShowMileageRemaining, Converter={StaticResource BoolToVisibilityConverter}}" Foreground="{Binding MileageDueRemainingColor}"/>
+					<TextBlock x:Name="mileageText" TextWrapping="Wrap" Text=" miles" VerticalAlignment="Bottom" Visibility="{Binding ShowMileageRemaining, Converter={StaticResource BoolToVisibilityConverter}}"/>
+					<TextBlock x:Name="altText" TextWrapping="Wrap" Text="{Binding AltRemaining}" Visibility="{Binding ShowAltRemaining, Converter={StaticResource BoolToVisibilityConverter}}" VerticalAlignment="Bottom" FontSize="29.333" TextAlignment="Right"/>
+				</StackPanel>
 			</Grid>
 		</DataTemplate>
 	</phone:PhoneApplicationPage.Resources>
@@ -60,24 +73,44 @@
 		<controls:Pivot Title="LOGBOOK">
 			<!--Pivot item one-->
 			<controls:PivotItem Header="reminders">
-				<StackPanel>
-					<StackPanel x:Name="Welcome_Panel" Margin="0,0,9,0" Visibility="Collapsed">
-						<TextBlock TextWrapping="Wrap" Margin="0,20,0,0" FontSize="26.667" FontFamily="Segoe WP Light" Foreground="Silver" Text="To start tracking your reminders, click on the garage icon below and add a new vehicle."/>
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="0.943*"/>
+						<RowDefinition Height="0.057*"/>
+					</Grid.RowDefinitions>
+					<StackPanel x:Name="Welcome_Panel" Margin="0,0,9,0" Visibility="Collapsed" VerticalAlignment="Top">
+						<TextBlock TextWrapping="Wrap" Margin="0" FontSize="32" FontFamily="Segoe WP Light" Text="To start tracking your reminders, click on the garage icon below and add a new vehicle.">
+							<TextBlock.Foreground>
+								<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
+							</TextBlock.Foreground>
+						</TextBlock>
 					</StackPanel>
-					<StackPanel x:Name="Form_Panel">
+					<StackPanel x:Name="Form_Panel" Margin="0" d:LayoutOverrides="Height">
 						<StackPanel x:Name="VehicleNameContainer" Orientation="Horizontal" Margin="0,0,0,20">
-							<TextBlock x:Name="VehicleNameLabel" TextWrapping="Wrap" Text="Reminders for: " FontSize="24" FontFamily="Segoe WP Light"/>
+							<TextBlock x:Name="VehicleNameLabel" TextWrapping="Wrap" Text="reminders for: " FontSize="24" FontFamily="Segoe WP Light"/>
 							<TextBlock x:Name="VehicleName" TextWrapping="Wrap"  Text="{Binding DefaultVehicle.VehicleName}" FontSize="24" >
 								<TextBlock.Foreground>
 									<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
 								</TextBlock.Foreground>
 							</TextBlock>
 						</StackPanel>
-						<ScrollViewer Margin="0" Height="519">
-							<ListBox x:Name="ResultsList" ItemTemplate="{StaticResource ReminderTemplate}"/>
+						<ScrollViewer Margin="0" Height="486">
+							<ListBox x:Name="ResultsList" ItemTemplate="{StaticResource ReminderTemplate}" SelectionChanged="ResultsList_SelectionChanged"/>
 						</ScrollViewer>
 					</StackPanel>
-				</StackPanel>
+					<StackPanel HorizontalAlignment="Left" Margin="0,0,0,8" Grid.Row="1" VerticalAlignment="Bottom">
+						<Border x:Name="DefaultHelp" BorderThickness="4,0,0,0" VerticalAlignment="Bottom" Width="447">
+							<Border.BorderBrush>
+								<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
+							</Border.BorderBrush>
+							<TextBlock TextWrapping="Wrap" Text="* click to show alternate reminder" Margin="8,0,0,0">
+								<TextBlock.Foreground>
+									<SolidColorBrush Color="{StaticResource PhoneForegroundColor}"/>
+								</TextBlock.Foreground>
+							</TextBlock>
+						</Border>
+					</StackPanel>
+				</Grid>
 			</controls:PivotItem>
 
  			<!--Pivot item two-->

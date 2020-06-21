@@ -88,13 +88,24 @@
                 <StackPanel>
             		<StackPanel x:Name="MapPanel" Height="535" Visibility="Collapsed">
             			<Microsoft_Phone_Controls_Maps:Map Height="137" CredentialsProvider="Ao2AxOV-Wfz-ItCAI5vIm8thxsRb1ZCGmEVjRlfLE_VnpuxIICzegBapVa_kBTdJ" x:Name="miniMap"/>
-            			<TextBlock x:Name="SearchLoading" TextWrapping="Wrap" Height="137" Margin="0,100,0,0" TextAlignment="Center" Foreground="#CAFFFFFF" FontSize="26.667"/>
+            			<TextBlock x:Name="SearchLoading" TextWrapping="Wrap" Height="137" Margin="0,100,0,0" TextAlignment="Center" FontSize="26.667">
+            				<TextBlock.Foreground>
+            					<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
+            				</TextBlock.Foreground>
+            			</TextBlock>
             			<ListBox x:Name="SearchResults" Height="379" ItemTemplate="{StaticResource DataTemplate1}" Margin="0,10,0,0" SelectionChanged="SearchResults_SelectionChanged"/>
             		</StackPanel>
             		<StackPanel x:Name="MessagePanel" Visibility="Collapsed">
-            			<TextBlock x:Name="MessageText" TextWrapping="Wrap" FontSize="37.333" FontFamily="Segoe WP Light" Foreground="#C6FFFFFF" Text="Loading..."/>
+            			<TextBlock x:Name="MessageText" TextWrapping="Wrap" FontSize="37.333" FontFamily="Segoe WP Light" Text="Loading...">
+            				<TextBlock.Foreground>
+            					<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
+            				</TextBlock.Foreground>
+            			</TextBlock>
             		</StackPanel>
-            		<RichTextBox x:Name="AppLocationDisabledMessage" Foreground="#C6FFFFFF" FontSize="32" Visibility="Collapsed">
+            		<RichTextBox x:Name="AppLocationDisabledMessage" FontSize="32" Visibility="Collapsed">
+            			<RichTextBox.Foreground>
+            				<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
+            			</RichTextBox.Foreground>
             			<Paragraph><Run Text="Location services disabled in application settings.  To use this feature, turn on location services from the "/><Hyperlink NavigateUri="//Views/SettingsPage.xaml"><Run Text="application settings menu"/></Hyperlink><Run Text="."/></Paragraph>
             		</RichTextBox>
             	</StackPanel>

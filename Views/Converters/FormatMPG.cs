@@ -22,7 +22,7 @@ namespace car_pal.Views.Converters
             {
                 return "-";
             }
-            return String.Format("{0:#}", value);
+            return String.Format("{0:0}", value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

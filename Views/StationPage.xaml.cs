@@ -44,6 +44,9 @@ namespace car_pal.Views
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
+            SearchLoading.Text = "Loading...";
+            SearchResults.Visibility = Visibility.Collapsed;
+            SearchLoading.Visibility = Visibility.Visible;
             refresh();
         }
 

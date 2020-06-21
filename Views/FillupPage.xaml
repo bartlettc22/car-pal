@@ -58,22 +58,26 @@
         </StackPanel>
         <StackPanel x:Name="ContentPanel" Margin="12,0,12,0" Grid.Row="1" >
         	<StackPanel x:Name="Welcome_Panel" Margin="9,0" Visibility="Collapsed">
-        		<TextBlock x:Name="Welcome_Message" TextWrapping="Wrap" Text="Welcome!" FontSize="48" Foreground="Silver" FontFamily="Segoe WP Light"/>
-        		<TextBlock TextWrapping="Wrap" Margin="0,20,0,0" FontSize="26.667" FontFamily="Segoe WP Light" Foreground="Silver" Text="To start tracking your fill-up history, click on the garage icon below and add a new vehicle."/>
+        		<TextBlock TextWrapping="Wrap" Margin="0" FontSize="32" FontFamily="Segoe WP Light" Text="To start tracking your fill-up history, click on the garage icon below and add a new vehicle.">
+        			<TextBlock.Foreground>
+        				<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
+        			</TextBlock.Foreground>
+        		</TextBlock>
         	</StackPanel>
         	<StackPanel x:Name="Form_Panel" Margin="9,0">
         		<StackPanel x:Name="VehicleNameContainer" Orientation="Horizontal">
-        			<TextBlock x:Name="VehicleNameLabel" TextWrapping="Wrap" Text="Filling Up: " FontSize="24" FontFamily="Segoe WP Light"/>
+        			<TextBlock x:Name="VehicleNameLabel" TextWrapping="Wrap" Text="filling up: " FontSize="24" FontFamily="Segoe WP Light"/>
         			<TextBlock x:Name="VehicleName" TextWrapping="Wrap"  Text="{Binding DefaultVehicle.VehicleName}" FontSize="24" >
         				<TextBlock.Foreground>
         					<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
         				</TextBlock.Foreground>
         			</TextBlock>
         		</StackPanel>
-        		<ScrollViewer x:Name="FormScroller" VerticalContentAlignment="Top">
+        		<ScrollViewer x:Name="FormScroller" VerticalContentAlignment="Top" Height="525">
         			<Grid Margin="0,15,0,0" Width="447">
         				<Grid.RowDefinitions>
         					<RowDefinition Height="Auto" MinHeight="72"/>
+        					<RowDefinition/>
         					<RowDefinition Height="Auto" MinHeight="90"/>
         					<RowDefinition Height="Auto" MinHeight="90"/>
         					<RowDefinition Height="Auto" MinHeight="90"/>
@@ -94,8 +98,7 @@
         					</toolkit:TimePicker.BorderBrush>
         				</toolkit:TimePicker>
         				<TextBlock x:Name="FillupDateLabel" Margin="0,0,8,8" TextWrapping="Wrap" Text="Date/Time of Fill-up" VerticalAlignment="Bottom" TextAlignment="Right" FontSize="24"/>
-        				<TextBlock x:Name="FillupPriceLabel" Margin="8,0,8,8" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Bottom" TextAlignment="Right" FontSize="24" Text="Price
-(per Gal.)"/>
+        				<TextBlock x:Name="FillupPriceLabel" Margin="8,0,8,8" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Bottom" TextAlignment="Right" FontSize="24"><Run Text="Price "/><LineBreak/><Run Text="(per Gal.)"/></TextBlock>
         				<TextBox x:Name="FillupPriceInput" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" d:LayoutOverrides="VerticalAlignment" FontSize="40" BorderThickness="2" TextAlignment="Right" Height="90" InputScope="Number">
         					<TextBox.BorderBrush>
         						<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
@@ -118,6 +121,7 @@
         					<Button x:Name="FillupDeleteButton" Content="Delete" Click="FillupDeleteButton_Click" Visibility="Collapsed"/>
         					<Button x:Name="FillupCancelButton" Content="Cancel" Click="fillupCancel_Click" Height="81" Margin="0"/>
         				</StackPanel>
+        				<Rectangle Margin="0" Grid.Row="5" Grid.ColumnSpan="2" Height="300"/>
         			</Grid>
         		</ScrollViewer>
         	</StackPanel>

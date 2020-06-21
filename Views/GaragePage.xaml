@@ -94,8 +94,8 @@
 					<RowDefinition Height="Auto"/>
 				</Grid.RowDefinitions>
 				<StackPanel Margin="0" Height="490">
-					<TextBlock x:Name="GarageEmptyNotice" TextWrapping="Wrap" FontSize="37.333" FontFamily="Segoe WP Light" Text="To add a new vehicle, click on the plus icon below."><TextBlock.Foreground>
-							<SolidColorBrush Color="{StaticResource PhoneDisabledColor}"/>
+					<TextBlock x:Name="GarageEmptyNotice" TextWrapping="Wrap" FontSize="32" FontFamily="Segoe WP Light" Text="To add a new vehicle, click on the plus icon below."><TextBlock.Foreground>
+							<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
 						</TextBlock.Foreground></TextBlock>
 					<ScrollViewer Margin="0">
 						<ListBox x:Name="VehicleList" ItemsSource="{Binding AllVehicles}" ItemTemplate="{StaticResource VehicleListDataTemplate}" SelectionChanged="VehicleList_SelectionChanged" />

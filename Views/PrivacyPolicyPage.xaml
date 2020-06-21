@@ -43,6 +43,10 @@
 					<Paragraph FontFamily="Segoe WP" TextAlignment="Left"><Run FontWeight="Bold" Text="Policy changes:" TextDecorations="Underline"/><Run Text=" By using the App you agree to the terms of this privacy policy and our terms of use. We may amend this privacy policy and the terms of use from time to time. If we do so, we will post an updated version on this page. You are responsible for regularly reviewing this policy so that you are aware of any changes to them and you will be bound by the new policy upon your continued use of the App."/></Paragraph>
 					<Paragraph FontFamily="Segoe WP" TextAlignment="Left"><Run/></Paragraph>
 					<Paragraph FontFamily="Segoe WP" TextAlignment="Left"><Run FontWeight="Bold" Text="Contact details:" TextDecorations="Underline"/><Run Text=" If you have any questions about the App or your information including what we hold and how it is used, you can contact us at "/><Hyperlink NavigateUri="mailto:alan.asher@live.com" TargetName="_blank"><Run Text="alan.asher@live.com"/></Hyperlink></Paragraph>
+					<Paragraph FontFamily="Segoe WP" TextAlignment="Left"/>
+					<Paragraph FontFamily="Segoe WP" TextAlignment="Left"/>
+					<Paragraph FontFamily="Segoe WP" TextAlignment="Left"/>
+					<Paragraph FontFamily="Segoe WP" TextAlignment="Left"/>
 				</RichTextBox>
 			</ScrollViewer>
 		</Grid>

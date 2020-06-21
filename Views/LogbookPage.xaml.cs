@@ -31,7 +31,6 @@ namespace car_pal
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
             
             if (App.ViewModel.AllVehicles.Count > 0)
             {
@@ -43,11 +42,22 @@ namespace car_pal
             {
                 Form_Panel.Visibility = Visibility.Collapsed;
                 Welcome_Panel.Visibility = Visibility.Visible;
+                DefaultHelp.Visibility = Visibility.Collapsed;
             }
         }
 
         private void InitializePage()
         {
+
+            if (App.ViewModel.DefaultVehicle.Reminders.Count(r => (r.RemindDate && r.RemindOdo)) > 0)
+            {
+                DefaultHelp.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                DefaultHelp.Visibility = Visibility.Collapsed;
+            }
+
             ObservableCollection<ReminderItemViewModel> resultsModel = new ObservableCollection<ReminderItemViewModel>();
             foreach(ReminderModel r in App.ViewModel.DefaultVehicle.Reminders)
             {
@@ -76,6 +86,19 @@ namespace car_pal
             {
                 NavigationService.Navigate(new Uri(string.Format("//Views/EditLogbook.xaml?reminderId={0}",
                     Uri.EscapeUriString(reminder.ReminderId.ToString())), UriKind.Relative));
+            }
+        }
+
+        private void ResultsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            ReminderItemViewModel reminder = (sender as ListBox).SelectedItem as ReminderItemViewModel;
+            Debug.WriteLine("changing");
+            if (reminder != null)
+            {
+                Debug.WriteLine("showing alt");
+                // unset the selection
+                (sender as ListBox).SelectedItem = null;
+                reminder.ShowAlt();
             }
         }
     }

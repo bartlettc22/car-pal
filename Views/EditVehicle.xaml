@@ -47,7 +47,7 @@
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
         	<StackPanel Margin="9,0,0,0">
         		<StackPanel x:Name="VehicleEditContainer" Orientation="Horizontal" Margin="0,0,0,10" Visibility="Collapsed">
-        			<TextBlock x:Name="VehicleEditLabel" Margin="0" TextWrapping="Wrap" Text="Editing Vehicle: " FontFamily="Segoe WP Light" FontSize="24"/>
+        			<TextBlock x:Name="VehicleEditLabel" Margin="0" TextWrapping="Wrap" Text="editing vehicle: " FontFamily="Segoe WP Light" FontSize="24"/>
         			<Border BorderBrush="#FF37892C" BorderThickness="0">
         				<TextBlock x:Name="VehicleEditName" TextWrapping="Wrap" Margin="0,0,0,-2" d:LayoutOverrides="Width, Height" FontSize="24" >
         					<TextBlock.Foreground>

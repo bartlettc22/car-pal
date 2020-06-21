@@ -38,7 +38,7 @@ namespace car_pal.Views
                     ReminderDate.IsChecked = _editReminder.RemindDate;
                     ReminderDateValue.Value = _editReminder.RemindDateValue;
                     ReminderOdo.IsChecked = _editReminder.RemindOdo;
-                    ReminderOdoValue.Text = _editReminder.RemindOdoValue.ToString();
+                    ReminderOdoValue.Text = (_editReminder.RemindOdoValue == 0)?"":_editReminder.RemindOdoValue.ToString();
                 }
             }
         }
@@ -57,10 +57,31 @@ namespace car_pal.Views
         {
             if (_editReminder != null)
             {
+                if ((bool)ReminderDate.IsChecked && ReminderDateValue.Value == null)
+                {
+                    MessageBox.Show("Date value required.");
+                    return;
+                }
+                if ((bool)ReminderOdo.IsChecked && string.IsNullOrWhiteSpace(ReminderOdoValue.Text))
+                {
+                    MessageBox.Show("Mileage Due is required.");
+                    return;
+                }
+
+                double val;
+                if ((bool)ReminderOdo.IsChecked && !double.TryParse(ReminderOdoValue.Text, out val))
+                {
+                    MessageBox.Show("The Mileage Due could not be converted to a number.");
+                    return;
+                };
+
                 _editReminder.RemindDate = (bool)ReminderDate.IsChecked;
                 _editReminder.RemindDateValue = (DateTime)ReminderDateValue.Value;
                 _editReminder.RemindOdo = (bool)ReminderOdo.IsChecked;
-                _editReminder.RemindOdoValue = double.Parse(ReminderOdoValue.Text);
+                if (_editReminder.RemindOdo)
+                {
+                    _editReminder.RemindOdoValue = double.Parse(ReminderOdoValue.Text);
+                }
 
                 App.ViewModel.saveDefault();
             }

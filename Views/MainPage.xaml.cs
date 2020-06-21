@@ -1,21 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using car_pal.Models;
 using System.Windows.Navigation;
-using System.Windows.Controls.Primitives;
-using System.IO.IsolatedStorage;
 using Microsoft.Phone.Shell;
-using System.ComponentModel;
 
 namespace car_pal
 {
@@ -30,9 +21,6 @@ namespace car_pal
 
             // Set the page DataContext property to the Main ViewModel.
             DataContext = App.ViewModel;
-
-            // Notify us when the fillup history changes so we can update the UI alternating colors
-            //App.ViewModel.PropertyChanged += UpdateFillupHistoryVisual;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -69,6 +57,14 @@ namespace car_pal
                 DashboardVehicleNameDisplay.Visibility = Visibility.Visible;
                 Dashboard_Panel.Visibility = Visibility.Visible;
                 FillupVehicleNameDisplay.Visibility = Visibility.Visible;
+                if (App.ViewModel.DefaultFillups.Count > 0)
+                {
+                    NoFillupMsg.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    NoFillupMsg.Visibility = Visibility.Visible;
+                }
             }
             else
             {

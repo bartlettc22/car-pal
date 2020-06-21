@@ -28,7 +28,7 @@
 
 		<!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-			<TextBlock TextWrapping="Wrap" FontSize="26.667"><Run Text="car-pal+ ©2012"/><LineBreak/><Run Text="version: 1.0"/><LineBreak/><Run Text="UI Design: Alan Asher"/><LineBreak/><Run Text="Developer: Chris Bartlett"/></TextBlock>
+			<TextBlock TextWrapping="Wrap" FontSize="26.667" Margin="12,0,0,0"><Run Text="car-pal+ ©2012"/><LineBreak/><Run Text="version: 1.0"/><LineBreak/><Run Text="UI Design: Alan Asher"/><LineBreak/><Run Text="Developer: Chris Bartlett"/></TextBlock>
 		</Grid>
 	</Grid>
 </phone:PhoneApplicationPage>

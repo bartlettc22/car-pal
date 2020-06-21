@@ -194,7 +194,7 @@ namespace car_pal.Views
 
         private void FillupDeleteButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (_editMode && _editFillup != null)
+            if (_editMode && _editFillup != null && MessageBox.Show("Are you sure?", "Delete fill-up", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
 
                 App.ViewModel.DeleteFillup(_editFillup);
