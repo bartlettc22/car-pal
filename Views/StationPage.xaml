@@ -20,7 +20,7 @@
 			<StackPanel Orientation="Horizontal" Margin="0,0,0,15">
 				<Canvas Width="20">
 					<Image x:Name="MapMarker" Height="35" Source="/car_pal;component/Images/map_marker.png" Stretch="Fill" Width="19" VerticalAlignment="Top" HorizontalAlignment="Left" Canvas.Top="8"/>
-					<TextBlock x:Name="PinIndicator" TextWrapping="Wrap" Text="{Binding ItemNumber, FallbackValue=1}" Width="19" TextAlignment="Center" FontSize="16" Height="25" Canvas.Top="6" Padding="0,0,0,4"/>
+					<TextBlock x:Name="PinIndicator" TextWrapping="Wrap" Text="{Binding ItemNumber, FallbackValue=1}" Width="19" TextAlignment="Center" FontSize="16" Height="25" Canvas.Top="6" Padding="0,0,0,4" Foreground="White"/>
 				</Canvas>
 				<StackPanel Margin="10,0,0,0">
 					<TextBlock x:Name="StationName" Margin="0" TextWrapping="Wrap" Text="{Binding Title, FallbackValue=Conoco}" FontSize="24"/>

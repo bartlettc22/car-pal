@@ -160,6 +160,7 @@
     <Content Include="icons\appbar.refresh.rest.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\road.png" />
     <Content Include="ServiceReferences.ClientConfig" />
     <None Include="Service References\BingService\search.wsdl" />
   </ItemGroup>

@@ -43,8 +43,6 @@ namespace car_pal
         private void InitializePageState()
         {
             DataContext = _garage = DataStore.Garage;
-
-            //_hasUnsavedChanges = State.ContainsKey(HAS_UNSAVED_CHANGES_KEY) && (bool)State[HAS_UNSAVED_CHANGES_KEY];
         }
 
         private void VehicleList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

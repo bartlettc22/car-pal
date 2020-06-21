@@ -15,11 +15,15 @@ using System.Windows.Navigation;
 using System.Windows.Controls.Primitives;
 using System.IO.IsolatedStorage;
 using Microsoft.Phone.Shell;
+using car_pal.Database;
 
 namespace car_pal
 {
     public partial class MainPage : PhoneApplicationPage
     {
+
+        // Data context for the local database
+        private DatabaseContext _db;
 
         bool _fillupAlt = false;
 
@@ -27,6 +31,12 @@ namespace car_pal
         public MainPage()
         {
             InitializeComponent();
+
+            // Connect to the database and instantiate data context.
+            _db = new DatabaseContext(DatabaseContext.DBConnectionString);
+
+            // Data context and observable collection are children of the main page.
+            this.DataContext = this;
 
             // Keep the splash screen up for a bit
             //System.Threading.Thread.Sleep(2000);
