@@ -1,5 +1,4 @@
-﻿<phone:PhoneApplicationPage 
-    x:Class="car_pal.Views.FillupPage"
+﻿<phone:PhoneApplicationPage
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
@@ -7,11 +6,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:car_pal.Models"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" 
+    x:Class="car_pal.Views.FillupPage"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
-    mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
+    mc:Ignorable="d" d:DesignHeight="728" d:DesignWidth="480"
     shell:SystemTray.IsVisible="False">
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar>
@@ -36,11 +37,14 @@
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
         	<StackPanel>
-        		<TextBlock x:Name="VehicleName" TextWrapping="Wrap" Height="43"  Text="{Binding Name, Mode=OneWay}" />
-        		<Grid Height="631">
+        		<StackPanel x:Name="VehicleNameContainer" Orientation="Horizontal">
+        			<TextBlock x:Name="VehicleNameLabel" TextWrapping="Wrap" Text="filling up: "/>
+        			<TextBlock x:Name="VehicleName" TextWrapping="Wrap"  Text="{Binding Name, Mode=OneWay}" />
+        		</StackPanel>
+        		<Grid>
         			<Grid.RowDefinitions>
-        				<RowDefinition Height="Auto"/>
-        				<RowDefinition Height="Auto"/>
+        				<RowDefinition Height="Auto" MinHeight="109"/>
+        				<RowDefinition Height="Auto" MinHeight="90"/>
         				<RowDefinition Height="Auto"/>
         				<RowDefinition Height="Auto"/>
         				<RowDefinition Height="Auto"/>
@@ -49,10 +53,11 @@
         				<ColumnDefinition Width="0.327*"/>
         				<ColumnDefinition Width="0.673*"/>
         			</Grid.ColumnDefinitions>
-        			<TextBlock x:Name="FillupDateLabel" HorizontalAlignment="Right" Margin="0,0,8,8" TextWrapping="Wrap" Text="Date/Time" VerticalAlignment="Bottom" Width="128" Height="32" TextAlignment="Right"/>
-        			<TextBox x:Name="FillupDateInput" Grid.Column="1" TextWrapping="Wrap" Height="90" FontSize="40" BorderThickness="0" TextAlignment="Right" IsReadOnly="True" Text="{Binding Date, Mode=TwoWay}" Margin="0,-1,0,1" InputScope="Date"/>
+        			<toolkit:DatePicker Grid.Column="1" FontSize="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" Margin="0,0,147,0" VerticalAlignment="Bottom"/>
+        			<toolkit:TimePicker Grid.Column="1" HorizontalAlignment="Right" Margin="0,37,12,0" d:LayoutOverrides="Height"/>
+        			<TextBlock x:Name="FillupDateLabel" Margin="0,0,8,8" TextWrapping="Wrap" Text="Date/Time" VerticalAlignment="Bottom" TextAlignment="Right"/>
         			<TextBlock x:Name="FillupPriceLabel" Margin="8,0,8,8" Grid.Row="1" TextWrapping="Wrap" Text="Price" VerticalAlignment="Bottom" TextAlignment="Right"/>
-        			<TextBox x:Name="FillupPriceInput" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" d:LayoutOverrides="VerticalAlignment" FontSize="40" BorderThickness="0" TextAlignment="Right" Height="90" InputScope="Number" Text="{Binding PricePerUnit, Mode=TwoWay, StringFormat=\{0:#.##\}}"/>
+        			<TextBox x:Name="FillupPriceInput" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" d:LayoutOverrides="VerticalAlignment" FontSize="40" BorderThickness="0" TextAlignment="Right" Height="90" InputScope="Number" Text="{Binding PricePerUnit, Mode=TwoWay}" LostFocus="FillupPriceInput_LostFocus"/>
         			<TextBlock x:Name="FillupVolLabel" Margin="0,0,8,8" Grid.Row="2" TextWrapping="Wrap" Text="Volume" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="128" TextAlignment="Right"/>
         			<TextBox x:Name="FillupVolInput" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" Height="90" TextAlignment="Right" FontSize="40" BorderThickness="0" InputScope="Number" Text="{Binding FuelVolume, Mode=TwoWay, StringFormat=\{0:#.#\}}"/>
         			<TextBlock x:Name="FillupOdoLabel" Margin="0,0,8,8" Grid.Row="3" TextWrapping="Wrap" Text="Odometer" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="128" TextAlignment="Right"/>

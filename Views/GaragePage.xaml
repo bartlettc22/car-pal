@@ -6,26 +6,41 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:model="clr-namespace:car_pal.Models"
+	xmlns:converters="clr-namespace:Views.Converters"
+	xmlns:car_pal_Views_Converters="clr-namespace:car_pal.Views.Converters"
 	mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="696"
 	x:Class="car_pal.GaragePage"
-	FontFamily="{StaticResource PhoneFontFamilyNormal}"
-	FontSize="{StaticResource PhoneFontSizeNormal}"
-	Foreground="{StaticResource PhoneForegroundBrush}"
 	Orientation="Portrait"
 	shell:SystemTray.IsVisible="True">
 	<phone:PhoneApplicationPage.Resources>
+		<car_pal_Views_Converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 		<DataTemplate x:Key="VehicleListDataTemplate">
-			<StackPanel Orientation="Horizontal">
-				<TextBlock TextWrapping="Wrap" Width="160" Text="{Binding Name}" FontSize="32"/>
-				<Button x:Name="EditButton" Background="#00000000" Padding="0" BorderThickness="0" Click="EditButton_Click">
-					<Image x:Name="EditImage" Source="/car_pal;component/icons/appbar.edit.rest.png" HorizontalAlignment="Right"/>
+			<Grid Width="454" Height="90">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock TextWrapping="Wrap" Text="{Binding Name, FallbackValue=Unnamed}" FontSize="40" VerticalAlignment="Center" FontFamily="Segoe WP Light" Margin="20,0,0,0"/>
+				<Button x:Name="EditButton" Background="#00000000" Padding="0" BorderThickness="0" Click="EditButton_Click" Margin="0" HorizontalAlignment="Right" Grid.Column="1" Width="90">
+					<Image Source="/car_pal;component/icons/appbar.edit.rest.png" Stretch="Fill"/>
 				</Button>
-				<Button x:Name="DeleteButton" Background="#00000000" Padding="0" BorderThickness="0" Click="DeleteButton_Click">
-					<Image x:Name="DeleteImage" Source="/car_pal;component/icons/appbar.delete.rest.png" HorizontalAlignment="Right"/>
+				<Button x:Name="DeleteButton" Background="#00000000" Padding="0" BorderThickness="0" Click="DeleteButton_Click" HorizontalAlignment="Right" Margin="0" Grid.Column="2" Width="90">
+					<Image x:Name="DeleteImage" Source="/car_pal;component/icons/appbar.delete.rest.png" Stretch="Fill"/>
 				</Button>
-			</StackPanel>
+				<Rectangle HorizontalAlignment="Left" Width="10" Fill="#FF00C161" Visibility="{Binding isDefaultVehicle, Converter={StaticResource BoolToVisibilityConverter}}"/>
+			</Grid>
 		</DataTemplate>
 	</phone:PhoneApplicationPage.Resources>
+	<phone:PhoneApplicationPage.FontFamily>
+		<StaticResource ResourceKey="PhoneFontFamilyNormal"/>
+	</phone:PhoneApplicationPage.FontFamily>
+	<phone:PhoneApplicationPage.FontSize>
+		<StaticResource ResourceKey="PhoneFontSizeNormal"/>
+	</phone:PhoneApplicationPage.FontSize>
+	<phone:PhoneApplicationPage.Foreground>
+		<StaticResource ResourceKey="PhoneForegroundBrush"/>
+	</phone:PhoneApplicationPage.Foreground>
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar>
 			<shell:ApplicationBarIconButton x:Name="AddVehicleAppBarButton" IconUri="/icons/appbar.add.rest.png" IsEnabled="True" Text="Add Vehicle" Click="AddVehicleAppBarButton_Click"/>

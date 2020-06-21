@@ -19,6 +19,8 @@ namespace car_pal.Views
     {
 
         private VehicleModel _vehicle;
+        private bool _editMode = false;
+        private VehicleModel _editVehicle;
 
         public EditVehicle()
         {
@@ -29,15 +31,19 @@ namespace car_pal.Views
         {
             base.OnNavigatedTo(e);
 
-            if (DataContext == null)
-            {
-                InitializePageState();
-            }
-        }
-
-        private void InitializePageState()
-        {
             _vehicle = new VehicleModel();
+
+            // Editing vehicle...
+            if (NavigationContext.QueryString.ContainsKey("vehicleName"))
+            {
+                _editVehicle = DataStore.Garage.getVehicle(NavigationContext.QueryString["vehicleName"]);
+                if(_editVehicle != null)
+                {
+                    _editMode = true;
+                    _vehicle.Name = _editVehicle.Name;
+                }
+            }
+
             DataContext = _vehicle;
         }
 
@@ -48,9 +54,29 @@ namespace car_pal.Views
 
         private void VehicleSave_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            GarageModel garage = DataStore.Garage;
-            garage.addVehicle(_vehicle);
-            DataStore.Garage = garage;
+            _vehicle.Name = (_vehicle.Name == null)?_vehicle.Name:_vehicle.Name.Trim();
+
+            if (_vehicle.Name == null || _vehicle.Name == "")
+            {
+                MessageBox.Show("Vehicle name is required.");
+                return;
+            }
+            else if((!_editMode && DataStore.Garage.vehicleExists(_vehicle.Name)) ||
+                (_editMode && _vehicle.Name != _editVehicle.Name && DataStore.Garage.vehicleExists(_vehicle.Name)))
+            {
+                MessageBox.Show("Vehicle name already exists.");
+                return;
+            }
+            
+
+            if (_editMode == false)
+            {
+                DataStore.Garage.addVehicle(_vehicle);
+            }
+            else
+            {
+                _editVehicle.Name = _vehicle.Name;
+            }
 
             DataStore.SaveGarage();
             NavigationService.GoBack();

@@ -52,11 +52,14 @@ namespace car_pal
         	//Get the data object that represents the current selected item
             VehicleModel vehicle = (sender as ListBox).SelectedItem as VehicleModel;
 
-            _garage = DataStore.Garage;
-            _garage.DefaultVehicleIndex = _garage.getVehicleIndexByName(vehicle.Name);
-            DataStore.SaveGarage();
+            if (vehicle != null)
+            {
+                _garage = DataStore.Garage;
+                _garage.DefaultVehicleIndex = _garage.getVehicleIndexByName(vehicle.Name);
+                DataStore.SaveGarage();
 
-            NavigationService.GoBack();
+                NavigationService.GoBack();
+            }
         }
 
         private void AddVehicleAppBarButton_Click(object sender, System.EventArgs e)
@@ -66,17 +69,14 @@ namespace car_pal
 
         private void EditButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-        	// TODO: Add event handler implementation here.
+            VehicleModel vehicle = (sender as Button).DataContext as VehicleModel;
+            NavigationService.Navigate(new Uri(string.Format("//Views/EditVehicle.xaml?vehicleName={0}", 
+                Uri.EscapeUriString(vehicle.Name)), UriKind.Relative));
         }
 
         private void DeleteButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
         	VehicleModel vehicle = (sender as Button).DataContext as VehicleModel;
-			/*ListBoxItem pressedItem = this.VehicleList.ItemContainerGenerator.ContainerFromItem(vehicle) as ListBoxItem;
-			if (pressedItem != null)
-			{
-                MessageBox.Show("The price per gallon value could not be converted to a number.");
-			}*/
             if (MessageBox.Show("Are you sure?", "Delete \"" + vehicle.Name + "\"", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
                 _garage.deleteVehicle(vehicle);

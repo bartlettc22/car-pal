@@ -21,6 +21,12 @@ namespace car_pal.Models
         private float _odometerReading;
         private float _pricePerUnit;
 
+        public FillupModel()
+        {
+            _date = DateTime.Now;
+            _date.AddDays(2.0);
+        }
+
         public DateTime FillupDate
         {
             get { return _date; }
@@ -65,6 +71,19 @@ namespace car_pal.Models
                 if (_pricePerUnit.Equals(roundedValue)) return;
                 _pricePerUnit = roundedValue;
                 NotifyPropertyChanged("PricePerUnit");
+            }
+        }
+
+        public float MPG
+        {
+            get
+            {
+                if (_fuelVolume != null && _odometerReading != null && _fuelVolume > 0 && _odometerReading > 0)
+                {
+                    return _odometerReading / _fuelVolume;
+                }
+
+                return 0;
             }
         }
 

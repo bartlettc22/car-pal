@@ -55,6 +55,18 @@ namespace car_pal.Models
             }
         }
 
+        public Boolean isDefaultVehicle
+        {
+            get
+            {
+                if (DataStore.Garage.getVehicleIndexByName(this.Name) == DataStore.Garage.DefaultVehicleIndex)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
         public void addFillup(FillupModel fillup)
         {
 

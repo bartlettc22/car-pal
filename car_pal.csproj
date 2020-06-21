@@ -54,7 +54,9 @@
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Controls" />
     <Reference Include="Microsoft.Phone.Controls.Maps" />
+    <Reference Include="Microsoft.Phone.Controls.Toolkit, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b772ad94eb9ca604, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone.Interop" />
+    <Reference Include="System.Device" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Servicemodel" />
     <Reference Include="System.Windows" />
@@ -77,8 +79,12 @@
     <Compile Include="Models\DataStore.cs" />
     <Compile Include="Models\FillupModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\ItemViewModel.cs" />
-    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="Views\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Views\Converters\RoundDecimalConverter.cs" />
+    <Compile Include="Views\Converters\NullToVisibilityConverter.cs" />
+    <Compile Include="Views\DebugPage.xaml.cs">
+      <DependentUpon>DebugPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\EditVehicle.xaml.cs">
       <DependentUpon>EditVehicle.xaml</DependentUpon>
     </Compile>
@@ -88,8 +94,11 @@
     <Compile Include="Views\GaragePage.xaml.cs">
       <DependentUpon>GaragePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\VehicleSelectionPopup.xaml.cs">
-      <DependentUpon>VehicleSelectionPopup.xaml</DependentUpon>
+    <Compile Include="Views\LogbookPage.xaml.cs">
+      <DependentUpon>LogbookPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StationPage.xaml.cs">
+      <DependentUpon>StationPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -101,10 +110,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <DesignData Include="SampleData\MainViewModelSampleData.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Views\DebugPage.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
-    </DesignData>
+    </Page>
     <Page Include="Views\EditVehicle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -117,9 +126,13 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\VehicleSelectionPopup.xaml">
+    <Page Include="Views\LogbookPage.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\StationPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -127,10 +140,26 @@
     <None Include="Properties\WMAppManifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="icons\appbar.feature.search.rest.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Images\logbook.png" />
+    <Resource Include="Images\gas-2.png" />
+    <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
+    <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
+    <Resource Include="appbar.basecircle.rest.png" />
+    <Resource Include="appbar.minus.rest.png" />
+    <Resource Include="Images\circle_addto.png" />
+    <Resource Include="Images\circle_download.png" />
+    <Resource Include="Images\circle_edit.png" />
+    <Resource Include="Images\circle_fav.png" />
+    <Resource Include="Images\circle_minus.png" />
+    <Resource Include="Images\fill_up.png" />
     <Resource Include="Images\icon_fuel_indicator.png" />
     <Content Include="icons\appbar.add.rest.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\map_marker.png" />
     <Resource Include="Images\SplashScreenImage.jpg" />
     <Resource Include="Images\ApplicationIcon.png" />
     <Resource Include="Images\TileIcon.png" />
@@ -142,6 +171,7 @@
     <Resource Include="icons\appbar.delete.rest.png" />
     <Resource Include="icons\appbar.edit.rest.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

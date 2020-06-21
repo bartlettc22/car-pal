@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,8 +16,14 @@ namespace car_pal.Models
     public class GarageModel
     {
         private ObservableCollection<VehicleModel> _vehicles;
-        //private VehicleModel _defaultVehicle;
-        private int _defaultVehicleIndex = 0;
+        private int _defaultVehicleIndex = -1;
+
+        public static event EventHandler DefaultVehicleChanged;
+
+        public GarageModel()
+        {
+            _vehicles = new ObservableCollection<VehicleModel>();
+        }
 
         public ObservableCollection<VehicleModel> Vehicles
         {
@@ -45,12 +52,21 @@ namespace car_pal.Models
             set
             {
                 _defaultVehicleIndex = value;
+                NotifyDefaultVehicleUpdated();
             }
         }
 
         public VehicleModel DefaultVehicle
         {
-            get { return _vehicles[DefaultVehicleIndex]; }
+            get 
+            {
+                if (_defaultVehicleIndex >= 0)
+                {
+                    return _vehicles[DefaultVehicleIndex];
+                }
+
+                return null;
+            }
         }
 
         public void addVehicle(VehicleModel vehicle) 
@@ -61,9 +77,29 @@ namespace car_pal.Models
 
         public void deleteVehicle(VehicleModel vehicle)
         {
-            //_vehicles.Insert(0, vehicle);
+
+            Boolean defaultChanged = false;
+
+            // If this is the only vehicle, empty the garage
+            if (GarageSize == 1)
+            {
+                _defaultVehicleIndex = -1;
+                defaultChanged = true;
+            }
+            // If we're deleting the default vehicle, change the default
+            else if (vehicle == DefaultVehicle)
+            {
+                _defaultVehicleIndex = 0;
+                defaultChanged = true;
+            }
+
             _vehicles.Remove(vehicle);
             DataStore.SaveGarage();
+
+            if (defaultChanged == true)
+            {
+                NotifyDefaultVehicleUpdated();
+            }
         }
 
         public int GarageSize
@@ -84,6 +120,32 @@ namespace car_pal.Models
             }
 
             return 0;
+        }
+
+        public VehicleModel getVehicle(String name)
+        {
+            if (vehicleExists(name))
+            {
+               return (from v in Vehicles
+                         where v.Name.ToUpper() == name.ToUpper()
+                         select v).First();
+            }
+
+            return null;
+        }
+
+        public bool vehicleExists(String name)
+        {
+            int count = (from v in Vehicles
+                         where v.Name.ToUpper() == name.ToUpper()
+                              select v).Count();
+            return (count > 0) ? true : false;
+        }
+
+        private static void NotifyDefaultVehicleUpdated()
+        {
+            var handler = DefaultVehicleChanged;
+            if (handler != null) handler(null, null);
         }
     }
 }

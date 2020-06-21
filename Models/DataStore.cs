@@ -16,10 +16,10 @@ namespace car_pal.Models
     public static class DataStore
     {
         private const string GARAGE_KEY = "car_pal.Garage";
-        //private const string VEHICLE_KEY = "car_pal.Vehicle";
         private static readonly IsolatedStorageSettings appSettings = IsolatedStorageSettings.ApplicationSettings;
-        //private static VehicleModel _vehicle;
         private static GarageModel _garage;
+
+        //public static event EventHandler GarageUpdated;
 
         public static GarageModel Garage
         {
@@ -33,10 +33,7 @@ namespace car_pal.Models
                     }
                     else
                     {
-                        _garage = new GarageModel
-                        {
-                            Vehicles = new ObservableCollection<VehicleModel>(),
-                        };
+                        _garage = new GarageModel(); ;
                     }
                 }
                 return _garage;
@@ -61,32 +58,5 @@ namespace car_pal.Models
                 MessageBox.Show("Error saving data to device.");
             }
         }
-
-        /*public static VehicleModel Vehicle
-        {
-            get
-            {
-                if (_vehicle == null)
-                {
-                    if (appSettings.Contains(VEHICLE_KEY))
-                    {
-                        _vehicle = (VehicleModel)appSettings[VEHICLE_KEY];
-                    }
-                    else
-                    {
-                        _vehicle = new VehicleModel
-                        {
-                            FillupHistory = new ObservableCollection<FillupModel>()
-                        };
-                    }
-                }
-                return _vehicle;
-            }
-            set
-            {
-                _vehicle = value;
-                //NotifyCarUpdated();
-            }
-        }*/
     }
 }

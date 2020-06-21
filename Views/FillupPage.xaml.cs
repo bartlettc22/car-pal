@@ -146,5 +146,10 @@ namespace car_pal.Views
         {
         	NavigationService.Navigate(new Uri("//Views/GaragePage.xaml", UriKind.Relative));
         }
+
+        private void FillupPriceInput_LostFocus(object sender, System.Windows.RoutedEventArgs e)
+        {
+            // Format currency field
+        }
     }
 }

@@ -9,20 +9,58 @@
 	xmlns:model="clr-namespace:car_pal.Models"
     xmlns:es="clr-namespace:Microsoft.Expression.Shapes;assembly=Microsoft.Expression.Drawing" 
     xmlns:Microsoft_Phone_Controls_Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps" 
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" 
     x:Class="car_pal.MainPage" 
-    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768" 
-    FontFamily="{StaticResource PhoneFontFamilyNormal}"
-    FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}"
+    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
     SupportedOrientations="Portrait"  Orientation="Portrait"
-    shell:SystemTray.IsVisible="True">
+    shell:SystemTray.IsVisible="True"
+	toolkit:TiltEffect.IsTiltEnabled="True">
+	<phone:PhoneApplicationPage.Resources>
+		<DataTemplate x:Key="FillupListItemTemplate">
+			<Grid Background="#C8E7793C" Height="71" Width="420" Margin="0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="0.592*"/>
+					<RowDefinition Height="0.408*"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="0.148*"/>
+					<ColumnDefinition Width="0.143*"/>
+					<ColumnDefinition Width="0.26*"/>
+					<ColumnDefinition Width="0.176*"/>
+					<ColumnDefinition Width="0.274*"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock x:Name="mpg_value" HorizontalAlignment="Right" Margin="8,0,0,0" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="32" Height="42" Width="52" TextAlignment="Right" FontWeight="Bold" Text="{Binding MPG}"/>
+				<TextBlock x:Name="mpg_label" Grid.Column="1" Margin="5,8,4,0" TextWrapping="Wrap" Text="mpg" VerticalAlignment="Bottom" FontSize="16"/>
+				<TextBlock x:Name="price_value" TextWrapping="Wrap" Text="{Binding PricePerUnit}" VerticalAlignment="Bottom" FontSize="32" Grid.Column="2" TextAlignment="Right" FontWeight="Bold"/>
+				<TextBlock x:Name="price_label" Grid.Column="3" Margin="5,0,0,0" TextWrapping="Wrap" Text="regular" FontSize="16" VerticalAlignment="Bottom"/>
+				<TextBlock x:Name="date" HorizontalAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="21.333" Height="42" Grid.Column="4" Width="81" TextAlignment="Right" Margin="0,0,5,0" Text="{Binding FillupDate}"/>
+				<TextBlock x:Name="odo_value" HorizontalAlignment="Right" TextWrapping="Wrap" Text="{Binding OdometerReading, FallbackValue=100\,000}" VerticalAlignment="Bottom" FontSize="16" Height="29" Width="60" TextAlignment="Right" Grid.Row="1" FontWeight="Bold"/>
+				<TextBlock x:Name="odo_label" Grid.Column="1" Margin="5,0,4,-1" TextWrapping="Wrap" Text="miles" FontSize="16" d:LayoutOverrides="VerticalAlignment" Grid.Row="1"/>
+				<TextBlock x:Name="vol_value" TextWrapping="Wrap" Text="{Binding FuelVolume}" FontSize="16" TextAlignment="Right" Grid.Row="1" FontWeight="Bold" Grid.Column="2"/>
+				<TextBlock x:Name="vol_label" Grid.Column="3" Margin="5,0,4,-1" TextWrapping="Wrap" Text="gallons" FontSize="16" Grid.Row="1" d:LayoutOverrides="VerticalAlignment"/>
+			</Grid>
+		</DataTemplate>
+	</phone:PhoneApplicationPage.Resources>
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+	<phone:PhoneApplicationPage.FontFamily>
+		<StaticResource ResourceKey="PhoneFontFamilyNormal"/>
+	</phone:PhoneApplicationPage.FontFamily>
+	<phone:PhoneApplicationPage.FontSize>
+		<StaticResource ResourceKey="PhoneFontSizeNormal"/>
+	</phone:PhoneApplicationPage.FontSize>
+	<phone:PhoneApplicationPage.Foreground>
+		<StaticResource ResourceKey="PhoneForegroundBrush"/>
+	</phone:PhoneApplicationPage.Foreground>
 	<phone:PhoneApplicationPage.ApplicationBar>
-		<shell:ApplicationBar IsVisible="True" IsMenuEnabled="False" Opacity="0.795" Mode="Minimized">
+		<shell:ApplicationBar IsVisible="True" IsMenuEnabled="True" Opacity="0.795" Mode="Minimized">
+			<shell:ApplicationBar.MenuItems>
+				<shell:ApplicationBarMenuItem IsEnabled="True" Text="debug" Click="ApplicationBarMenuItem_Click"/>
+			</shell:ApplicationBar.MenuItems>
 			<shell:ApplicationBarIconButton x:Name="GarageAppBarButton" IconUri="/icons/appbar.feature.settings.rest.png" IsEnabled="True" Text="garage" Click="GarageAppBarButton_Click"/>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
 
-    <!--LayoutRoot is the root grid where all page content is placed-->
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent"
           d:DataContext="{d:DesignInstance Type=model:VehicleModel}">
@@ -35,14 +73,14 @@
  
             <!--Panorama item one-->
             <controls:PanoramaItem Header="dashboard">
-            	<StackPanel>
-            		<Grid Background="#81000000" Height="312">
+            	<StackPanel Margin="0,-21,0,0">
+            		<Grid Background="#81000000" Margin="0,25,0,0">
             			<Grid.RowDefinitions>
-            				<RowDefinition Height="Auto" MinHeight="78"/>
-            				<RowDefinition Height="Auto" MinHeight="78"/>
             				<RowDefinition Height="Auto" MinHeight="62"/>
-            				<RowDefinition Height="Auto" MinHeight="67"/>
-            				<RowDefinition MinHeight="59" Height="Auto"/>
+            				<RowDefinition Height="Auto" MinHeight="62"/>
+            				<RowDefinition Height="Auto" MinHeight="62"/>
+            				<RowDefinition Height="Auto" MinHeight="62"/>
+            				<RowDefinition MinHeight="35" Height="Auto"/>
             			</Grid.RowDefinitions>
             			<Grid.ColumnDefinitions>
             				<ColumnDefinition/>
@@ -50,30 +88,35 @@
             			</Grid.ColumnDefinitions>
             			<TextBlock x:Name="stat1_value" Margin="0" Text="28" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Foreground="#FF00C161"/>
             			<TextBlock x:Name="stat1_label" Margin="5,0,0,0" TextWrapping="Wrap" Text="mpg" d:LayoutOverrides="GridBox" Grid.Column="1" FontSize="48" FontFamily="Segoe WP Light"/>
-            			<TextBlock x:Name="stat2_value" Margin="0" TextWrapping="Wrap" Text="$0.10" Width="202" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Grid.Row="1" Foreground="#FF00C161"/>
-            			<TextBlock x:Name="stat2_label" Margin="5,0,0,0" TextWrapping="Wrap" Text="cost/mi." Grid.Column="1" FontSize="48" d:LayoutOverrides="GridBox" Grid.Row="1" FontFamily="Segoe WP Light"/>
-            			<TextBlock x:Name="stat3_value" TextWrapping="Wrap" Text="345" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Grid.Row="2" Foreground="#FF00C161" Margin="0"/>
+            			<TextBlock x:Name="stat2_value" TextWrapping="Wrap" Text="$0.10" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Grid.Row="1" Foreground="#FF00C161"/>
+            			<TextBlock x:Name="stat2_label" TextWrapping="Wrap" Text="cost/mi." Grid.Column="1" FontSize="48" d:LayoutOverrides="GridBox" Grid.Row="1" FontFamily="Segoe WP Light" Margin="5,0,0,0"/>
+            			<TextBlock x:Name="stat3_value" TextWrapping="Wrap" Text="345" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Grid.Row="2" Foreground="#FF00C161"/>
             			<TextBlock x:Name="stat3_label" Margin="5,0,0,0" TextWrapping="Wrap" Text="mi./fill" Grid.Column="1" FontSize="48" Grid.Row="2" FontFamily="Segoe WP Light" d:LayoutOverrides="GridBox"/>
             			<TextBlock x:Name="stat4_value" Text="17" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Grid.Row="3" Foreground="#FF00C161" RenderTransformOrigin="0.514,0.248"/>
             			<TextBlock x:Name="stat4_label" Margin="5,0,0,0" TextWrapping="Wrap" Text="days/fill" Grid.Column="1" FontSize="48" Grid.Row="3" FontFamily="Segoe WP Light" d:LayoutOverrides="GridBox"/>
             			<TextBlock x:Name="notice" Margin="0" TextWrapping="Wrap" Text="averages based on last 8 fillups" FontSize="18.667" Grid.Row="4" FontFamily="Segoe WP Light" Grid.ColumnSpan="2" TextAlignment="Center" FontStyle="Italic"/>
             		</Grid>
-            		<StackPanel Orientation="Horizontal" Height="128" VerticalAlignment="Center" HorizontalAlignment="Center">
-            			<Button x:Name="FillupLink" Background="#FF00C161" BorderBrush="Transparent" Width="135" Height="135" Margin="0" BorderThickness="0" Click="FillupLink_Click">
-            				<StackPanel Width="92" Height="94">
-            					<Image Height="48" Source="Images/icon_fuel_indicator.png" Stretch="Fill" Margin="0,0,8,0"/>
-            					<TextBlock TextWrapping="Wrap" FontSize="14.667" Height="46" Margin="0,0,11,0" Opacity="0.8"><Run Text="fill-up"/><LineBreak/><Run/></TextBlock>
-            				</StackPanel>
+            		<StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0">
+            			<Button x:Name="FillupLink" Padding="0" BorderThickness="0" Foreground="White" BorderBrush="Transparent" Width="145" Click="FillupLink_Click" Height="145" d:LayoutOverrides="Height" VerticalAlignment="Center">
+            				<Canvas Height="125" Width="125">
+            					<toolkit:HubTile IsFrozen="True" VerticalAlignment="Top" DisplayNotification="True" HorizontalAlignment="Left" Height="125" Width="125" Background="#FF00C161" />
+            					<Image Height="63" Width="109" Source="Images/fill_up.png" Canvas.Left="8" Canvas.Top="8"/>
+            					<TextBlock TextWrapping="Wrap" Text="fill-up" Canvas.Left="8" Canvas.Top="95" RenderTransformOrigin="0.489,0.486" Foreground="White" FontSize="18.667"/>
+            				</Canvas>
             			</Button>
-            			<Button x:Name="GasStationLink" BorderBrush="Transparent" Background="#FF00C161" Width="135" FontSize="24" Height="135" Margin="0" BorderThickness="0">
-            				<StackPanel Width="92" Height="94">
-            					<Image Height="48" Source="Images/icon_fuel_indicator.png" Stretch="Fill" Margin="0,0,8,0"/>
-            					<TextBlock TextWrapping="Wrap" FontSize="14.667" Height="46" Margin="0,0,11,0" Opacity="0.8"><Run Text="nearby "/><LineBreak/><Run Text="gas stations"/><LineBreak/><Run/></TextBlock>
-            				</StackPanel>
+            			<Button x:Name="GasStationLink" BorderBrush="Transparent" Background="#FF00C161" Width="145" FontSize="24" Height="145" Margin="0" BorderThickness="0" Click="GasStationLink_Click" Foreground="White" Padding="0">
+            				<Grid Height="121" Width="121" Background="#FF00C161">
+            					<Grid.RowDefinitions>
+            						<RowDefinition Height="0.554*"/>
+            						<RowDefinition Height="0.446*"/>
+            					</Grid.RowDefinitions>
+            					<Image Height="57" Source="Images/gas-2.png" Stretch="Fill" VerticalAlignment="Top" Margin="10,10,10,0"/>
+            					<TextBlock TextWrapping="Wrap" FontSize="17.333" Margin="10,0,10,10" Opacity="0.8" VerticalAlignment="Bottom" Grid.Row="1" d:LayoutOverrides="GridBox" Foreground="White"><Run Text="nearby "/><LineBreak/><Run Text="gas stations"/></TextBlock>
+            				</Grid>
             			</Button>
-            			<Button x:Name="LogbookLink" BorderBrush="Transparent" Background="#FF00C161" Width="135" Height="135" BorderThickness="0">
+            			<Button x:Name="LogbookLink" BorderBrush="Transparent" Background="#FF00C161" Width="145" Height="145" BorderThickness="0" Click="LogbookLink_Click">
             				<StackPanel Width="92" Height="94">
-            					<Image Height="48" Source="Images/icon_fuel_indicator.png" Stretch="Fill" Margin="0,0,8,0"/>
+            					<Image Height="48" Source="Images/logbook.png" Stretch="Fill" Margin="0,0,8,0"/>
             					<TextBlock TextWrapping="Wrap" FontSize="14.667" Height="46" Margin="0,0,11,0" Opacity="0.8" VerticalAlignment="Bottom"><Run Text="logbook"/><LineBreak/><Run/></TextBlock>
             				</StackPanel>
             			</Button>
@@ -84,38 +127,95 @@
             <!--Panorama item two-->
             <!--Use 'Orientation="Horizontal"' to enable a panel that lays out horizontally-->
             <controls:PanoramaItem Header="fill-up history">
-            	<StackPanel Height="498">
-            		<StackPanel.Background>
-            			<ImageBrush Stretch="Fill"/>
-            		</StackPanel.Background>
-            		<Grid Height="71" Background="#C8E7793C">
-            			<Grid.RowDefinitions>
-            				<RowDefinition Height="0.592*"/>
-            				<RowDefinition Height="0.408*"/>
-            			</Grid.RowDefinitions>
-            			<Grid.ColumnDefinitions>
-            				<ColumnDefinition Width="0.148*"/>
-            				<ColumnDefinition Width="0.143*"/>
-            				<ColumnDefinition Width="0.26*"/>
-            				<ColumnDefinition Width="0.176*"/>
-            				<ColumnDefinition Width="0.274*"/>
-            			</Grid.ColumnDefinitions>
-            			<TextBlock x:Name="mpg_value" HorizontalAlignment="Right" Margin="8,0,0,0" TextWrapping="Wrap" Text="28" VerticalAlignment="Bottom" FontSize="32" Height="42" Width="52" TextAlignment="Right" FontWeight="Bold"/>
-            			<TextBlock x:Name="mpg_label" Grid.Column="1" Margin="5,8,4,0" TextWrapping="Wrap" Text="mpg" VerticalAlignment="Bottom" FontSize="16"/>
-            			<TextBlock x:Name="price_value" HorizontalAlignment="Right" TextWrapping="Wrap" Text="$4.07" VerticalAlignment="Bottom" FontSize="32" Height="42" Grid.Column="2" Width="109" TextAlignment="Right" FontWeight="Bold"/>
-            			<TextBlock x:Name="price_label" Grid.Column="3" Margin="5,0,0,0" TextWrapping="Wrap" Text="regular" FontSize="16" VerticalAlignment="Bottom"/>
-            			<TextBlock x:Name="date" HorizontalAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="21.333" Height="42" Grid.Column="4" Width="81" TextAlignment="Right" Margin="0,0,5,0"><Run FontSize="14.667" Text="23 - Nov"/><LineBreak/><Run FontSize="13.333" Text="2011"/><LineBreak/><Run/></TextBlock>
-            			<TextBlock x:Name="odo_value" HorizontalAlignment="Right" TextWrapping="Wrap" Text="119,321" VerticalAlignment="Bottom" FontSize="16" Height="29" Width="60" TextAlignment="Right" Grid.Row="1" FontWeight="Bold"/>
-            			<TextBlock x:Name="odo_label" Grid.Column="1" Margin="5,0,4,-1" TextWrapping="Wrap" Text="miles" FontSize="16" d:LayoutOverrides="VerticalAlignment" Grid.Row="1"/>
-            			<TextBlock x:Name="vol_value" HorizontalAlignment="Right" TextWrapping="Wrap" Text="10.00" VerticalAlignment="Bottom" FontSize="16" Height="29" Width="60" TextAlignment="Right" Grid.Row="1" FontWeight="Bold" Grid.Column="2"/>
-            			<TextBlock x:Name="vol_label" Grid.Column="3" Margin="5,0,4,-1" TextWrapping="Wrap" Text="gallons" FontSize="16" Grid.Row="1" d:LayoutOverrides="VerticalAlignment"/>
-            		</Grid>
-            		<Grid Height="71" Background="#96E7793C"/>
-            	</StackPanel>
+            	<ScrollViewer Margin="0,-21,0,0">
+            		<ListBox x:Name="FillupList" ItemsSource="{Binding FillupHistory}" ItemTemplate="{StaticResource FillupListItemTemplate}"/>
+            	</ScrollViewer>
                 <!--Double line list with image placeholder and text wrapping-->
             </controls:PanoramaItem>
             <controls:PanoramaItem Header="road alerts">
-                <TextBlock x:Name="VehicleName" TextWrapping="Wrap" Height="43"  Text="{Binding Name, Mode=OneWay}" FontSize="32" />
+                <StackPanel Margin="0,-21,0,0">
+                	<Grid Height="63" Background="Black" Margin="0,0,0,4">
+                		<Grid.RowDefinitions>
+                			<RowDefinition Height="0.413*"/>
+                			<RowDefinition Height="0.587*"/>
+                		</Grid.RowDefinitions>
+                		<Grid.ColumnDefinitions>
+                			<ColumnDefinition Width="0.112*"/>
+                			<ColumnDefinition Width="0.826*"/>
+                			<ColumnDefinition Width="0.062*"/>
+                		</Grid.ColumnDefinitions>
+                		<TextBlock TextWrapping="Wrap" Grid.Column="1" d:LayoutOverrides="HorizontalAlignment" Text="closed for the season" VerticalAlignment="Bottom" Margin="10,0,0,0"/>
+                		<Button Content="m&#xd;&#xa;a&#xd;&#xa;p" Grid.Column="2" d:LayoutOverrides="HorizontalAlignment" Background="#FF4B4949" Foreground="#FF252525" Grid.RowSpan="2" Padding="0" BorderThickness="0" FontSize="16" UseLayoutRounding="True" Margin="-12"/>
+                		<TextBlock TextWrapping="Wrap" Grid.Column="1" VerticalAlignment="Bottom" d:LayoutOverrides="HorizontalAlignment, GridBox" Grid.Row="1" Height="37" FontSize="12" Text="US 34 Eastbound / Westbound Trail Ridge Road Colorado River Trailhead Many Marks Curve" Margin="10,0"/>
+                		<Rectangle Fill="#FFF1162A" HorizontalAlignment="Right" Grid.Row="1" Stroke="Black" Width="6"/>
+                		<Image Margin="8,4,11,4" Grid.Row="1" Source="Images/circle_minus.png" Stretch="Fill"/>
+                	</Grid>
+                	<Grid Height="63" Background="Black" Margin="0,0,0,4">
+                		<Grid.RowDefinitions>
+                			<RowDefinition Height="0.413*"/>
+                			<RowDefinition Height="0.587*"/>
+                		</Grid.RowDefinitions>
+                		<Grid.ColumnDefinitions>
+                			<ColumnDefinition Width="0.112*"/>
+                			<ColumnDefinition Width="0.826*"/>
+                			<ColumnDefinition Width="0.062*"/>
+                		</Grid.ColumnDefinitions>
+                		<TextBlock TextWrapping="Wrap" Grid.Column="1" d:LayoutOverrides="HorizontalAlignment" Text="closed for the season" VerticalAlignment="Bottom" Margin="10,0,0,0"/>
+                		<Button Content="m&#xa;a&#xa;p" Grid.Column="2" d:LayoutOverrides="HorizontalAlignment" Background="#FF4B4949" Foreground="#FF252525" Grid.RowSpan="2" Padding="0" BorderThickness="0" FontSize="16" UseLayoutRounding="True" Margin="-12"/>
+                		<TextBlock TextWrapping="Wrap" Grid.Column="1" VerticalAlignment="Bottom" d:LayoutOverrides="HorizontalAlignment, GridBox" Grid.Row="1" Height="37" FontSize="12" Text="US 34 Eastbound / Westbound Trail Ridge Road Colorado River Trailhead Many Marks Curve" Margin="10,0"/>
+                		<Rectangle Fill="#FFF1162A" HorizontalAlignment="Right" Grid.Row="1" Stroke="Black" Width="6"/>
+                		<Image Margin="8,4,11,4" Grid.Row="1" Source="Images/circle_minus.png" Stretch="Fill"/>
+                	</Grid>
+                	<Grid Height="63" Background="Black" Margin="0,0,0,4">
+                		<Grid.RowDefinitions>
+                			<RowDefinition Height="0.413*"/>
+                			<RowDefinition Height="0.587*"/>
+                		</Grid.RowDefinitions>
+                		<Grid.ColumnDefinitions>
+                			<ColumnDefinition Width="0.112*"/>
+                			<ColumnDefinition Width="0.826*"/>
+                			<ColumnDefinition Width="0.062*"/>
+                		</Grid.ColumnDefinitions>
+                		<TextBlock TextWrapping="Wrap" Grid.Column="1" d:LayoutOverrides="HorizontalAlignment" Text="bridge construction" VerticalAlignment="Bottom" Margin="10,0,0,0"/>
+                		<Button Content="m&#xa;a&#xa;p" Grid.Column="2" d:LayoutOverrides="HorizontalAlignment" Background="#FF4B4949" Foreground="#FF252525" Grid.RowSpan="2" Padding="0" BorderThickness="0" FontSize="16" UseLayoutRounding="True" Margin="-12"/>
+                		<TextBlock TextWrapping="Wrap" Grid.Column="1" VerticalAlignment="Bottom" d:LayoutOverrides="HorizontalAlignment, GridBox" Grid.Row="1" Height="37" FontSize="12" Text="US 34 Eastbound / Westbound Trail Ridge Road Colorado River Trailhead Many Marks Curve" Margin="10,0"/>
+                		<Image Margin="8,4,11,4" Grid.Row="1" Source="Images/circle_download.png" Stretch="Fill"/>
+                		<Rectangle Fill="#FFF1D516" HorizontalAlignment="Right" Grid.Row="1" Stroke="Black" Width="6"/>
+                		<Image Margin="8,4,11,4" Grid.Row="1" Source="Images/circle_download.png" Stretch="Fill"/>
+                	</Grid>
+                	<Grid Height="63" Background="Black" Margin="0,0,0,4">
+                		<Grid.RowDefinitions>
+                			<RowDefinition Height="0.413*"/>
+                			<RowDefinition Height="0.587*"/>
+                		</Grid.RowDefinitions>
+                		<Grid.ColumnDefinitions>
+                			<ColumnDefinition Width="0.112*"/>
+                			<ColumnDefinition Width="0.826*"/>
+                			<ColumnDefinition Width="0.062*"/>
+                		</Grid.ColumnDefinitions>
+                		<TextBlock TextWrapping="Wrap" Grid.Column="1" d:LayoutOverrides="HorizontalAlignment" Text="road construction" VerticalAlignment="Bottom" Margin="10,0,0,0"/>
+                		<Button Content="m&#xa;a&#xa;p" Grid.Column="2" d:LayoutOverrides="HorizontalAlignment" Background="#FF4B4949" Foreground="#FF252525" Grid.RowSpan="2" Padding="0" BorderThickness="0" FontSize="16" UseLayoutRounding="True" Margin="-12"/>
+                		<TextBlock TextWrapping="Wrap" Grid.Column="1" VerticalAlignment="Bottom" d:LayoutOverrides="HorizontalAlignment, GridBox" Grid.Row="1" Height="37" FontSize="12" Text="US 34 Eastbound / Westbound Trail Ridge Road Colorado River Trailhead Many Marks Curve" Margin="10,0"/>
+                		<Rectangle Fill="#FFF1162A" HorizontalAlignment="Right" Grid.Row="1" Stroke="Black" Width="6"/>
+                		<Image Margin="8,4,11,4" Grid.Row="1" Source="Images/circle_download.png" Stretch="Fill"/>
+                	</Grid>
+                	<Grid Height="63" Background="Black" Margin="0,0,0,4">
+                		<Grid.RowDefinitions>
+                			<RowDefinition Height="0.413*"/>
+                			<RowDefinition Height="0.587*"/>
+                		</Grid.RowDefinitions>
+                		<Grid.ColumnDefinitions>
+                			<ColumnDefinition Width="0.112*"/>
+                			<ColumnDefinition Width="0.826*"/>
+                			<ColumnDefinition Width="0.062*"/>
+                		</Grid.ColumnDefinitions>
+                		<TextBlock TextWrapping="Wrap" Grid.Column="1" d:LayoutOverrides="HorizontalAlignment" Text="road re-opened" VerticalAlignment="Bottom" Margin="10,0,0,0"/>
+                		<Button Content="m&#xa;a&#xa;p" Grid.Column="2" d:LayoutOverrides="HorizontalAlignment" Background="#FF4B4949" Foreground="#FF252525" Grid.RowSpan="2" Padding="0" BorderThickness="0" FontSize="16" UseLayoutRounding="True" Margin="-12"/>
+                		<TextBlock TextWrapping="Wrap" Grid.Column="1" VerticalAlignment="Bottom" d:LayoutOverrides="HorizontalAlignment, GridBox" Grid.Row="1" Height="37" FontSize="12" Text="US 34 Eastbound / Westbound Trail Ridge Road Colorado River Trailhead Many Marks Curve" Margin="10,0"/>
+                		<Rectangle Fill="#FF00C161" HorizontalAlignment="Right" Grid.Row="1" Stroke="Black" Width="6"/>
+                		<Image Margin="8,4,11,4" Grid.Row="1" Source="Images/circle_fav.png" Stretch="Fill"/>
+                	</Grid>
+                </StackPanel>
             </controls:PanoramaItem>
         </controls:Panorama>
     </Grid>
