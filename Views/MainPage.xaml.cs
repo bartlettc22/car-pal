@@ -15,30 +15,38 @@ using System.Windows.Navigation;
 using System.Windows.Controls.Primitives;
 using System.IO.IsolatedStorage;
 using Microsoft.Phone.Shell;
+using System.ComponentModel;
 
 namespace car_pal
 {
     public partial class MainPage : PhoneApplicationPage
-    {
+    {   
 
         bool _fillupAlt = false;
 
-        // Constructor
         public MainPage()
         {
             InitializeComponent();
 
-            // Set the page DataContext property to the ViewModel.
+            // Set the page DataContext property to the Main ViewModel.
             DataContext = App.ViewModel;
 
-            // Keep the splash screen up for a bit
-            //System.Threading.Thread.Sleep(2000);
+            // Notify us when the fillup history changes so we can update the UI alternating colors
+            //App.ViewModel.PropertyChanged += UpdateFillupHistoryVisual;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
+            // Reset alternating fillup colors
+            _fillupAlt = false;
+
+            Loaded += new RoutedEventHandler(OnLoaded);
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
             ShellTile TileFindFillup = ShellTile.ActiveTiles.FirstOrDefault(x => x.NavigationUri.ToString().Contains("FillupPage"));
             ShellTile TileFindStation = ShellTile.ActiveTiles.FirstOrDefault(x => x.NavigationUri.ToString().Contains("StationPage"));
             ShellTile TileFindLogbook = ShellTile.ActiveTiles.FirstOrDefault(x => x.NavigationUri.ToString().Contains("LogbookPage"));
@@ -57,7 +65,6 @@ namespace car_pal
 
             if (App.ViewModel.AllVehicles.Count > 0)
             {
-                //DataContext = DataStore.Garage.DefaultVehicle;
                 Welcome_Panel.Visibility = Visibility.Collapsed;
                 DashboardVehicleNameDisplay.Visibility = Visibility.Visible;
                 Dashboard_Panel.Visibility = Visibility.Visible;
@@ -70,71 +77,6 @@ namespace car_pal
                 FillupVehicleNameDisplay.Visibility = Visibility.Collapsed;
                 Welcome_Panel.Visibility = Visibility.Visible;
             }
-
-            /*GarageModel garage = DataStore.Garage;
-            _fillupAlt = false;
-            if (garage.GarageSize > 0)
-            {
-                DataContext = DataStore.Garage.DefaultVehicle;
-                Welcome_Panel.Visibility = Visibility.Collapsed;
-                Dashboard_Panel.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                Dashboard_Panel.Visibility = Visibility.Collapsed;
-                Welcome_Panel.Visibility = Visibility.Visible;
-            }
-
-            // Initialize the page state only if it is not already initialized,
-            // and not when the application was deactivated but not tombstoned (returning from being dormant).
-            if (DataContext == null)
-            {
-                //InitializePageState();
-            }*/
-        }
-
-        private void InitializePageState()
-        {
-
-        }
-
-        void Garage_DefaultVehicleChanged(object sender, EventArgs e)
-        {
-            //DataContext = DataStore.Garage.DefaultVehicle;
-        }
-
-        private void FillupLink_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-        	NavigationService.Navigate(new Uri("//Views/FillupPage.xaml", UriKind.Relative));
-        }
-
-        private void GarageAppBarButton_Click(object sender, System.EventArgs e)
-        {
-		    NavigationService.Navigate(new Uri("//Views/GaragePage.xaml", UriKind.Relative));
-			
-			/*
-			// Create a popup.
-			Popup p = new Popup();
-		
-			// Set the Child property of Popup to an instance of MyControl.
-			p.Child = new VehicleSelectionPopup();
-		
-			// Set where the popup will show up on the screen.
-			p.VerticalOffset = 200;
-			p.HorizontalOffset = 200;
-		
-			// Open the popup.
-			p.IsOpen = true; */
-        }
-
-        private void GasStationLink_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Uri("//Views/StationPage.xaml", UriKind.Relative));
-        }
-
-        private void LogbookLink_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-        	NavigationService.Navigate(new Uri("//Views/LogbookPage.xaml", UriKind.Relative));
         }
 
         private void PinTile_Click(object sender, System.EventArgs e)
@@ -147,10 +89,10 @@ namespace car_pal
                 {
                     StandardTileData NewTileData = new StandardTileData
                     {
-                        BackgroundImage = new Uri("/Images/TileFillupBackground.png", UriKind.Relative),
+                        BackgroundImage = new Uri("/Images/PinnedTileFillupBg.png", UriKind.Relative),
                         Title = "Fill-up",
                         BackTitle = "car-pal+",
-                        BackBackgroundImage = new Uri("/Images/TileFillupBackground.png", UriKind.Relative)
+                        BackBackgroundImage = new Uri("/Images/PinnedTileFillupBg.png", UriKind.Relative)
                     };
 
                     ShellTile.Create(new Uri("/Views/FillupPage.xaml", UriKind.Relative), NewTileData);
@@ -168,10 +110,10 @@ namespace car_pal
                 {
                     StandardTileData NewTileData = new StandardTileData
                     {
-                        BackgroundImage = new Uri("/Images/TileStationBackground.png", UriKind.Relative),
+                        BackgroundImage = new Uri("/Images/PinnedTileStationBg.png", UriKind.Relative),
                         Title = "Find Gas Station",
                         BackTitle = "car-pal+",
-                        BackBackgroundImage = new Uri("/Images/TileStationBackground.png", UriKind.Relative)
+                        BackBackgroundImage = new Uri("/Images/PinnedTileStationBg.png", UriKind.Relative)
                     };
 
                     ShellTile.Create(new Uri("/Views/StationPage.xaml", UriKind.Relative), NewTileData);
@@ -189,10 +131,10 @@ namespace car_pal
                 {
                     StandardTileData NewTileData = new StandardTileData
                     {
-                        BackgroundImage = new Uri("/Images/TileLogbookBackground.png", UriKind.Relative),
+                        BackgroundImage = new Uri("/Images/PinnedTileLogbookBg.png", UriKind.Relative),
                         Title = "Logbook",
                         BackTitle = "car-pal+",
-                        BackBackgroundImage = new Uri("/Images/TileLogbookBackground.png", UriKind.Relative)
+                        BackBackgroundImage = new Uri("/Images/PinnedTileLogbookBg.png", UriKind.Relative)
                     };
 
                     ShellTile.Create(new Uri("/Views/LogbookPage.xaml", UriKind.Relative), NewTileData);
@@ -205,31 +147,64 @@ namespace car_pal
             }
         }
 
-        private void HistoryItem_Loaded(object sender, RoutedEventArgs e)
+        private void HistoryItem_Loaded(object sender, RoutedEventArgs arg)
         {
 
             Grid ItemRef = sender as Grid;    
 
-            //SolidColorBrush brush1 = new SolidColorBrush(Color.FromArgb(200,221,121,100));
-
             if (_fillupAlt)
             {
-                ItemRef.Background.Opacity -= 0.2;
+                //ItemRef.Background.Opacity -= 0.2;
+                ItemRef.Background = new SolidColorBrush(Color.FromArgb(145, 231, 121, 54));
+            }
+            else
+            {
+                ItemRef.Background = new SolidColorBrush(Color.FromArgb(200, 231, 121, 54));
             }
 
             _fillupAlt = !_fillupAlt;
         }
 
-        private void SettingsBarMenuItem_Click(object sender, System.EventArgs e)
-        {
-        	NavigationService.Navigate(new Uri("//Views/SettingsPage.xaml", UriKind.Relative));
-        }
-
         private void FillupList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            FillupModel fillup = (sender as Button).DataContext as FillupModel;
-            NavigationService.Navigate(new Uri(string.Format("//Views/FillupPage.xaml?fillupId={0}", 
-                Uri.EscapeUriString(fillup.FillupId.ToString())), UriKind.Relative));
+            FillupModel fillup = (sender as ListBox).SelectedItem as FillupModel;
+            if (fillup != null)
+            {
+                // unset the selection and bring user to edit fillup
+                (sender as ListBox).SelectedItem = null;
+                NavigationService.Navigate(new Uri(string.Format("//Views/FillupPage.xaml?fillupId={0}",
+                    Uri.EscapeUriString(fillup.FillupId.ToString())), UriKind.Relative));
+            }
+        }
+
+        private void FillupLink_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("//Views/FillupPage.xaml", UriKind.Relative));
+        }
+
+        private void GasStationLink_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("//Views/StationPage.xaml", UriKind.Relative));
+        }
+
+        private void LogbookLink_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("//Views/LogbookPage.xaml", UriKind.Relative));
+        }
+
+        private void WelcomeAddVehicleButton_Click(object sender, RoutedEventArgs e)
+        {
+        	NavigationService.Navigate(new Uri("//Views/EditVehicle.xaml", UriKind.Relative));
+        }
+
+        private void GarageAppBarButton_Click(object sender, System.EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("//Views/GaragePage.xaml", UriKind.Relative));
+        }
+
+        private void SettingsBarMenuItem_Click(object sender, System.EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("//Views/SettingsPage.xaml", UriKind.Relative));
         }
     }
 }

@@ -32,16 +32,17 @@ namespace car_pal.Views
         double _currentLatitude;
         double _currentLongitude;
         GeoCoordinate _currentLocation;
-        StationItemViewModel _currentlySelectedItem;
+        //StationItemViewModel _currentlySelectedItem;
+        ListBoxItem _currentlySelectedItem;
 
         public StationPage()
         {
             InitializeComponent();
 
-            Loaded += new RoutedEventHandler(InitializePage);
+            Loaded += new RoutedEventHandler(OnLoaded);
         }
 
-        private void InitializePage(object sender, RoutedEventArgs e)
+        private void OnLoaded(object sender, RoutedEventArgs e)
         {
             refresh();
         }
@@ -318,17 +319,29 @@ namespace car_pal.Views
         private void SearchResults_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             StationItemViewModel station = (sender as ListBox).SelectedItem as StationItemViewModel;
+            //ListBoxItem Item = (sender as ListBox).SelectedItem as ListBoxItem;
+
             if (station != null)
             {
                 if (_currentlySelectedItem != null)
                 {
-                    _currentlySelectedItem.TitleColor = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
+                    //_currentlySelectedItem.TitleColor = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
+                    //_currentlySelectedItem.Title
+                    //Item.BorderThickness = new Thickness(0,0,0,0);
+                    //Item.BorderBrush = new SolidColorBrush();
                 }
-                station.TitleColor = new SolidColorBrush(Color.FromArgb(0xFF, 0x64, 0x3C, 0x77));
-                _currentlySelectedItem = station;
+                //station.TitleColor = new SolidColorBrush(Color.FromArgb(0xFF, 0x64, 0x3C, 0x77));
+                //Item.BorderThickness = new Thickness(2, 2, 2, 2);
+                //Item.BorderBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x64, 0x3C, 0x77));
+                //_currentlySelectedItem = Item;
 
                 miniMap.SetView(station.Coordinates, 16);
             }
+        }
+
+        private void SettingsBarMenuItem_Click(object sender, System.EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("//Views/SettingsPage.xaml", UriKind.Relative));
         }
     }
 }

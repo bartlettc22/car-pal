@@ -19,14 +19,30 @@
 		<DataTemplate x:Key="DataTemplate1">
 			<StackPanel x:Name="MasterStack" Orientation="Horizontal" Margin="0,0,0,15">
 				<Canvas Width="30">
-					<Image x:Name="MapMarker" Source="/car_pal;component/Images/MapPin.png" Canvas.Top="8" Height="54" Width="28"/>
+					<Image x:Name="MapMarker" Source="/car_pal;component/Images/MapPinLarge.png" Canvas.Top="8" Height="54" Width="28"/>
 					<TextBlock x:Name="PinIndicator" TextWrapping="Wrap" Text="{Binding ItemNumber, FallbackValue=10}" Width="28" TextAlignment="Center" FontSize="21.333" Height="31" Canvas.Top="6" Padding="0,0,0,4" Foreground="White"/>
 				</Canvas>
 				<StackPanel x:Name="StationTextStack" Margin="10,0,0,0">
-					<TextBlock x:Name="StationName" Margin="0" TextWrapping="Wrap" Text="{Binding Title, FallbackValue=Conoco}" FontSize="24" Foreground="{Binding TitleColor, FallbackValue=#FFFFFFFF}"/>
-					<TextBlock x:Name="Address" Margin="0" TextWrapping="Wrap" FontSize="18.667" Text="{Binding Address, FallbackValue=1234 S. Broadway St.\, Denver\, CO}" Foreground="White"/>
-					<TextBlock x:Name="Phone" Margin="0" TextWrapping="Wrap" FontSize="18.667" Text="{Binding PhoneNumber, FallbackValue=(303) 555 - 5555}" Foreground="White"/>
-					<TextBlock x:Name="Distance" Margin="0" TextWrapping="Wrap" FontSize="18.667" Text="{Binding Distance, FallbackValue=2.40 mi.}" Foreground="White"/>
+					<TextBlock x:Name="StationName" Margin="0" TextWrapping="Wrap" Text="{Binding Title, FallbackValue=Conoco}" FontSize="24">
+						<TextBlock.Foreground>
+							<SolidColorBrush Color="{StaticResource PhoneForegroundColor}"/>
+						</TextBlock.Foreground>
+					</TextBlock>
+					<TextBlock x:Name="Address" Margin="0" TextWrapping="Wrap" FontSize="18.667" Text="{Binding Address, FallbackValue=1234 S. Broadway St.\, Denver\, CO}">
+						<TextBlock.Foreground>
+							<SolidColorBrush Color="{StaticResource PhoneForegroundColor}"/>
+						</TextBlock.Foreground>
+					</TextBlock>
+					<TextBlock x:Name="Phone" Margin="0" TextWrapping="Wrap" FontSize="18.667" Text="{Binding PhoneNumber, FallbackValue=(303) 555 - 5555}">
+						<TextBlock.Foreground>
+							<SolidColorBrush Color="{StaticResource PhoneForegroundColor}"/>
+						</TextBlock.Foreground>
+					</TextBlock>
+					<TextBlock x:Name="Distance" Margin="0" TextWrapping="Wrap" FontSize="18.667" Text="{Binding Distance, FallbackValue=2.40 mi.}">
+						<TextBlock.Foreground>
+							<SolidColorBrush Color="{StaticResource PhoneForegroundColor}"/>
+						</TextBlock.Foreground>
+					</TextBlock>
 				</StackPanel>
 			</StackPanel>
 		</DataTemplate>
@@ -55,6 +71,9 @@
 	</phone:PhoneApplicationPage.Foreground>
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar>
+			<shell:ApplicationBar.MenuItems>
+				<shell:ApplicationBarMenuItem x:Name="SettingsBarMenuItem" Text="settings" Click="SettingsBarMenuItem_Click"/>
+			</shell:ApplicationBar.MenuItems>
 			<shell:ApplicationBarIconButton x:Name="HomeAppBarButton" IconUri="/icons/appbar.home.png" Text="home" Click="HomeAppBarButton_Click"/>
 			<shell:ApplicationBarIconButton x:Name="RefreshButton" IconUri="/icons/appbar.refresh.rest.png" Text="refresh" Click="RefreshButton_Click"/>
 		</shell:ApplicationBar>

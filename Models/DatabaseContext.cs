@@ -16,7 +16,7 @@ namespace car_pal.Models
         // Pass the connection string to the base class.
         public DatabaseContext(string connectionString) : base(connectionString) 
         { 
-            PropertyChanged += delegate(object sender, PropertyChangedEventArgs arg) { Debug.WriteLine("DatabaseContext Property Changed!: " + arg.PropertyName); };
+            //PropertyChanged += delegate(object sender, PropertyChangedEventArgs arg) { Debug.WriteLine("DatabaseContext Property Changed!: " + arg.PropertyName); };
         }
 
         // DB table models
@@ -51,8 +51,7 @@ namespace car_pal.Models
                 new Action<FillupModel>(this.attach_Fillup),
                 new Action<FillupModel>(this.detach_Fillup)
                 );
-            _fillups.CollectionChanged += delegate { Debug.WriteLine("Fillups Changed!"); NotifyPropertyChanged("Fillups"); };
-            PropertyChanged += delegate(object sender, PropertyChangedEventArgs arg) { Debug.WriteLine("VehicleModel Property Changed!: " + arg.PropertyName); };
+            _fillups.CollectionChanged += delegate { NotifyPropertyChanged("Fillups"); };
         }
 
         // Define Vehicle ID: private field, public property and database column.
@@ -178,11 +177,6 @@ namespace car_pal.Models
     [Table]
     public class FillupModel : INotifyPropertyChanged, INotifyPropertyChanging
     {
-        public FillupModel()
-        {
-            PropertyChanged += delegate(object sender, PropertyChangedEventArgs arg) { Debug.WriteLine("FillupModel Property Changed!: " + arg.PropertyName); };
-        }
-
         private double _fillupMPG;
         public double FillupMPG
         {

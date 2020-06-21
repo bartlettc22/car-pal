@@ -45,7 +45,7 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-        	<StackPanel>
+        	<StackPanel Margin="9,0,0,0">
         		<StackPanel x:Name="VehicleEditContainer" Orientation="Horizontal" Margin="0,0,0,10" Visibility="Collapsed">
         			<TextBlock x:Name="VehicleEditLabel" Margin="0" TextWrapping="Wrap" Text="Editing Vehicle: " FontFamily="Segoe WP Light" FontSize="24"/>
         			<Border BorderBrush="#FF37892C" BorderThickness="0">
@@ -66,7 +66,11 @@
         				<ColumnDefinition Width="0.596*"/>
         			</Grid.ColumnDefinitions>
         			<TextBlock x:Name="VehicleNameLabel" Margin="0,0,8,8" TextWrapping="Wrap" Text="Vehicle Name" Height="32" TextAlignment="Right" FontSize="26.667"/>
-        			<TextBox x:Name="VehicleNameInput" Grid.Column="1" TextWrapping="Wrap" Height="90" FontSize="40" BorderThickness="0" TextAlignment="Right" Text="{Binding Name, Mode=TwoWay}" Margin="0,-1,0,1" InputScope="Text" MaxLength="14" />
+        			<TextBox x:Name="VehicleNameInput" Grid.Column="1" TextWrapping="Wrap" Height="90" FontSize="40" BorderThickness="2" TextAlignment="Right" Margin="0,-1,0,1" InputScope="Text" MaxLength="14" >
+        				<TextBox.BorderBrush>
+        					<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
+        				</TextBox.BorderBrush>
+        			</TextBox>
         			<StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" d:LayoutOverrides="GridBox" HorizontalAlignment="Center">
         				<Button x:Name="VehicleSaveButton" Content="Save" Click="VehicleSave_Click" Height="81" Margin="0"/>
         				<Button x:Name="VehicleCancelButton" Content="Cancel" Click="VehicleCancel_Click" Height="81" Margin="0"/>

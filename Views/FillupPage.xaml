@@ -53,14 +53,15 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
             <TextBlock x:Name="ApplicationTitle" Text="FILL-UP" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock x:Name="PageTitle" Text="add fill-up" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock x:Name="PageTitle_Add" Text="add fill-up" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock x:Name="PageTitle_Edit" Text="edit fill-up" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}" Visibility="Collapsed"/>
         </StackPanel>
         <StackPanel x:Name="ContentPanel" Margin="12,0,12,0" Grid.Row="1" >
-        	<StackPanel x:Name="Welcome_Panel" Margin="0,0,9,0" Visibility="Collapsed">
+        	<StackPanel x:Name="Welcome_Panel" Margin="9,0" Visibility="Collapsed">
         		<TextBlock x:Name="Welcome_Message" TextWrapping="Wrap" Text="Welcome!" FontSize="48" Foreground="Silver" FontFamily="Segoe WP Light"/>
         		<TextBlock TextWrapping="Wrap" Margin="0,20,0,0" FontSize="26.667" FontFamily="Segoe WP Light" Foreground="Silver" Text="To start tracking your fill-up history, click on the garage icon below and add a new vehicle."/>
         	</StackPanel>
-        	<StackPanel x:Name="Form_Panel" Margin="0,0,9,0">
+        	<StackPanel x:Name="Form_Panel" Margin="9,0">
         		<StackPanel x:Name="VehicleNameContainer" Orientation="Horizontal">
         			<TextBlock x:Name="VehicleNameLabel" TextWrapping="Wrap" Text="Filling Up: " FontSize="24" FontFamily="Segoe WP Light"/>
         			<TextBlock x:Name="VehicleName" TextWrapping="Wrap"  Text="{Binding DefaultVehicle.VehicleName}" FontSize="24" >
@@ -69,32 +70,56 @@
         				</TextBlock.Foreground>
         			</TextBlock>
         		</StackPanel>
-        		<Grid Margin="0,15,0,0">
-        			<Grid.RowDefinitions>
-        				<RowDefinition Height="Auto" MinHeight="72"/>
-        				<RowDefinition Height="Auto" MinHeight="90"/>
-        				<RowDefinition Height="Auto" MinHeight="90"/>
-        				<RowDefinition Height="Auto" MinHeight="90"/>
-        				<RowDefinition Height="Auto" MinHeight="81"/>
-        			</Grid.RowDefinitions>
-        			<Grid.ColumnDefinitions>
-        				<ColumnDefinition Width="0.327*"/>
-        				<ColumnDefinition Width="0.673*"/>
-        			</Grid.ColumnDefinitions>
-        			<toolkit:DatePicker x:Name="FillupDate" Grid.Column="1" FontSize="26.667" HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" Margin="0,0,143,0" VerticalAlignment="Bottom"/>
-        			<toolkit:TimePicker x:Name="FillupTime" Grid.Column="1" Margin="148,0,0,0" VerticalAlignment="Bottom"/>
-        			<TextBlock x:Name="FillupDateLabel" Margin="0,0,8,8" TextWrapping="Wrap" Text="Date/Time of Fillup" VerticalAlignment="Bottom" TextAlignment="Right" FontSize="26.667"/>
-        			<TextBlock x:Name="FillupPriceLabel" Margin="8,0,8,8" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Bottom" TextAlignment="Right" FontSize="26.667" Text="Price (per Gal.)"/>
-        			<TextBox x:Name="FillupPriceInput" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" d:LayoutOverrides="VerticalAlignment" FontSize="40" BorderThickness="0" TextAlignment="Right" Height="90" InputScope="Number" LostFocus="FillupPriceInput_LostFocus"/>
-        			<TextBlock x:Name="FillupVolLabel" Margin="0,0,8,8" Grid.Row="2" TextWrapping="Wrap" Text="Volume (Gal.)" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="128" TextAlignment="Right" FontSize="26.667"/>
-        			<TextBox x:Name="FillupVolInput" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" Height="90" TextAlignment="Right" FontSize="40" BorderThickness="0" InputScope="Number"/>
-        			<TextBlock x:Name="FillupOdoLabel" Margin="0,0,8,8" Grid.Row="3" TextWrapping="Wrap" Text="Odometer (miles)" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="128" TextAlignment="Right" FontSize="26.667"/>
-        			<TextBox x:Name="FillupOdoInput" Grid.Column="1" Grid.Row="3" TextWrapping="Wrap" Height="90" InputScope="Number" TextAlignment="Right" BorderThickness="0" FontSize="40"/>
-        			<StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" d:LayoutOverrides="GridBox" HorizontalAlignment="Center">
-        				<Button x:Name="FillupSaveButton" Content="Save" Click="fillup_save_Click" Height="81" Margin="0"/>
-        				<Button x:Name="FillupCancelButton" Content="Cancel" Click="fillup_cancel_Click" Height="81" Margin="0"/>
-        			</StackPanel>
-        		</Grid>
+        		<ScrollViewer x:Name="FormScroller" VerticalContentAlignment="Top">
+        			<Grid Margin="0,15,0,0" Width="447">
+        				<Grid.RowDefinitions>
+        					<RowDefinition Height="Auto" MinHeight="72"/>
+        					<RowDefinition Height="Auto" MinHeight="90"/>
+        					<RowDefinition Height="Auto" MinHeight="90"/>
+        					<RowDefinition Height="Auto" MinHeight="90"/>
+        					<RowDefinition Height="Auto" MinHeight="81"/>
+        				</Grid.RowDefinitions>
+        				<Grid.ColumnDefinitions>
+        					<ColumnDefinition Width="0.327*"/>
+        					<ColumnDefinition Width="0.673*"/>
+        				</Grid.ColumnDefinitions>
+        				<toolkit:DatePicker x:Name="FillupDate" Grid.Column="1" FontSize="26.667" HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" Margin="0,0,133,0" VerticalAlignment="Bottom" BorderThickness="2">
+        					<toolkit:DatePicker.BorderBrush>
+        						<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
+        					</toolkit:DatePicker.BorderBrush>
+        				</toolkit:DatePicker>
+        				<toolkit:TimePicker x:Name="FillupTime" Grid.Column="1" Margin="149,0,0,0" VerticalAlignment="Bottom" BorderThickness="2">
+        					<toolkit:TimePicker.BorderBrush>
+        						<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
+        					</toolkit:TimePicker.BorderBrush>
+        				</toolkit:TimePicker>
+        				<TextBlock x:Name="FillupDateLabel" Margin="0,0,8,8" TextWrapping="Wrap" Text="Date/Time of Fill-up" VerticalAlignment="Bottom" TextAlignment="Right" FontSize="24"/>
+        				<TextBlock x:Name="FillupPriceLabel" Margin="8,0,8,8" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Bottom" TextAlignment="Right" FontSize="24" Text="Price
+(per Gal.)"/>
+        				<TextBox x:Name="FillupPriceInput" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" d:LayoutOverrides="VerticalAlignment" FontSize="40" BorderThickness="2" TextAlignment="Right" Height="90" InputScope="Number">
+        					<TextBox.BorderBrush>
+        						<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
+        					</TextBox.BorderBrush>
+        				</TextBox>
+        				<TextBlock x:Name="FillupVolLabel" Margin="0,0,8,8" Grid.Row="2" TextWrapping="Wrap" Text="Volume (Gal.)" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="128" TextAlignment="Right" FontSize="24"/>
+        				<TextBox x:Name="FillupVolInput" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" Height="90" TextAlignment="Right" FontSize="40" BorderThickness="2" InputScope="Number">
+        					<TextBox.BorderBrush>
+        						<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
+        					</TextBox.BorderBrush>
+        				</TextBox>
+        				<TextBlock x:Name="FillupOdoLabel" Margin="0,0,8,8" Grid.Row="3" TextWrapping="Wrap" Text="Odometer (miles)" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="128" TextAlignment="Right" FontSize="24"/>
+        				<TextBox x:Name="FillupOdoInput" Grid.Column="1" Grid.Row="3" TextWrapping="Wrap" Height="90" InputScope="Number" TextAlignment="Right" BorderThickness="2" FontSize="40">
+        					<TextBox.BorderBrush>
+        						<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
+        					</TextBox.BorderBrush>
+        				</TextBox>
+        				<StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" d:LayoutOverrides="GridBox" HorizontalAlignment="Center">
+        					<Button x:Name="FillupSaveButton" Content="Save" Click="fillupSave_Click" Height="81" Margin="0"/>
+        					<Button x:Name="FillupDeleteButton" Content="Delete" Click="FillupDeleteButton_Click" Visibility="Collapsed"/>
+        					<Button x:Name="FillupCancelButton" Content="Cancel" Click="fillupCancel_Click" Height="81" Margin="0"/>
+        				</StackPanel>
+        			</Grid>
+        		</ScrollViewer>
         	</StackPanel>
         </StackPanel>
     </Grid>

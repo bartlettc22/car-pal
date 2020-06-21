@@ -25,7 +25,7 @@ namespace car_pal.ViewModel
         public MainViewModel()
         {
             _db = new DatabaseContext(DatabaseContext.DBConnectionString);
-            PropertyChanged += delegate(object sender, PropertyChangedEventArgs arg) { Debug.WriteLine("MainViewModel Property Changed!: "+arg.PropertyName); };
+            //PropertyChanged += delegate(object sender, PropertyChangedEventArgs arg) { Debug.WriteLine("MainViewModel Property Changed!: "+arg.PropertyName); };
         }
 
         // Vehicle List
@@ -209,6 +209,12 @@ namespace car_pal.ViewModel
         // Called when default vehicle is set, calculates MPGs and other stats
         public void calcDefault()
         {
+
+            OverallMPG = 0;
+            OverallCostMile = 0;
+            OverallMileFill = 0;
+            OverallDaysFill = 0;
+            
             FillupModel previousFillup = new FillupModel();
 
             DefaultFillups = new ObservableCollection<FillupModel>();
@@ -272,6 +278,7 @@ namespace car_pal.ViewModel
             {
                 VehicleModel NewDefaultVehicle = AllVehicles.First(v => v.VehicleId != vehicle.VehicleId);
                 NewDefaultVehicle.IsDefaultVehicle = true;
+                DefaultVehicle = NewDefaultVehicle;
             }
 
             // Check if the vehicle has fillups and remove those
@@ -281,7 +288,6 @@ namespace car_pal.ViewModel
             }
 
             // Remove the vehicle from the "all" observable collection.
-            Debug.WriteLine("Removed Vehicle: (" + vehicle.VehicleId + ", \"" + vehicle.VehicleName + "\")");
             AllVehicles.Remove(vehicle);
             
             _db.Vehicles.DeleteOnSubmit(vehicle);
@@ -292,6 +298,21 @@ namespace car_pal.ViewModel
         public void AddFillup(FillupModel fillup)
         {
             App.ViewModel.DefaultVehicle.Fillups.Add(fillup);
+            App.ViewModel.SaveChangesToDB();
+            calcDefault();
+            NotifyPropertyChanged("DefaultVehicle");
+        }
+
+        public void EditFillup(FillupModel fillup)
+        {
+            App.ViewModel.SaveChangesToDB();
+            calcDefault();
+            NotifyPropertyChanged("DefaultVehicle");
+        }
+
+        public void DeleteFillup(FillupModel fillup)
+        {
+            _db.Fillups.DeleteOnSubmit(fillup);
             App.ViewModel.SaveChangesToDB();
             calcDefault();
             NotifyPropertyChanged("DefaultVehicle");

@@ -12,9 +12,9 @@
     xmlns:Microsoft_Phone_Controls_Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps" 
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" 
     x:Class="car_pal.MainPage" 
-    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
+    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
     SupportedOrientations="Portrait"  Orientation="Portrait"
-    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.IsVisible="False"
 	toolkit:TiltEffect.IsTiltEnabled="True">
 	<phone:PhoneApplicationPage.Resources>
 		<car_pal_Views_Converters:FormatDate x:Key="FormatDate"/>
@@ -24,24 +24,24 @@
 		<car_pal_Views_Converters:FormatTime x:Key="FormatTime"/>
 		<car_pal_Views_Converters:NumberToVisibilityConverter x:Key="NumberToVisibilityConverter"/>
 		<DataTemplate x:Key="FillupListItemTemplate">
-			<Grid Background="#C8E7793C" Height="71" Width="420" Margin="0,0,0,2" Loaded="HistoryItem_Loaded">
+			<Grid Background="#C7E7793C" Height="71" Width="420" Margin="0,0,0,2" Loaded="HistoryItem_Loaded">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="0.592*"/>
 					<RowDefinition Height="0.408*"/>
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="0.181*"/>
-					<ColumnDefinition Width="0.11*"/>
-					<ColumnDefinition Width="0.305*"/>
-					<ColumnDefinition Width="0.171*"/>
-					<ColumnDefinition Width="0.233*"/>
+					<ColumnDefinition Width="0.207*"/>
+					<ColumnDefinition Width="0.117*"/>
+					<ColumnDefinition Width="0.319*"/>
+					<ColumnDefinition Width="0.155*"/>
+					<ColumnDefinition Width="0.202*"/>
 				</Grid.ColumnDefinitions>
 				<TextBlock x:Name="mpg_value" HorizontalAlignment="Right" Margin="8,0,0,0" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="37.333" Height="42" Width="52" TextAlignment="Right" FontWeight="Bold" Text="{Binding FillupMPG, Converter={StaticResource FormatMPG}}" Foreground="White"/>
 				<TextBlock x:Name="mpg_label" Grid.Column="1" Margin="5,8,4,0" TextWrapping="Wrap" Text="mpg" VerticalAlignment="Bottom" FontSize="17.333" Foreground="White"/>
 				<TextBlock x:Name="price_value" TextWrapping="Wrap" Text="{Binding PriceReading, Converter={StaticResource FormatCurrency}}" VerticalAlignment="Bottom" FontSize="37.333" Grid.Column="2" TextAlignment="Right" FontWeight="Bold" Foreground="White" Height="42"/>
 				<TextBlock x:Name="price_label" Grid.Column="3" Margin="5,0,0,0" TextWrapping="Wrap" Text="regular" FontSize="17.333" VerticalAlignment="Bottom" Foreground="White"/>
 				<TextBlock x:Name="date" HorizontalAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="14.667" Height="42" Grid.Column="4" Width="81" TextAlignment="Right" Margin="0,0,5,0" Text="{Binding FillupDate, Converter={StaticResource FormatDate}}" Foreground="White" FontWeight="Bold"/>
-				<TextBlock x:Name="odo_value" HorizontalAlignment="Right" TextWrapping="Wrap" Text="{Binding OdoReading, Converter={StaticResource FormatNumber}}" VerticalAlignment="Bottom" FontSize="18.667" Height="29" Width="60" TextAlignment="Right" Grid.Row="1" FontWeight="Bold" Foreground="White"/>
+				<TextBlock x:Name="odo_value" HorizontalAlignment="Right" TextWrapping="Wrap" Text="{Binding OdoReading, Converter={StaticResource FormatNumber}}" VerticalAlignment="Bottom" FontSize="18.667" Height="29" Width="84" TextAlignment="Right" Grid.Row="1" FontWeight="Bold" Foreground="White"/>
 				<TextBlock x:Name="odo_label" Grid.Column="1" Margin="5,0,4,-1" TextWrapping="Wrap" Text="miles" FontSize="17.333" d:LayoutOverrides="VerticalAlignment" Grid.Row="1" Foreground="White"/>
 				<TextBlock x:Name="vol_value" TextWrapping="Wrap" Text="{Binding VolReading}" FontSize="18.667" TextAlignment="Right" Grid.Row="1" FontWeight="Bold" Grid.Column="2" Foreground="White"/>
 				<TextBlock x:Name="vol_label" Grid.Column="3" Margin="5,0,4,0" TextWrapping="Wrap" Text="gallons" FontSize="17.333" Grid.Row="1" d:LayoutOverrides="VerticalAlignment" Foreground="White"/>
@@ -76,15 +76,16 @@
         <!--Panorama control-->
         <controls:Panorama Title="car-pal+" Foreground="White">
             <controls:Panorama.Background>
-                <ImageBrush ImageSource="/car_pal;component/Images/background3.png"/>
+                <ImageBrush ImageSource="/car_pal;component/Images/PanoramaBackground.png"/>
             </controls:Panorama.Background>
  
             <!--Panorama item one-->
             <controls:PanoramaItem Header="dashboard">
             	<StackPanel Margin="0,-21,0,0">
-            		<StackPanel x:Name="Welcome_Panel" Height="291" Background="#BC3D3D3D" Visibility="Collapsed">
-            			<TextBlock Height="79" TextWrapping="Wrap" Margin="10,10,0,0" FontSize="37.333" FontFamily="Segoe WP Light"><Run Text="Welcome!"/><LineBreak/><Run/></TextBlock>
-            			<TextBlock TextWrapping="Wrap" Margin="10,0"><Run FontFamily="Segoe WP Light" Text="In order for us to help you keep track of your mileage history and maintenance log, pull up the application menu bar below and go to the garage to add a vehicle."/><LineBreak/><Run/></TextBlock>
+            		<StackPanel x:Name="Welcome_Panel" Height="330" Background="#BC3D3D3D" Visibility="Collapsed">
+            			<TextBlock Height="79" TextWrapping="Wrap" Margin="10,10,0,0" FontSize="37.333" FontFamily="Segoe WP Light" Text="Welcome to car-pal+!"/>
+            			<TextBlock TextWrapping="Wrap" Margin="10,0" FontSize="21.333"><Run FontFamily="Segoe WP Light" Text="In order for us to help you keep track of your mileage history and maintenance reminders, start by adding a new vehicle."/><LineBreak/><Run FontFamily="Segoe WP Light" Text="profile."/></TextBlock>
+            			<Button x:Name="WelcomeAddVehicleButton" Content="add vehicle" Width="200" Margin="0,20,0,0" BorderThickness="2" FontFamily="Segoe WP Light" BorderBrush="White" Foreground="White" Click="WelcomeAddVehicleButton_Click"/>
             		</StackPanel>
             		<StackPanel x:Name="DashboardVehicleNameDisplay" Orientation="Horizontal" Background="#BF000000">
             			<TextBlock TextWrapping="Wrap" Text="Vehicle:" VerticalAlignment="Top" Margin="10,2,5,2" Padding="0" FontSize="21.333" FontFamily="Segoe WP Light"/>
@@ -133,7 +134,7 @@
             						<RowDefinition/>
             						<RowDefinition Height="0.446*"/>
             					</Grid.RowDefinitions>
-            					<Image Source="/car_pal;component/Images/fill_up.png" Margin="10,10,10,0" VerticalAlignment="Top" Stretch="None"/>
+            					<Image Source="/car_pal;component/Images/HomeTileFillup.png" Margin="10,10,10,0" VerticalAlignment="Top" Stretch="None"/>
             					<TextBlock TextWrapping="Wrap" Text="fill-up" RenderTransformOrigin="0.489,0.486" Foreground="White" FontSize="18.667" Margin="10,0,10,10" VerticalAlignment="Bottom" d:LayoutOverrides="Width" Grid.Row="1" Opacity="0.8"/>
             				</Grid>
             			</Button>
@@ -148,8 +149,8 @@
             						<RowDefinition Height="0.554*"/>
             						<RowDefinition Height="0.446*"/>
             					</Grid.RowDefinitions>
-            					<Image Height="57" Source="/car_pal;component/Images/tile_gas_station.png" Stretch="None" VerticalAlignment="Top" Margin="10,10,10,0"/>
-            					<TextBlock TextWrapping="Wrap" FontSize="17.333" Margin="10,0,10,10" Opacity="0.8" VerticalAlignment="Bottom" Grid.Row="1" d:LayoutOverrides="GridBox" Foreground="White"><Run Text="nearby "/><LineBreak/><Run Text="gas stations"/></TextBlock>
+            					<Image Height="57" Source="/car_pal;component/Images/HomeTileStation.png" Stretch="None" VerticalAlignment="Top" Margin="10,10,10,0"/>
+            					<TextBlock TextWrapping="Wrap" FontSize="18.667" Margin="10,0,10,10" Opacity="0.8" VerticalAlignment="Bottom" Grid.Row="1" d:LayoutOverrides="GridBox" Foreground="White"><Run Text="nearby "/><LineBreak/><Run Text="gas stations"/></TextBlock>
             				</Grid>
             			</Button>
             			<Button x:Name="LogbookLink" BorderBrush="Transparent" Background="#FF00C161" Width="145" Height="145" BorderThickness="0" Click="LogbookLink_Click" Foreground="White" Padding="0">
@@ -163,8 +164,8 @@
             						<RowDefinition Height="0.573*"/>
             						<RowDefinition Height="0.446*"/>
             					</Grid.RowDefinitions>
-            					<Image Source="/car_pal;component/Images/logbook.png" Stretch="None" Margin="10,10,10,0" VerticalAlignment="Top"/>
-            					<TextBlock TextWrapping="Wrap" FontSize="14.667" Margin="10,0,10,10" Opacity="0.8" VerticalAlignment="Bottom" Grid.Row="1" Text="logbook" Foreground="White"/>
+            					<Image Source="/car_pal;component/Images/HomeTileLogbook.png" Stretch="None" Margin="10,10,10,0" VerticalAlignment="Top"/>
+            					<TextBlock TextWrapping="Wrap" FontSize="18.667" Margin="10,0,10,10" Opacity="0.8" VerticalAlignment="Bottom" Grid.Row="1" Text="logbook" Foreground="White"/>
             				</Grid>
             			</Button>
             		</StackPanel>
@@ -188,91 +189,6 @@
             		</ScrollViewer>
             	</StackPanel>
                 <!--Double line list with image placeholder and text wrapping-->
-            </controls:PanoramaItem>
-            <controls:PanoramaItem Header="road alerts" Visibility="Collapsed">
-                <StackPanel Margin="0,-21,0,0">
-                	<Grid Height="63" Background="Black" Margin="0,0,0,4">
-                		<Grid.RowDefinitions>
-                			<RowDefinition Height="0.413*"/>
-                			<RowDefinition Height="0.587*"/>
-                		</Grid.RowDefinitions>
-                		<Grid.ColumnDefinitions>
-                			<ColumnDefinition Width="0.112*"/>
-                			<ColumnDefinition Width="0.826*"/>
-                			<ColumnDefinition Width="0.062*"/>
-                		</Grid.ColumnDefinitions>
-                		<TextBlock TextWrapping="Wrap" Grid.Column="1" d:LayoutOverrides="HorizontalAlignment" Text="closed for the season" VerticalAlignment="Bottom" Margin="10,0,0,0"/>
-                		<Button Content="m&#xd;&#xa;a&#xd;&#xa;p" Grid.Column="2" d:LayoutOverrides="HorizontalAlignment" Background="#FF4B4949" Foreground="#FF252525" Grid.RowSpan="2" Padding="0" BorderThickness="0" FontSize="16" UseLayoutRounding="True" Margin="-12"/>
-                		<TextBlock TextWrapping="Wrap" Grid.Column="1" VerticalAlignment="Bottom" d:LayoutOverrides="HorizontalAlignment, GridBox" Grid.Row="1" Height="37" FontSize="12" Text="US 34 Eastbound / Westbound Trail Ridge Road Colorado River Trailhead Many Marks Curve" Margin="10,0"/>
-                		<Rectangle Fill="#FFF1162A" HorizontalAlignment="Right" Grid.Row="1" Stroke="Black" Width="6"/>
-                		<Image Margin="8,4,11,4" Grid.Row="1" Source="Images/circle_minus.png" Stretch="Fill"/>
-                	</Grid>
-                	<Grid Height="63" Background="Black" Margin="0,0,0,4">
-                		<Grid.RowDefinitions>
-                			<RowDefinition Height="0.413*"/>
-                			<RowDefinition Height="0.587*"/>
-                		</Grid.RowDefinitions>
-                		<Grid.ColumnDefinitions>
-                			<ColumnDefinition Width="0.112*"/>
-                			<ColumnDefinition Width="0.826*"/>
-                			<ColumnDefinition Width="0.062*"/>
-                		</Grid.ColumnDefinitions>
-                		<TextBlock TextWrapping="Wrap" Grid.Column="1" d:LayoutOverrides="HorizontalAlignment" Text="closed for the season" VerticalAlignment="Bottom" Margin="10,0,0,0"/>
-                		<Button Content="m&#xa;a&#xa;p" Grid.Column="2" d:LayoutOverrides="HorizontalAlignment" Background="#FF4B4949" Foreground="#FF252525" Grid.RowSpan="2" Padding="0" BorderThickness="0" FontSize="16" UseLayoutRounding="True" Margin="-12"/>
-                		<TextBlock TextWrapping="Wrap" Grid.Column="1" VerticalAlignment="Bottom" d:LayoutOverrides="HorizontalAlignment, GridBox" Grid.Row="1" Height="37" FontSize="12" Text="US 34 Eastbound / Westbound Trail Ridge Road Colorado River Trailhead Many Marks Curve" Margin="10,0"/>
-                		<Rectangle Fill="#FFF1162A" HorizontalAlignment="Right" Grid.Row="1" Stroke="Black" Width="6"/>
-                		<Image Margin="8,4,11,4" Grid.Row="1" Source="Images/circle_minus.png" Stretch="Fill"/>
-                	</Grid>
-                	<Grid Height="63" Background="Black" Margin="0,0,0,4">
-                		<Grid.RowDefinitions>
-                			<RowDefinition Height="0.413*"/>
-                			<RowDefinition Height="0.587*"/>
-                		</Grid.RowDefinitions>
-                		<Grid.ColumnDefinitions>
-                			<ColumnDefinition Width="0.112*"/>
-                			<ColumnDefinition Width="0.826*"/>
-                			<ColumnDefinition Width="0.062*"/>
-                		</Grid.ColumnDefinitions>
-                		<TextBlock TextWrapping="Wrap" Grid.Column="1" d:LayoutOverrides="HorizontalAlignment" Text="bridge construction" VerticalAlignment="Bottom" Margin="10,0,0,0"/>
-                		<Button Content="m&#xa;a&#xa;p" Grid.Column="2" d:LayoutOverrides="HorizontalAlignment" Background="#FF4B4949" Foreground="#FF252525" Grid.RowSpan="2" Padding="0" BorderThickness="0" FontSize="16" UseLayoutRounding="True" Margin="-12"/>
-                		<TextBlock TextWrapping="Wrap" Grid.Column="1" VerticalAlignment="Bottom" d:LayoutOverrides="HorizontalAlignment, GridBox" Grid.Row="1" Height="37" FontSize="12" Text="US 34 Eastbound / Westbound Trail Ridge Road Colorado River Trailhead Many Marks Curve" Margin="10,0"/>
-                		<Image Margin="8,4,11,4" Grid.Row="1" Source="Images/circle_download.png" Stretch="Fill"/>
-                		<Rectangle Fill="#FFF1D516" HorizontalAlignment="Right" Grid.Row="1" Stroke="Black" Width="6"/>
-                		<Image Margin="8,4,11,4" Grid.Row="1" Source="Images/circle_download.png" Stretch="Fill"/>
-                	</Grid>
-                	<Grid Height="63" Background="Black" Margin="0,0,0,4">
-                		<Grid.RowDefinitions>
-                			<RowDefinition Height="0.413*"/>
-                			<RowDefinition Height="0.587*"/>
-                		</Grid.RowDefinitions>
-                		<Grid.ColumnDefinitions>
-                			<ColumnDefinition Width="0.112*"/>
-                			<ColumnDefinition Width="0.826*"/>
-                			<ColumnDefinition Width="0.062*"/>
-                		</Grid.ColumnDefinitions>
-                		<TextBlock TextWrapping="Wrap" Grid.Column="1" d:LayoutOverrides="HorizontalAlignment" Text="road construction" VerticalAlignment="Bottom" Margin="10,0,0,0"/>
-                		<Button Content="m&#xa;a&#xa;p" Grid.Column="2" d:LayoutOverrides="HorizontalAlignment" Background="#FF4B4949" Foreground="#FF252525" Grid.RowSpan="2" Padding="0" BorderThickness="0" FontSize="16" UseLayoutRounding="True" Margin="-12"/>
-                		<TextBlock TextWrapping="Wrap" Grid.Column="1" VerticalAlignment="Bottom" d:LayoutOverrides="HorizontalAlignment, GridBox" Grid.Row="1" Height="37" FontSize="12" Text="US 34 Eastbound / Westbound Trail Ridge Road Colorado River Trailhead Many Marks Curve" Margin="10,0"/>
-                		<Rectangle Fill="#FFF1162A" HorizontalAlignment="Right" Grid.Row="1" Stroke="Black" Width="6"/>
-                		<Image Margin="8,4,11,4" Grid.Row="1" Source="Images/circle_download.png" Stretch="Fill"/>
-                	</Grid>
-                	<Grid Height="63" Background="Black" Margin="0,0,0,4">
-                		<Grid.RowDefinitions>
-                			<RowDefinition Height="0.413*"/>
-                			<RowDefinition Height="0.587*"/>
-                		</Grid.RowDefinitions>
-                		<Grid.ColumnDefinitions>
-                			<ColumnDefinition Width="0.112*"/>
-                			<ColumnDefinition Width="0.826*"/>
-                			<ColumnDefinition Width="0.062*"/>
-                		</Grid.ColumnDefinitions>
-                		<TextBlock TextWrapping="Wrap" Grid.Column="1" d:LayoutOverrides="HorizontalAlignment" Text="road re-opened" VerticalAlignment="Bottom" Margin="10,0,0,0"/>
-                		<Button Content="m&#xa;a&#xa;p" Grid.Column="2" d:LayoutOverrides="HorizontalAlignment" Background="#FF4B4949" Foreground="#FF252525" Grid.RowSpan="2" Padding="0" BorderThickness="0" FontSize="16" UseLayoutRounding="True" Margin="-12"/>
-                		<TextBlock TextWrapping="Wrap" Grid.Column="1" VerticalAlignment="Bottom" d:LayoutOverrides="HorizontalAlignment, GridBox" Grid.Row="1" Height="37" FontSize="12" Text="US 34 Eastbound / Westbound Trail Ridge Road Colorado River Trailhead Many Marks Curve" Margin="10,0"/>
-                		<Rectangle Fill="#FF00C161" HorizontalAlignment="Right" Grid.Row="1" Stroke="Black" Width="6"/>
-                		<Image Margin="8,4,11,4" Grid.Row="1" Source="Images/circle_fav.png" Stretch="Fill"/>
-                	</Grid>
-                </StackPanel>
             </controls:PanoramaItem>
         </controls:Panorama>
     </Grid>

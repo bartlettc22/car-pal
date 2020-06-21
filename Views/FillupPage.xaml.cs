@@ -19,72 +19,74 @@ namespace car_pal.Views
     public partial class FillupPage : PhoneApplicationPage
     {
 
-        private VehicleModel _currentVehicle;
-        private FillupModel _fillup;
+        private bool _editMode = false;
+        private FillupModel _editFillup;
 
         public FillupPage()
         {
             InitializeComponent();
-
-            // Set the page DataContext property to the ViewModel.
-            DataContext = App.ViewModel;
-
-            _fillup = new FillupModel();
+            Loaded += OnLoaded;
         }
 
-        /// <summary>
-        /// Called when navigating to this page; loads the car data from storage 
-        /// and then initializes the page state.
-        /// </summary>
-        /// <param name="e">The event data.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
 
             if (App.ViewModel.AllVehicles.Count > 0)
             {
                 Welcome_Panel.Visibility = Visibility.Collapsed;
                 Form_Panel.Visibility = Visibility.Visible;
+
+                if (!State.ContainsKey("WentToDatePicker") && NavigationContext.QueryString.ContainsKey("fillupId"))
+                {
+                    _editFillup = App.ViewModel.DefaultFillups.First(f => f.FillupId == int.Parse(NavigationContext.QueryString["fillupId"]));
+                    if (_editFillup != null)
+                    {
+                        // Editing vehicle...
+                        _editMode = true;
+                        PageTitle_Edit.Visibility = Visibility.Visible;
+                        PageTitle_Add.Visibility = Visibility.Collapsed;
+                        FillupDeleteButton.Visibility = Visibility.Visible;
+                        FillupDate.Value = new DateTime(_editFillup.FillupDate.Year, _editFillup.FillupDate.Month, _editFillup.FillupDate.Day);
+                        FillupTime.Value = new DateTime(_editFillup.FillupDate.Year, _editFillup.FillupDate.Month, _editFillup.FillupDate.Day, _editFillup.FillupDate.Hour, _editFillup.FillupDate.Minute, _editFillup.FillupDate.Second);
+                        FillupPriceInput.Text = _editFillup.PriceReading.ToString();
+                        FillupVolInput.Text = _editFillup.VolReading.ToString();
+                        FillupOdoInput.Text = _editFillup.OdoReading.ToString();
+                    }
+                }
             }
             else
             {
                 Form_Panel.Visibility = Visibility.Collapsed;
                 Welcome_Panel.Visibility = Visibility.Visible;
             }
-
         }
 
-        /// <summary>
-        /// Initializes the view and its data context. 
-        /// </summary>
-        private void InitializePageState()
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            //GarageModel garage = DataStore.Garage;
-            //_currentVehicle = garage.DefaultVehicle;
-            //VehicleName.DataContext = _currentVehicle;
-            //DataContext = _currentFillup = new zFillupModel();
+            if (e.Content is DatePickerPage || e.Content is TimePickerPage)
+            {
+                State["WentToDatePicker"] = true;
+            }
 
-            //_hasUnsavedChanges = State.ContainsKey(HAS_UNSAVED_CHANGES_KEY) && (bool)State[HAS_UNSAVED_CHANGES_KEY];
-
+            base.OnNavigatedFrom(e);
         }
 
-        private void fillup_cancel_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            // Focus hack?
+        }
+
+        private void fillupCancel_Click(object sender, System.Windows.RoutedEventArgs e)
         {
         	NavigationService.GoBack();
         }
 
-        private void fillup_save_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void fillupSave_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-        	// Commit any uncommitted changes. Changes in a bound text box are 
-            // normally committed to the data source only when the text box 
-            // loses focus. However, application bar buttons do not receive or 
-            // change focus because they are not Silverlight controls. 
-			// TODO: ONLY NEEDED IF SAVE BUTTON CHANGED TO APPLICATION BAR
-            //CommitTextBoxWithFocus();
-
-            // Everything checks out, lets do it!
+            
             DateTime dT = (DateTime)FillupDate.Value;
+            dT.Subtract(dT.TimeOfDay);
             dT = dT.AddHours(FillupTime.Value.Value.Hour);
             dT = dT.AddMinutes(FillupTime.Value.Value.Minute);
 
@@ -96,11 +98,6 @@ namespace car_pal.Views
             if (FillupTime.Value == null)
             {
                 MessageBox.Show("Time value required.");
-                return;
-            }
-            if ((from f in App.ViewModel.DefaultFillups where f.FillupDate == dT select f.FillupId).Count() > 0)
-            {
-                MessageBox.Show("An entry for this time already exists");
                 return;
             }
 
@@ -140,60 +137,49 @@ namespace car_pal.Views
                 MessageBox.Show("The price per gallon value could not be converted to a number.");
                 return;
             };
-            if ((from f in App.ViewModel.DefaultFillups where f.FillupDate <= dT && f.OdoReading >= double.Parse(FillupOdoInput.Text) select f.FillupId).Count() > 0)
+
+            int editId = _editMode ? _editFillup.FillupId : -1;
+            if ((from f in App.ViewModel.DefaultFillups where f.FillupDate == dT && f.FillupId != editId select f.FillupId).Count() > 0)
+            {
+                MessageBox.Show("An entry for this time already exists");
+                return;
+            }
+            if ((from f in App.ViewModel.DefaultFillups where f.FillupDate <= dT && f.OdoReading >= double.Parse(FillupOdoInput.Text) && f.FillupId != editId select f.FillupId).Count() > 0)
             {
                 MessageBox.Show("A entry exists for a previous date with a higher odometer reading.  Please check entry and/or fillup history.");
                 return;
             }
-            if ((from f in App.ViewModel.DefaultFillups where f.FillupDate >= dT && f.OdoReading <= double.Parse(FillupOdoInput.Text) select f.FillupId).Count() > 0)
+            if ((from f in App.ViewModel.DefaultFillups where f.FillupDate >= dT && f.OdoReading <= double.Parse(FillupOdoInput.Text) && f.FillupId != editId select f.FillupId).Count() > 0)
             {
                 MessageBox.Show("A entry exists for a future date with a lower odometer reading.  Please check entry and/or fillup history.");
                 return;
             }
 
-            FillupModel _newFillup = new FillupModel();
-            _newFillup.FillupDate = dT;
-            _newFillup.PriceReading = double.Parse(FillupPriceInput.Text);
-            _newFillup.VolReading = double.Parse(FillupVolInput.Text);
-            _newFillup.OdoReading = double.Parse(FillupOdoInput.Text);
-
-            // Need to add logic for editing...
-
-            App.ViewModel.AddFillup(_newFillup);
-            
-
-            //Debug.WriteLine("Date: " + dT.Value.Month + "/" + dT.Value.Day + "/" + dT.Value.Year + " " + dT.Value.Hour + ":" + dT.Value.Minute + ":" + dT.Value.Second);
-
-
-            //_currentVehicle.addFillup(_currentFillup);
-			
-			
-			/*
-			SaveResult result = CarDataStore.SaveFillup(_currentFillup,
-                delegate
-                {
-                    MessageBox.Show("There is not enough space on your phone to " +
-                    "save your fill-up data. Free some space and try again.");
-                });
-
-            if (result.SaveSuccessful)
+            // Everything checks out, lets do it!
+            if (!_editMode)
             {
-                Microsoft.Phone.Shell.PhoneApplicationService.Current
-                    .State[Constants.FILLUP_SAVED_KEY] = true;
-                NavigationService.GoBack();
+                FillupModel _newFillup = new FillupModel();
+                _newFillup.FillupDate = dT;
+                _newFillup.PriceReading = double.Parse(FillupPriceInput.Text);
+                _newFillup.VolReading = double.Parse(FillupVolInput.Text);
+                _newFillup.OdoReading = double.Parse(FillupOdoInput.Text);
+
+                App.ViewModel.AddFillup(_newFillup);
             }
             else
             {
-                string errorMessages = String.Join(
-                    Environment.NewLine + Environment.NewLine,
-                    result.ErrorMessages.ToArray());
-                if (!String.IsNullOrEmpty(errorMessages))
-                {
-                    MessageBox.Show(errorMessages,
-                        "Warning: Invalid Values", MessageBoxButton.OK);
-                }
-            }*/
-			NavigationService.GoBack();
+                _editFillup.FillupDate = dT;
+                _editFillup.PriceReading = double.Parse(FillupPriceInput.Text);
+                _editFillup.VolReading = double.Parse(FillupVolInput.Text);
+                _editFillup.OdoReading = double.Parse(FillupOdoInput.Text);
+                App.ViewModel.EditFillup(_editFillup);
+            }
+
+            // Return to the main page.
+            if (NavigationService.CanGoBack)
+            {
+                NavigationService.GoBack();
+            }
         }
 
         private void GarageAppBarButton_Click(object sender, System.EventArgs e)
@@ -201,14 +187,24 @@ namespace car_pal.Views
         	NavigationService.Navigate(new Uri("//Views/GaragePage.xaml", UriKind.Relative));
         }
 
-        private void FillupPriceInput_LostFocus(object sender, System.Windows.RoutedEventArgs e)
-        {
-            // Format currency field
-        }
-
         private void HomeAppBarButton_Click(object sender, System.EventArgs e)
         {
         	NavigationService.Navigate(new Uri("//Views/MainPage.xaml", UriKind.Relative));
+        }
+
+        private void FillupDeleteButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (_editMode && _editFillup != null)
+            {
+
+                App.ViewModel.DeleteFillup(_editFillup);
+                
+                // Return to the main page.
+                if (NavigationService.CanGoBack)
+                {
+                    NavigationService.GoBack();
+                }
+            }
         }
     }
 }

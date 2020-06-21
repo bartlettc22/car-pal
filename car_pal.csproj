@@ -188,58 +188,35 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Resource Include="icons\appbar.edit.rest.large.png" />
+    <Resource Include="icons\appbar.delete.rest.large.png" />
     <Content Include="icons\appbar.home.png" />
     <Content Include="icons\appbar.refresh.rest.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Service References\BingService\search1.wsdl" />
-    <Resource Include="Images\road.png" />
-    <Resource Include="Images\tile_gas_station.png" />
-    <Content Include="icons\appbar.transport.play.rest.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="Images\HomeTileStation.png" />
     <Content Include="Images\ApplicationTileIcon.png" />
     <Content Include="Images\ApplicationIcon.png" />
-    <Resource Include="Images\background1.png" />
-    <Resource Include="Images\background2.png" />
-    <Resource Include="Images\background3.png" />
-    <Resource Include="Images\MapPin.png" />
-    <Content Include="Images\TileFillupBackground.png" />
-    <Content Include="Images\TileLogbookBackground.png" />
-    <Content Include="Images\TileStationBackground.png" />
+    <Resource Include="Images\PanoramaBackground.png" />
+    <Resource Include="Images\MapPinLarge.png" />
+    <Content Include="Images\PinnedTileFillupBg.png" />
+    <Content Include="Images\PinnedTileLogbookBg.png" />
+    <Content Include="Images\PinnedTileStationBg.png" />
     <Content Include="ServiceReferences.ClientConfig" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="icons\appbar.feature.search.rest.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Resource Include="Images\logbook.png" />
-    <Resource Include="Images\gas-2.png" />
+    <Resource Include="Images\HomeTileLogbook.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
-    <Resource Include="appbar.basecircle.rest.png" />
-    <Resource Include="appbar.minus.rest.png" />
-    <Resource Include="Images\circle_addto.png" />
-    <Resource Include="Images\circle_download.png" />
-    <Resource Include="Images\circle_edit.png" />
-    <Resource Include="Images\circle_fav.png" />
-    <Resource Include="Images\circle_minus.png" />
-    <Resource Include="Images\fill_up.png" />
-    <Resource Include="Images\icon_fuel_indicator.png" />
+    <Resource Include="Images\HomeTileFillup.png" />
     <Content Include="icons\appbar.add.rest.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="Images\map_marker.png" />
-    <Resource Include="Images\SplashScreenImage.jpg" />
-    <Resource Include="Images\zApplicationIcon.png" />
-    <Resource Include="Images\TileIcon.png" />
     <Content Include="icons\appbar.feature.settings.rest.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="Images\PanoramaBackground.png" />
     <Content Include="SplashScreenImage.jpg" />
-    <Resource Include="icons\appbar.delete.rest.png" />
-    <Resource Include="icons\appbar.edit.rest.png" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

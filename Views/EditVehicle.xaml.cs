@@ -24,13 +24,12 @@ namespace car_pal.Views
         public EditVehicle()
         {
             InitializeComponent();
-            Loaded += SetPageFocus;
+            Loaded += OnLoaded;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
             
             if (NavigationContext.QueryString.ContainsKey("vehicleId"))
             {
@@ -41,14 +40,14 @@ namespace car_pal.Views
                     _editMode = true;
                     PageTitle_Edit.Visibility = Visibility.Visible;
                     PageTitle_Add.Visibility = Visibility.Collapsed;
-                    VehicleNameInput.Text = _editVehicle.VehicleName;
+                    //VehicleNameInput.Text = _editVehicle.VehicleName;
                     VehicleEditContainer.Visibility = Visibility.Visible;
                     VehicleEditName.Text = _editVehicle.VehicleName;
                 }
             }
         }
 
-        private void SetPageFocus(object sender, RoutedEventArgs e)
+        private void OnLoaded(object sender, RoutedEventArgs e)
         {
             VehicleNameInput.Focus();
         }
@@ -63,7 +62,6 @@ namespace car_pal.Views
 
             VehicleNameInput.Text = (VehicleNameInput.Text == null) ? VehicleNameInput.Text : VehicleNameInput.Text.Trim();
             bool vehicle_name_exists = (App.ViewModel.AllVehicles.Count(v => v.VehicleName.ToLower() == VehicleNameInput.Text.ToLower()) > 0);
-
 
             if (VehicleNameInput.Text == null || VehicleNameInput.Text == "")
             {
@@ -99,7 +97,6 @@ namespace car_pal.Views
             {
                 NavigationService.GoBack();
             }
-         
         }
     }
 }

@@ -15,6 +15,7 @@ using Microsoft.Phone.Shell;
 using car_pal.Models;
 using car_pal.ViewModel;
 using System.Diagnostics;
+using System.IO.IsolatedStorage;
 
 namespace car_pal
 {
@@ -73,18 +74,7 @@ namespace car_pal
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
-            Debug.WriteLine("Launching");
-
-            LoadViewModelFromIsolatedStorage();
-
-            // if the view model is not loaded, create a new one
-            if (ViewModel == null)
-            {
-                //ViewModel = new FeedViewModel();
-                //ViewModel.Update();
-            }
-
-            // set the frame DataContext
+            LoadViewModelFromDB();
             RootFrame.DataContext = ViewModel;
         }
 
@@ -94,14 +84,13 @@ namespace car_pal
         {
             if (e.IsApplicationInstancePreserved)
             {
-                Debug.WriteLine("Activated From Dormant State");
+                //LoadViewModelFromAppState();
             }
             else
             {
-                Debug.WriteLine("Activated From Tombstoned State");
-                LoadViewModelFromAppState();
+                LoadViewModel();
                 RootFrame.DataContext = ViewModel;
-            } 
+            }
         }
 
         // Code to execute when the application is deactivated (sent to background)
@@ -109,8 +98,8 @@ namespace car_pal
         private void Application_Deactivated(object sender, DeactivatedEventArgs e)
         {
             Debug.WriteLine("Deactivated");
-            SaveViewModelToAppState();
-            SaveViewModelToIsolatedStorage();
+            SaveViewModel();
+            //SaveViewModelToIsolatedStorage();
         }
 
         // Code to execute when the application is closing (eg, user hit Back)
@@ -118,23 +107,10 @@ namespace car_pal
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
             Debug.WriteLine("Closing");
-            SaveViewModelToIsolatedStorage();
+            //SaveViewModelToIsolatedStorage();
         }
 
-        private void SaveViewModelToAppState()
-        {
-            PhoneApplicationService.Current.State["MainViewModel"] = ViewModel;
-        }
-
-        private void LoadViewModelFromAppState()
-        {
-            if (PhoneApplicationService.Current.State.ContainsKey("MainViewModel"))
-            {
-                ViewModel = PhoneApplicationService.Current.State["MainViewModel"] as MainViewModel;
-            }
-        }
-
-        private void LoadViewModelFromIsolatedStorage()
+        private void LoadViewModelFromDB()
         {
             // load the view model from isolated storage
 
@@ -160,17 +136,34 @@ namespace car_pal
             ViewModel.LoadCollectionsFromDatabase();
         }
 
-        private void SaveViewModelToIsolatedStorage()
+        private void SaveViewModel()
         {
-            // persist the data using isolated storage
-            /*using (var store = IsolatedStorageFile.GetUserStoreForApplication())
-            using (var stream = new IsolatedStorageFileStream("data.txt",
-                                                              FileMode.Create,
-                                                              FileAccess.Write,
-                                                              store))
+            //PhoneApplicationService.Current.State["MainViewModel"] = ViewModel;
+            //IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
+            //settings["ViewModel"] = ViewModel;
+        }
+
+        private void LoadViewModel()
+        {
+            /*IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
+            if (settings.Contains("ViewModel"))
             {
-                var serializer = new XmlSerializer(typeof(FeedViewModel));
-                serializer.Serialize(stream, ViewModel);
+                ViewModel = settings["ViewModel"] as MainViewModel;
+            }
+            else
+            {
+                
+            }*/
+
+            LoadViewModelFromDB();
+
+            /*if (PhoneApplicationService.Current.State.ContainsKey("MainViewModel"))
+            {
+                ViewModel = PhoneApplicationService.Current.State["MainViewModel"] as MainViewModel;
+            }
+            else
+            {
+                //LoadViewModelFromIsolatedStorage();
             }*/
         }
 
