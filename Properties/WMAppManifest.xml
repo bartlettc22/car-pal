@@ -20,12 +20,12 @@
       <Capability Name="ID_CAP_APPOINTMENTS"/>
     </Capabilities>
     <Tasks>
-      <DefaultTask  Name ="_default" NavigationPage="MainPage.xaml"/>
+      <DefaultTask  Name ="_default" NavigationPage="Views/MainPage.xaml"/>
     </Tasks>
     <Tokens>
       <PrimaryToken TokenID="car_palToken" TaskName="_default">
         <TemplateType5>
-          <BackgroundImageURI IsRelative="true" IsResource="false">Images/TileIcon.png</BackgroundImageURI>
+          <BackgroundImageURI IsRelative="true" IsResource="false">Images/ApplicationTileIcon.png</BackgroundImageURI>
           <Count>0</Count>
           <Title>car-pal+</Title>
         </TemplateType5>

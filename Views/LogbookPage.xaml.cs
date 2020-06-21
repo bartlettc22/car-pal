@@ -19,5 +19,10 @@ namespace car_pal
         {
             InitializeComponent();
         }
+
+        private void HomeAppBarButton_Click(object sender, System.EventArgs e)
+        {
+        	NavigationService.Navigate(new Uri("//Views/MainPage.xaml", UriKind.Relative));
+        }
     }
 }

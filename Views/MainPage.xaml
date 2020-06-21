@@ -38,7 +38,7 @@
 				<TextBlock x:Name="price_value" TextWrapping="Wrap" Text="{Binding PricePerUnit, Converter={StaticResource FormatCurrency}}" VerticalAlignment="Bottom" FontSize="32" Grid.Column="2" TextAlignment="Right" FontWeight="Bold" Foreground="White"/>
 				<TextBlock x:Name="price_label" Grid.Column="3" Margin="5,0,0,0" TextWrapping="Wrap" Text="regular" FontSize="16" VerticalAlignment="Bottom" Foreground="White"/>
 				<TextBlock x:Name="date" HorizontalAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="14.667" Height="42" Grid.Column="4" Width="81" TextAlignment="Right" Margin="0,0,5,0" Text="{Binding FillupDate, Converter={StaticResource FormatDate}}" Foreground="White" FontWeight="Bold"/>
-				<TextBlock x:Name="odo_value" HorizontalAlignment="Right" TextWrapping="Wrap" Text="{Binding OdometerReading, Converter={StaticResource FormatNumber}, FallbackValue=100\,000}" VerticalAlignment="Bottom" FontSize="16" Height="29" Width="60" TextAlignment="Right" Grid.Row="1" FontWeight="Bold" Foreground="White"/>
+				<TextBlock x:Name="odo_value" HorizontalAlignment="Right" TextWrapping="Wrap" Text="{Binding OdoReading, Converter={StaticResource FormatNumber}, FallbackValue=0}" VerticalAlignment="Bottom" FontSize="16" Height="29" Width="60" TextAlignment="Right" Grid.Row="1" FontWeight="Bold" Foreground="White"/>
 				<TextBlock x:Name="odo_label" Grid.Column="1" Margin="5,0,4,-1" TextWrapping="Wrap" Text="miles" FontSize="16" d:LayoutOverrides="VerticalAlignment" Grid.Row="1" Foreground="White"/>
 				<TextBlock x:Name="vol_value" TextWrapping="Wrap" Text="{Binding FuelVolume}" FontSize="16" TextAlignment="Right" Grid.Row="1" FontWeight="Bold" Grid.Column="2" Foreground="White"/>
 				<TextBlock x:Name="vol_label" Grid.Column="3" Margin="5,0,4,-1" TextWrapping="Wrap" Text="gallons" FontSize="16" Grid.Row="1" d:LayoutOverrides="VerticalAlignment" Foreground="White"/>
@@ -72,7 +72,7 @@
         <!--Panorama control-->
         <controls:Panorama Title="car-pal+">
             <controls:Panorama.Background>
-                <ImageBrush ImageSource="Images/PanoramaBackground.png"/>
+                <ImageBrush ImageSource="/car_pal;component/Images/background3.png"/>
             </controls:Panorama.Background>
  
             <!--Panorama item one-->
@@ -105,28 +105,50 @@
             			<TextBlock x:Name="notice" Margin="0" TextWrapping="Wrap" Text="stats will show up after your first fill-up" FontSize="18.667" Grid.Row="4" FontFamily="Segoe WP Light" Grid.ColumnSpan="2" TextAlignment="Center" FontStyle="Italic"/>
             		</Grid>
             		<StackPanel x:Name="Tile_Panel" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0">
-            			<Button x:Name="FillupLink" Padding="0" BorderThickness="0" Foreground="White" BorderBrush="Transparent" Width="145" Click="FillupLink_Click" Height="145" d:LayoutOverrides="Height" VerticalAlignment="Center">
-            				<Canvas Height="125" Width="125">
-            					<toolkit:HubTile IsFrozen="True" VerticalAlignment="Top" DisplayNotification="True" HorizontalAlignment="Left" Height="125" Width="125" Background="#FF00C161" />
-            					<Image Height="63" Width="109" Source="Images/fill_up.png" Canvas.Left="8" Canvas.Top="8"/>
-            					<TextBlock TextWrapping="Wrap" Text="fill-up" Canvas.Left="8" Canvas.Top="95" RenderTransformOrigin="0.489,0.486" Foreground="White" FontSize="18.667"/>
-            				</Canvas>
+            			<Button x:Name="FillupLink" Padding="0" BorderThickness="0" Foreground="White" BorderBrush="Transparent" Width="145" Click="FillupLink_Click" Height="145" d:LayoutOverrides="Height" Background="#FF00C161">
+							<toolkit:ContextMenuService.ContextMenu>
+								<toolkit:ContextMenu>
+   									<toolkit:MenuItem x:Name="PinLinkFillup" Header="pin to start" Click="PinTile_Click" Tag="fillup" />
+	        					</toolkit:ContextMenu>
+	     					</toolkit:ContextMenuService.ContextMenu>            				
+							<Grid Height="121" Width="121" Background="#FF00C161">
+            					<Grid.RowDefinitions>
+            						<RowDefinition/>
+            						<RowDefinition Height="0.446*"/>
+            					</Grid.RowDefinitions>
+            					<Image Source="/car_pal;component/Images/fill_up.png" Margin="10,10,10,0" VerticalAlignment="Top" Stretch="None"/>
+            					<TextBlock TextWrapping="Wrap" Text="fill-up" RenderTransformOrigin="0.489,0.486" Foreground="White" FontSize="18.667" Margin="10,0,10,10" VerticalAlignment="Bottom" d:LayoutOverrides="Width" Grid.Row="1" Opacity="0.8"/>
+            				</Grid>
             			</Button>
-            			<Button x:Name="GasStationLink" BorderBrush="Transparent" Background="#FF00C161" Width="145" FontSize="24" Height="145" Margin="0" BorderThickness="0" Click="GasStationLink_Click" Foreground="White" Padding="0">
+            			<Button x:Name="GasStationLink" BorderBrush="Transparent" Background="#FF00C161" Width="145" FontSize="24" Height="145" BorderThickness="0" Click="GasStationLink_Click" Foreground="White" Padding="0">
+							<toolkit:ContextMenuService.ContextMenu>
+								<toolkit:ContextMenu>
+                                    <toolkit:MenuItem x:Name="PinLinkStation" Header="pin to start" Click="PinTile_Click" Tag="gas_station" />
+	        					</toolkit:ContextMenu>
+	     					</toolkit:ContextMenuService.ContextMenu>
             				<Grid Height="121" Width="121" Background="#FF00C161">
             					<Grid.RowDefinitions>
             						<RowDefinition Height="0.554*"/>
             						<RowDefinition Height="0.446*"/>
             					</Grid.RowDefinitions>
-            					<Image Height="57" Source="Images/gas-2.png" Stretch="Fill" VerticalAlignment="Top" Margin="10,10,10,0"/>
+            					<Image Height="57" Source="/car_pal;component/Images/tile_gas_station.png" Stretch="None" VerticalAlignment="Top" Margin="10,10,10,0"/>
             					<TextBlock TextWrapping="Wrap" FontSize="17.333" Margin="10,0,10,10" Opacity="0.8" VerticalAlignment="Bottom" Grid.Row="1" d:LayoutOverrides="GridBox" Foreground="White"><Run Text="nearby "/><LineBreak/><Run Text="gas stations"/></TextBlock>
             				</Grid>
             			</Button>
-            			<Button x:Name="LogbookLink" BorderBrush="Transparent" Background="#FF00C161" Width="145" Height="145" BorderThickness="0" Click="LogbookLink_Click">
-            				<StackPanel Width="92" Height="94">
-            					<Image Height="48" Source="Images/logbook.png" Stretch="Fill" Margin="0,0,8,0"/>
-            					<TextBlock TextWrapping="Wrap" FontSize="14.667" Height="46" Margin="0,0,11,0" Opacity="0.8" VerticalAlignment="Bottom"><Run Text="logbook"/><LineBreak/><Run/></TextBlock>
-            				</StackPanel>
+            			<Button x:Name="LogbookLink" BorderBrush="Transparent" Background="#FF00C161" Width="145" Height="145" BorderThickness="0" Click="LogbookLink_Click" Foreground="White" Padding="0">
+							<toolkit:ContextMenuService.ContextMenu>
+								<toolkit:ContextMenu>
+                                    <toolkit:MenuItem x:Name="PinLinkLogbook" Header="pin to start" Click="PinTile_Click" Tag="logbook" />
+	        					</toolkit:ContextMenu>
+	     					</toolkit:ContextMenuService.ContextMenu>
+							<Grid Height="121" Width="121" Background="#FF00C161">
+            					<Grid.RowDefinitions>
+            						<RowDefinition Height="0.573*"/>
+            						<RowDefinition Height="0.446*"/>
+            					</Grid.RowDefinitions>
+            					<Image Source="/car_pal;component/Images/logbook.png" Stretch="None" Margin="10,10,10,0" VerticalAlignment="Top"/>
+            					<TextBlock TextWrapping="Wrap" FontSize="14.667" Margin="10,0,10,10" Opacity="0.8" VerticalAlignment="Bottom" Grid.Row="1" Text="logbook" Foreground="White"/>
+            				</Grid>
             			</Button>
             		</StackPanel>
             	</StackPanel>
@@ -136,11 +158,11 @@
             <!--Use 'Orientation="Horizontal"' to enable a panel that lays out horizontally-->
             <controls:PanoramaItem Header="fill-up history">
             	<ScrollViewer Margin="0,-21,0,0">
-            		<ListBox x:Name="FillupList" ItemsSource="{Binding FillupHistory}" ItemTemplate="{StaticResource FillupListItemTemplate}"/>
+            		<ListBox x:Name="FillupList" ItemTemplate="{StaticResource FillupListItemTemplate}" ItemsSource="{Binding Fillups}"/>
             	</ScrollViewer>
                 <!--Double line list with image placeholder and text wrapping-->
             </controls:PanoramaItem>
-            <controls:PanoramaItem Header="road alerts">
+            <controls:PanoramaItem Header="road alerts" Visibility="Collapsed">
                 <StackPanel Margin="0,-21,0,0">
                 	<Grid Height="63" Background="Black" Margin="0,0,0,4">
                 		<Grid.RowDefinitions>

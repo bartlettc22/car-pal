@@ -10,10 +10,12 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using car_pal.Models;
+using System.Device.Location;
+using System.ComponentModel;
 
 namespace car_pal.ViewModel
 {
-    public class StationItemViewModel
+    public class StationItemViewModel : INotifyPropertyChanged
     {
 
         private String _title;
@@ -21,6 +23,13 @@ namespace car_pal.ViewModel
         private String _phoneNumber;
         private double _distance;
         private int _itemNumber;
+        private GeoCoordinate _coordinates;
+        private SolidColorBrush _titleColor;
+
+        public StationItemViewModel()
+        {
+            TitleColor = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
+        }
 
         public int ItemNumber
         {
@@ -82,6 +91,46 @@ namespace car_pal.ViewModel
                 _distance = double.Parse(value);
             }
         }
+
+        public GeoCoordinate Coordinates
+        {
+            get
+            {
+                return _coordinates;
+            }
+            set
+            {
+                _coordinates = value;
+            }
+        }
+
+
+        public SolidColorBrush TitleColor
+        {
+            get
+            {
+                return _titleColor;
+            }
+            set
+            {
+                _titleColor = value;
+                NotifyPropertyChanged("TitleColor");
+            }
+        }
+
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        // Used to notify Silverlight that a property has changed.
+        private void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        #endregion
 
     }
 }

@@ -1,48 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using Microsoft.Phone.Controls;
 using System.Windows.Navigation;
 using car_pal.Models;
+using Microsoft.Phone.Controls;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Windows;
 
 namespace car_pal
 {
     public partial class GaragePage : PhoneApplicationPage
     {
 
-        private GarageModel _garage;
+        //private GarageModel _garage;
 
         public GaragePage()
         {
             InitializeComponent();
+
+            // Set the page DataContext property to the ViewModel.
+            DataContext = App.ViewModel;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            // Initialize the page state only if it is not already initialized,
-            // and not when the application was deactivated but not tombstoned (returning from being dormant).
-            if (DataContext == null)
+            if (App.ViewModel.AllVehicles.Count > 0)
             {
-                InitializePageState();
+                GarageEmptyNotice.Visibility = Visibility.Collapsed;
+                //App.ViewModel.DefaultVehicle.IsDefaultVehicle = true;
+                //Debug.WriteLine("Default Vehicle: " + App.ViewModel.DefaultVehicle.VehicleName);
             }
-
-            // Delete temporary storage to avoid unnecessary storage costs.
-            State.Clear();
-        }
-
-        private void InitializePageState()
-        {
-            DataContext = _garage = DataStore.Garage;
         }
 
         private void VehicleList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -52,11 +42,8 @@ namespace car_pal
 
             if (vehicle != null)
             {
-                _garage = DataStore.Garage;
-                _garage.DefaultVehicleIndex = _garage.getVehicleIndexByName(vehicle.Name);
-                DataStore.SaveGarage();
-
-                NavigationService.GoBack();
+                App.ViewModel.DefaultVehicle = vehicle;
+                //NavigationService.GoBack();
             }
         }
 
@@ -68,18 +55,20 @@ namespace car_pal
         private void EditButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             VehicleModel vehicle = (sender as Button).DataContext as VehicleModel;
-            NavigationService.Navigate(new Uri(string.Format("//Views/EditVehicle.xaml?vehicleName={0}", 
-                Uri.EscapeUriString(vehicle.Name)), UriKind.Relative));
+            NavigationService.Navigate(new Uri(string.Format("//Views/EditVehicle.xaml?vehicleId={0}", 
+                Uri.EscapeUriString(vehicle.VehicleId.ToString())), UriKind.Relative));
         }
 
         private void DeleteButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
         	VehicleModel vehicle = (sender as Button).DataContext as VehicleModel;
-            if (MessageBox.Show("Are you sure?", "Delete \"" + vehicle.Name + "\"", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            if (MessageBox.Show("Are you sure?", "Delete \"" + vehicle.VehicleName + "\"", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
-                _garage.deleteVehicle(vehicle);
-                DataStore.SaveGarage();
-                InitializePageState();
+                App.ViewModel.DeleteVehicle(vehicle);
+                if (App.ViewModel.AllVehicles.Count == 0)
+                {
+                    GarageEmptyNotice.Visibility = Visibility.Visible;
+                }
             }
         }
     }

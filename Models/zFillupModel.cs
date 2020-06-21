@@ -13,7 +13,7 @@ using System.Windows.Shapes;
 
 namespace car_pal.Models
 {
-    public class FillupModel : INotifyPropertyChanged
+    public class zFillupModel : INotifyPropertyChanged
     {
 
         private DateTime _date;
@@ -22,7 +22,7 @@ namespace car_pal.Models
         private float _pricePerUnit;
         private float _mpg;
 
-        public FillupModel()
+        public zFillupModel()
         {
             _date = DateTime.Now;
             _date.AddDays(2.0);

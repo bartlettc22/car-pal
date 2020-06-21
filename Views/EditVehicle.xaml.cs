@@ -18,33 +18,39 @@ namespace car_pal.Views
     public partial class EditVehicle : PhoneApplicationPage
     {
 
-        private VehicleModel _vehicle;
         private bool _editMode = false;
         private VehicleModel _editVehicle;
 
         public EditVehicle()
         {
             InitializeComponent();
+            Loaded += SetPageFocus;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            _vehicle = new VehicleModel();
-
-            // Editing vehicle...
-            if (NavigationContext.QueryString.ContainsKey("vehicleName"))
+            
+            if (NavigationContext.QueryString.ContainsKey("vehicleId"))
             {
-                _editVehicle = DataStore.Garage.getVehicle(NavigationContext.QueryString["vehicleName"]);
+                _editVehicle = App.ViewModel.AllVehicles.First(v => v.VehicleId == int.Parse(NavigationContext.QueryString["vehicleId"]));
                 if(_editVehicle != null)
                 {
+                    // Editing vehicle...
                     _editMode = true;
-                    _vehicle.Name = _editVehicle.Name;
+                    PageTitle_Edit.Visibility = Visibility.Visible;
+                    PageTitle_Add.Visibility = Visibility.Collapsed;
+                    VehicleNameInput.Text = _editVehicle.VehicleName;
+                    VehicleEditContainer.Visibility = Visibility.Visible;
+                    VehicleEditName.Text = _editVehicle.VehicleName;
                 }
             }
+        }
 
-            DataContext = _vehicle;
+        private void SetPageFocus(object sender, RoutedEventArgs e)
+        {
+            VehicleNameInput.Focus();
         }
 
         private void VehicleCancel_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -54,32 +60,46 @@ namespace car_pal.Views
 
         private void VehicleSave_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            _vehicle.Name = (_vehicle.Name == null)?_vehicle.Name:_vehicle.Name.Trim();
 
-            if (_vehicle.Name == null || _vehicle.Name == "")
+            VehicleNameInput.Text = (VehicleNameInput.Text == null) ? VehicleNameInput.Text : VehicleNameInput.Text.Trim();
+            bool vehicle_name_exists = (App.ViewModel.AllVehicles.Count(v => v.VehicleName.ToLower() == VehicleNameInput.Text.ToLower()) > 0);
+
+
+            if (VehicleNameInput.Text == null || VehicleNameInput.Text == "")
             {
                 MessageBox.Show("Vehicle name is required.");
                 return;
             }
-            else if((!_editMode && DataStore.Garage.vehicleExists(_vehicle.Name)) ||
-                (_editMode && _vehicle.Name != _editVehicle.Name && DataStore.Garage.vehicleExists(_vehicle.Name)))
+            else if ((!_editMode && vehicle_name_exists) ||
+                (_editMode && VehicleNameInput.Text != _editVehicle.VehicleName && vehicle_name_exists))
             {
                 MessageBox.Show("Vehicle name already exists.");
                 return;
             }
-            
 
-            if (_editMode == false)
+            if (!_editMode)
             {
-                DataStore.Garage.addVehicle(_vehicle);
+                // Create a new vehicle
+                VehicleModel newVehicle = new VehicleModel
+                {
+                    VehicleName = VehicleNameInput.Text
+                };
+
+                // Add the item to the ViewModel.
+                App.ViewModel.AddVehicle(newVehicle);
             }
             else
             {
-                _editVehicle.Name = _vehicle.Name;
+                _editVehicle.VehicleName = VehicleNameInput.Text;
+                App.ViewModel.SaveChangesToDB();
             }
 
-            DataStore.SaveGarage();
-            NavigationService.GoBack();
+            // Return to the main page.
+            if (NavigationService.CanGoBack)
+            {
+                NavigationService.GoBack();
+            }
+         
         }
     }
 }

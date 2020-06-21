@@ -12,6 +12,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using car_pal.Models;
 using Microsoft.Phone.Controls;
+using System.Diagnostics;
 
 namespace car_pal.Views
 {
@@ -19,11 +20,16 @@ namespace car_pal.Views
     {
 
         private VehicleModel _currentVehicle;
-        private FillupModel _currentFillup;
+        private FillupModel _fillup;
 
         public FillupPage()
         {
             InitializeComponent();
+
+            // Set the page DataContext property to the ViewModel.
+            DataContext = App.ViewModel;
+
+            _fillup = new FillupModel();
         }
 
         /// <summary>
@@ -35,15 +41,18 @@ namespace car_pal.Views
         {
             base.OnNavigatedTo(e);
 
-            // Initialize the page state only if it is not already initialized,
-            // and not when the application was deactivated but not tombstoned (returning from being dormant).
-            //if (DataContext == null)
-            //{
-                InitializePageState();
-            //}
 
-            // Delete temporary storage to avoid unnecessary storage costs.
-            State.Clear();
+            if (App.ViewModel.AllVehicles.Count > 0)
+            {
+                Welcome_Panel.Visibility = Visibility.Collapsed;
+                Form_Panel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                Form_Panel.Visibility = Visibility.Collapsed;
+                Welcome_Panel.Visibility = Visibility.Visible;
+            }
+
         }
 
         /// <summary>
@@ -51,10 +60,10 @@ namespace car_pal.Views
         /// </summary>
         private void InitializePageState()
         {
-            GarageModel garage = DataStore.Garage;
-            _currentVehicle = garage.DefaultVehicle;
-            VehicleName.DataContext = _currentVehicle;
-            DataContext = _currentFillup = new FillupModel();
+            //GarageModel garage = DataStore.Garage;
+            //_currentVehicle = garage.DefaultVehicle;
+            //VehicleName.DataContext = _currentVehicle;
+            //DataContext = _currentFillup = new zFillupModel();
 
             //_hasUnsavedChanges = State.ContainsKey(HAS_UNSAVED_CHANGES_KEY) && (bool)State[HAS_UNSAVED_CHANGES_KEY];
 
@@ -73,7 +82,16 @@ namespace car_pal.Views
             // change focus because they are not Silverlight controls. 
 			// TODO: ONLY NEEDED IF SAVE BUTTON CHANGED TO APPLICATION BAR
             //CommitTextBoxWithFocus();
-			
+            if (FillupDate.Value == null)
+            {
+                MessageBox.Show("Date value required.");
+                return;
+            }
+            if (FillupTime.Value == null)
+            {
+                MessageBox.Show("Time value required.");
+                return;
+            }
 			if (string.IsNullOrWhiteSpace(FillupOdoInput.Text))
             {
                 MessageBox.Show("The odometer reading is required.");
@@ -111,7 +129,25 @@ namespace car_pal.Views
                 return;
             };
 
-            _currentVehicle.addFillup(_currentFillup);
+            // Everything checks out, lets do it!
+            DateTime dT = (DateTime)FillupDate.Value;
+            dT = dT.AddHours(FillupTime.Value.Value.Hour);
+            dT = dT.AddMinutes(FillupTime.Value.Value.Minute);
+
+            FillupModel _newFillup = new FillupModel();
+            _newFillup.FillupDate = (DateTime)dT;
+            _newFillup.PriceReading = double.Parse(FillupPriceInput.Text);
+            _newFillup.VolReading = double.Parse(FillupVolInput.Text);
+            _newFillup.OdoReading = double.Parse(FillupOdoInput.Text);
+
+            // Need to add logic for editing...
+            App.ViewModel.DefaultVehicle.Fillups.Add(_newFillup);
+            App.ViewModel.SaveChangesToDB();
+
+            //Debug.WriteLine("Date: " + dT.Value.Month + "/" + dT.Value.Day + "/" + dT.Value.Year + " " + dT.Value.Hour + ":" + dT.Value.Minute + ":" + dT.Value.Second);
+
+
+            //_currentVehicle.addFillup(_currentFillup);
 			
 			
 			/*
@@ -150,6 +186,11 @@ namespace car_pal.Views
         private void FillupPriceInput_LostFocus(object sender, System.Windows.RoutedEventArgs e)
         {
             // Format currency field
+        }
+
+        private void HomeAppBarButton_Click(object sender, System.EventArgs e)
+        {
+        	NavigationService.Navigate(new Uri("//Views/MainPage.xaml", UriKind.Relative));
         }
     }
 }

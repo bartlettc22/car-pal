@@ -16,6 +16,7 @@ using System.Collections.ObjectModel;
 using Microsoft.Phone.Controls.Maps;
 using car_pal.BingService;
 using car_pal.ViewModel;
+using System.Diagnostics;
 
 namespace car_pal.Views
 {
@@ -23,7 +24,13 @@ namespace car_pal.Views
     {
 
         GeoCoordinateWatcher watcher;
-        GeoCoordinate _location;
+        bool _initialized = false;
+
+        GeoPositionStatus _gpsStatus;
+        double _currentLatitude;
+        double _currentLongitude;
+        GeoCoordinate _currentLocation;
+        StationItemViewModel _currentlySelectedItem;
 
         public StationPage()
         {
@@ -45,6 +52,9 @@ namespace car_pal.Views
         // Event handler for the GeoCoordinateWatcher.StatusChanged event.
         void watcher_StatusChanged(object sender, GeoPositionStatusChangedEventArgs e)
         {
+
+            _gpsStatus = e.Status;
+
             switch (e.Status)
             {
                 case GeoPositionStatus.Disabled:
@@ -53,47 +63,54 @@ namespace car_pal.Views
                     if (watcher.Permission == GeoPositionPermission.Denied)
                     {
                         // The user has disabled the Location Service on their device.
-                        statusTextBlock.Text = "you have this application access to location.";
+                        Debug.WriteLine("Location service disabled.");
                     }
                     else
                     {
-                        statusTextBlock.Text = "location is not functioning on this device";
+                        Debug.WriteLine("Location service not functioning.");
                     }
                     break;
 
                 case GeoPositionStatus.Initializing:
                     // The Location Service is initializing.
-                    // Disable the Start Location button.
-                    //startLocationButton.IsEnabled = false;
+                    Debug.WriteLine("Location service intitializing.");
                     break;
 
                 case GeoPositionStatus.NoData:
                     // The Location Service is working, but it cannot get location data.
-                    // Alert the user and enable the Stop Location button.
-                    statusTextBlock.Text = "location data is not available.";
-                    //stopLocationButton.IsEnabled = true;
+                    Debug.WriteLine("Location service data not currently available.");
                     break;
 
                 case GeoPositionStatus.Ready:
                     // The Location Service is working and is receiving location data.
-                    // Show the current position and enable the Stop Location button.
-                    statusTextBlock.Text = "location data is available.";
-                    //stopLocationButton.IsEnabled = true;
+                    Debug.WriteLine("Location service data available.");
                     break;
             }
         }
 
         void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
-            //latitudeTextBlock.Text = e.Position.Location.Latitude.ToString("0.000");
-            //longitudeTextBlock.Text = e.Position.Location.Longitude.ToString("0.000");
-            latText.Text = e.Position.Location.Latitude.ToString("0.000");
-            longText.Text = e.Position.Location.Longitude.ToString("0.000");
-
-            GeoCoordinate center = new GeoCoordinate(e.Position.Location.Latitude, e.Position.Location.Longitude);
+            Debug.WriteLine("GPS Position Changed (" + e.Position.Location.Latitude.ToString("0.000") + "," + e.Position.Location.Longitude.ToString("0.000") + ")");
+            //latText.Text = e.Position.Location.Latitude.ToString("0.000");
+            //longText.Text = e.Position.Location.Longitude.ToString("0.000");
             //double zoomLevel = double.Parse(s[2], NumberStyles.Float, CultureInfo.InvariantCulture);
-            miniMap.SetView(center, 12);
-            _location = center;
+
+            _currentLatitude = e.Position.Location.Latitude;
+            _currentLongitude = e.Position.Location.Longitude;
+
+            if (!_initialized)
+            {
+                _initialized = true;
+                refresh();                
+            }
+        }
+
+        private void refresh()
+        {
+            Debug.WriteLine("Refreshing gas station display");
+            _currentLocation = new GeoCoordinate(_currentLatitude, _currentLongitude);
+            miniMap.SetView(_currentLocation, 12);
+            search();
         }
 
         // Click the event handler for the “Start Location” button.
@@ -114,9 +131,9 @@ namespace car_pal.Views
             
             request.Market = "en-us";
             request.UILanguage = "en";
-            request.Longitude = _location.Longitude;
+            request.Longitude = _currentLocation.Longitude;
             request.LongitudeSpecified = true;
-            request.Latitude = _location.Latitude;
+            request.Latitude = _currentLocation.Latitude;
             request.LatitudeSpecified = true;
             request.Radius = 10.0;
             request.RadiusSpecified = true;
@@ -161,10 +178,10 @@ namespace car_pal.Views
             r = geocodeResponse.Results;
             SearchResults.ItemsSource = r;*/
 
+            miniMap.Children.Clear();
+
             ObservableCollection<StationItemViewModel> resultsModel = new ObservableCollection<StationItemViewModel>();
             PhonebookResult[] r = e.Result.Phonebook.Results;
-            
-
 
             SolidColorBrush pinBrush = new SolidColorBrush(Color.FromArgb(255,85,44,105));
 
@@ -174,7 +191,7 @@ namespace car_pal.Views
                 Pushpin pin = new Pushpin();
                 pin.Location = new GeoCoordinate(r[i].Latitude, r[i].Longitude);
                 pin.Background = pinBrush;
-                pin.Content = i;
+                pin.Content = i + 1;
                 pin.Height = 60;
                 pin.Width = 30;
                 miniMap.Children.Add(pin);
@@ -185,7 +202,8 @@ namespace car_pal.Views
                 station.Address = r[i].Address + ", " + r[i].City + ", " + r[i].StateOrProvince;
                 station.PhoneNumber = r[i].PhoneNumber;
                 station.ItemNumber = i + 1;
-                station.Distance = distanceApart(_location, pin.Location).ToString();
+                station.Coordinates = pin.Location;
+                station.Distance = distanceApart(_currentLocation, pin.Location).ToString();
                 resultsModel.Add(station);
             }
 
@@ -216,7 +234,25 @@ namespace car_pal.Views
 
         private void RefreshButton_Click(object sender, System.EventArgs e)
         {
-        	search();
+            refresh();
+        }
+
+        private void HomeAppBarButton_Click(object sender, System.EventArgs e)
+        {
+        	NavigationService.Navigate(new Uri("//Views/MainPage.xaml", UriKind.Relative));
+        }
+
+        private void SearchResults_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            StationItemViewModel station = (sender as ListBox).SelectedItem as StationItemViewModel;
+            if (_currentlySelectedItem != null)
+            {
+                _currentlySelectedItem.TitleColor = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
+            }
+            station.TitleColor = new SolidColorBrush(Color.FromArgb(0xFF, 0x64, 0x3C, 0x77));
+            _currentlySelectedItem = station;
+
+            miniMap.SetView(station.Coordinates, 16);
         }
     }
 }

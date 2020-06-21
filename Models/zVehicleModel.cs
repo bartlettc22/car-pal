@@ -13,14 +13,14 @@ using System.Collections.ObjectModel;
 
 namespace car_pal.Models
 {
-    public class VehicleModel : INotifyPropertyChanged
+    public class zVehicleModel : INotifyPropertyChanged
     {
         private string _name;
-        private ObservableCollection<FillupModel> _fillupHistory;
+        private ObservableCollection<zFillupModel> _fillupHistory;
 
-        public VehicleModel()
+        public zVehicleModel()
         {
-            _fillupHistory = new ObservableCollection<FillupModel>();
+            _fillupHistory = new ObservableCollection<zFillupModel>();
         }
 
         public string Name
@@ -34,7 +34,7 @@ namespace car_pal.Models
             }
         }
 
-        public ObservableCollection<FillupModel> FillupHistory
+        public ObservableCollection<zFillupModel> FillupHistory
         {
             get { return _fillupHistory; }
             set
@@ -67,7 +67,7 @@ namespace car_pal.Models
             }
         }
 
-        public void addFillup(FillupModel fillup)
+        public void addFillup(zFillupModel fillup)
         {
 
             _fillupHistory.Insert(_fillupHistory.Count, fillup);
@@ -79,7 +79,7 @@ namespace car_pal.Models
         {
 
             float prev_odo = 0;
-            FillupModel f;
+            zFillupModel f;
 
             for (int i = 0; i < _fillupHistory.Count; i++)
             {

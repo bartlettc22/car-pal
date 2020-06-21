@@ -15,17 +15,17 @@ namespace car_pal.Models
 {
     public class GarageModel
     {
-        private ObservableCollection<VehicleModel> _vehicles;
+        private ObservableCollection<zVehicleModel> _vehicles;
         private int _defaultVehicleIndex = -1;
 
         public static event EventHandler DefaultVehicleChanged;
 
         public GarageModel()
         {
-            _vehicles = new ObservableCollection<VehicleModel>();
+            _vehicles = new ObservableCollection<zVehicleModel>();
         }
 
-        public ObservableCollection<VehicleModel> Vehicles
+        public ObservableCollection<zVehicleModel> Vehicles
         {
             get { return _vehicles; }
             set
@@ -56,7 +56,7 @@ namespace car_pal.Models
             }
         }
 
-        public VehicleModel DefaultVehicle
+        public zVehicleModel DefaultVehicle
         {
             get 
             {
@@ -69,13 +69,13 @@ namespace car_pal.Models
             }
         }
 
-        public void addVehicle(VehicleModel vehicle) 
+        public void addVehicle(zVehicleModel vehicle) 
         {
             _vehicles.Insert(0, vehicle);
             DataStore.SaveGarage();
         }
 
-        public void deleteVehicle(VehicleModel vehicle)
+        public void deleteVehicle(zVehicleModel vehicle)
         {
 
             Boolean defaultChanged = false;
@@ -110,7 +110,7 @@ namespace car_pal.Models
         public Int16 getVehicleIndexByName(String name)
         {
             Int16 i = 0;
-            foreach (VehicleModel v in _vehicles)
+            foreach (zVehicleModel v in _vehicles)
             {
                 if (v.Name == name)
                 {
@@ -122,7 +122,7 @@ namespace car_pal.Models
             return 0;
         }
 
-        public VehicleModel getVehicle(String name)
+        public zVehicleModel getVehicle(String name)
         {
             if (vehicleExists(name))
             {

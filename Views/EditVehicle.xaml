@@ -38,18 +38,22 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock x:Name="ApplicationTitle" Text="car-pal+" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock x:Name="PageTitle_Add" Text="add vehicle" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}" Visibility="{Binding Name, ConverterParameter=Inverse, Converter={StaticResource NullToVisibilityConverter}, Mode=OneTime}"/>
-            <TextBlock x:Name="PageTitle_Edit" Text="edit vehicle" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}" Visibility="{Binding Name, Converter={StaticResource NullToVisibilityConverter}, Mode=OneTime}"/>
+            <TextBlock x:Name="ApplicationTitle" Text="GARAGE" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock x:Name="PageTitle_Add" Text="add vehicle" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock x:Name="PageTitle_Edit" Text="edit vehicle" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}" Visibility="Collapsed"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
         	<StackPanel>
-        		<StackPanel x:Name="VehicleEditContainer" Orientation="Horizontal" Margin="0,0,0,10" Visibility="{Binding Name, Converter={StaticResource NullToVisibilityConverter}, Mode=OneTime}">
-        			<TextBlock x:Name="VehicleEditLabel" Margin="0" TextWrapping="Wrap" Text="Editing Vehicle: "/>
-        			<Border BorderBrush="#FF37892C" BorderThickness="0,0,0,2">
-        				<TextBlock x:Name="VehicleEditName" TextWrapping="Wrap" Text="{Binding Name, Mode=OneTime}" Margin="0,0,0,-2" d:LayoutOverrides="Width, Height" />
+        		<StackPanel x:Name="VehicleEditContainer" Orientation="Horizontal" Margin="0,0,0,10" Visibility="Collapsed">
+        			<TextBlock x:Name="VehicleEditLabel" Margin="0" TextWrapping="Wrap" Text="Editing Vehicle: " FontFamily="Segoe WP Light" FontSize="24"/>
+        			<Border BorderBrush="#FF37892C" BorderThickness="0">
+        				<TextBlock x:Name="VehicleEditName" TextWrapping="Wrap" Margin="0,0,0,-2" d:LayoutOverrides="Width, Height" FontSize="24" >
+        					<TextBlock.Foreground>
+        						<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
+        					</TextBlock.Foreground>
+        				</TextBlock>
         			</Border>
         		</StackPanel>
         		<Grid>
@@ -58,11 +62,11 @@
         				<RowDefinition Height="Auto"/>
         			</Grid.RowDefinitions>
         			<Grid.ColumnDefinitions>
-        				<ColumnDefinition Width="0.327*"/>
-        				<ColumnDefinition Width="0.673*"/>
+        				<ColumnDefinition Width="0.404*"/>
+        				<ColumnDefinition Width="0.596*"/>
         			</Grid.ColumnDefinitions>
-        			<TextBlock x:Name="NameLabel" Margin="0,0,8,8" TextWrapping="Wrap" Text="Vehicle Name" Width="128" Height="32" TextAlignment="Right"/>
-        			<TextBox x:Name="NameInput" Grid.Column="1" TextWrapping="Wrap" Height="90" FontSize="40" BorderThickness="0" TextAlignment="Right" Text="{Binding Name, Mode=TwoWay}" Margin="0,-1,0,1" InputScope="Text" MaxLength="14" />
+        			<TextBlock x:Name="VehicleNameLabel" Margin="0,0,8,8" TextWrapping="Wrap" Text="Vehicle Name" Height="32" TextAlignment="Right" FontSize="26.667"/>
+        			<TextBox x:Name="VehicleNameInput" Grid.Column="1" TextWrapping="Wrap" Height="90" FontSize="40" BorderThickness="0" TextAlignment="Right" Text="{Binding Name, Mode=TwoWay}" Margin="0,-1,0,1" InputScope="Text" MaxLength="14" />
         			<StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" d:LayoutOverrides="GridBox" HorizontalAlignment="Center">
         				<Button x:Name="VehicleSaveButton" Content="Save" Click="VehicleSave_Click" Height="81" Margin="0"/>
         				<Button x:Name="VehicleCancelButton" Content="Cancel" Click="VehicleCancel_Click" Height="81" Margin="0"/>

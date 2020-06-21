@@ -24,7 +24,7 @@ namespace car_pal
 
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            DataStore.Garage.DefaultVehicle.FillupHistory = new ObservableCollection<FillupModel>();
+            DataStore.Garage.DefaultVehicle.FillupHistory = new ObservableCollection<zFillupModel>();
             DataStore.SaveGarage();
         }
     }

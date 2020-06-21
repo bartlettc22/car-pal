@@ -12,7 +12,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using car_pal.Database;
+using car_pal.Models;
+using car_pal.ViewModel;
 
 namespace car_pal
 {
@@ -23,6 +24,13 @@ namespace car_pal
         /// </summary>
         /// <returns>The root frame of the Phone Application.</returns>
         public PhoneApplicationFrame RootFrame { get; private set; }
+
+        // The static ViewModel, to be used across the application.
+        private static MainViewModel _viewModel;
+        public static MainViewModel ViewModel
+        {
+            get { return _viewModel; }
+        }
 
         /// <summary>
         /// Constructor for the Application object.
@@ -61,12 +69,19 @@ namespace car_pal
             // Create the database if it does not exist.
             using (DatabaseContext db = new DatabaseContext(DatabaseContext.DBConnectionString))
             {
+                //db.DeleteDatabase();
                 if (db.DatabaseExists() == false)
                 {
-                    //Create the database
+                    // Create the local database.
                     db.CreateDatabase();
                 }
             }
+
+            // Create the ViewModel object.
+            _viewModel = new MainViewModel();
+
+            // Query the local database and load observable collections.
+            _viewModel.LoadCollectionsFromDatabase();
         }
 
         // Code to execute when the application is launching (eg, from Start)
