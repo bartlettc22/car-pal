@@ -18,80 +18,65 @@ namespace car_pal.Views
 {
     public partial class EditLogbook : PhoneApplicationPage
     {
-
-        private VehicleModel _currentVehicle;
-        private FillupModel _fillup;
+        private ReminderModel _editReminder;
 
         public EditLogbook()
         {
             InitializeComponent();
-
-            // Set the page DataContext property to the ViewModel.
-            DataContext = App.ViewModel;
-
-            _fillup = new FillupModel();
         }
 
-        /// <summary>
-        /// Called when navigating to this page; loads the car data from storage 
-        /// and then initializes the page state.
-        /// </summary>
-        /// <param name="e">The event data.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-
-            if (App.ViewModel.AllVehicles.Count > 0)
+            if (!State.ContainsKey("WentToDatePicker") && NavigationContext.QueryString.ContainsKey("reminderId"))
             {
-                //Welcome_Panel.Visibility = Visibility.Collapsed;
-                //Form_Panel.Visibility = Visibility.Visible;
+                _editReminder = App.ViewModel.DefaultVehicle.Reminders.First(r => r.ReminderId == int.Parse(NavigationContext.QueryString["reminderId"]));
+                if (_editReminder != null)
+                {
+                    ReminderName.Text = _editReminder.ReminderType;
+                    ReminderDate.IsChecked = _editReminder.RemindDate;
+                    ReminderDateValue.Value = _editReminder.RemindDateValue;
+                    ReminderOdo.IsChecked = _editReminder.RemindOdo;
+                    ReminderOdoValue.Text = _editReminder.RemindOdoValue.ToString();
+                }
             }
-            else
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            if (e.Content is DatePickerPage || e.Content is TimePickerPage)
             {
-                //Form_Panel.Visibility = Visibility.Collapsed;
-                //Welcome_Panel.Visibility = Visibility.Visible;
+                State["WentToDatePicker"] = true;
             }
 
+            base.OnNavigatedFrom(e);
         }
 
-        /// <summary>
-        /// Initializes the view and its data context. 
-        /// </summary>
-        private void InitializePageState()
+        private void SaveButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            //GarageModel garage = DataStore.Garage;
-            //_currentVehicle = garage.DefaultVehicle;
-            //VehicleName.DataContext = _currentVehicle;
-            //DataContext = _currentFillup = new zFillupModel();
+            if (_editReminder != null)
+            {
+                _editReminder.RemindDate = (bool)ReminderDate.IsChecked;
+                _editReminder.RemindDateValue = (DateTime)ReminderDateValue.Value;
+                _editReminder.RemindOdo = (bool)ReminderOdo.IsChecked;
+                _editReminder.RemindOdoValue = double.Parse(ReminderOdoValue.Text);
 
-            //_hasUnsavedChanges = State.ContainsKey(HAS_UNSAVED_CHANGES_KEY) && (bool)State[HAS_UNSAVED_CHANGES_KEY];
-
+                App.ViewModel.saveDefault();
+            }
+            if (NavigationService.CanGoBack)
+            {
+                NavigationService.GoBack();
+            }
         }
 
-        private void fillup_cancel_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void CancelButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-        	NavigationService.GoBack();
+            if (NavigationService.CanGoBack)
+            {
+                NavigationService.GoBack();
+            }
         }
 
-        private void fillup_save_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-			NavigationService.GoBack();
-        }
-
-        private void GarageAppBarButton_Click(object sender, System.EventArgs e)
-        {
-        	NavigationService.Navigate(new Uri("//Views/GaragePage.xaml", UriKind.Relative));
-        }
-
-        private void FillupPriceInput_LostFocus(object sender, System.Windows.RoutedEventArgs e)
-        {
-            // Format currency field
-        }
-
-        private void HomeAppBarButton_Click(object sender, System.EventArgs e)
-        {
-        	NavigationService.Navigate(new Uri("//Views/MainPage.xaml", UriKind.Relative));
-        }
     }
 }

@@ -262,6 +262,28 @@ namespace car_pal.ViewModel
                 vehicle.IsDefaultVehicle = true; DefaultVehicle = vehicle;
             }
 
+            // Add default reminders
+            ReminderModel reminderOil = new ReminderModel();
+            reminderOil.ReminderType = "oil change";
+            reminderOil.RemindDate = false;
+            reminderOil.RemindDateValue = System.DateTime.Now;
+            reminderOil.RemindOdo = false;
+            vehicle.Reminders.Add(reminderOil);
+
+            ReminderModel reminderRotate = new ReminderModel();
+            reminderRotate.ReminderType = "rotate tires";
+            reminderRotate.RemindDate = false;
+            reminderRotate.RemindDateValue = System.DateTime.Now;
+            reminderRotate.RemindOdo = false;
+            vehicle.Reminders.Add(reminderRotate);
+
+            ReminderModel reminderFluids = new ReminderModel();
+            reminderFluids.ReminderType = "check fluids";
+            reminderFluids.RemindDate = false;
+            reminderFluids.RemindDateValue = System.DateTime.Now;
+            reminderFluids.RemindOdo = false;
+            vehicle.Reminders.Add(reminderFluids);
+
             _db.Vehicles.InsertOnSubmit(vehicle);
             _db.SubmitChanges();
 
@@ -285,6 +307,12 @@ namespace car_pal.ViewModel
             foreach (FillupModel f in vehicle.Fillups)
             {
                 _db.Fillups.DeleteOnSubmit(f);
+            }
+
+            // Check if the vehicle has reminders and remove those
+            foreach (ReminderModel r in vehicle.Reminders)
+            {
+                _db.Reminders.DeleteOnSubmit(r);
             }
 
             // Remove the vehicle from the "all" observable collection.

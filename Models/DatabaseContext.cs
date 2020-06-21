@@ -22,6 +22,7 @@ namespace car_pal.Models
         // DB table models
         public Table<VehicleModel> Vehicles;
         public Table<FillupModel> Fillups;
+        public Table<ReminderModel> Reminders;
 
         #region INotifyPropertyChanged Members
 
@@ -52,6 +53,12 @@ namespace car_pal.Models
                 new Action<FillupModel>(this.detach_Fillup)
                 );
             _fillups.CollectionChanged += delegate { NotifyPropertyChanged("Fillups"); };
+
+            _reminders = new EntitySet<ReminderModel>(
+                new Action<ReminderModel>(this.attach_Reminder),
+                new Action<ReminderModel>(this.detach_Reminder)
+                );
+            _reminders.CollectionChanged += delegate { NotifyPropertyChanged("Reminders"); };
         }
 
         // Define Vehicle ID: private field, public property and database column.
@@ -140,6 +147,30 @@ namespace car_pal.Models
         {
             NotifyPropertyChanging("Vehicle");
             fillup.Vehicle = null;
+        }
+
+        // Define the entity set for the collection side of the relationship.
+        private EntitySet<ReminderModel> _reminders;
+
+        [Association(Storage = "_reminders", OtherKey = "_vehicleId", ThisKey = "VehicleId")]
+        public EntitySet<ReminderModel> Reminders
+        {
+            get { return this._reminders; }
+            set { this._reminders.Assign(value); }
+        }
+
+        // Called during an add operation
+        private void attach_Reminder(ReminderModel reminder)
+        {
+            NotifyPropertyChanging("Vehicle");
+            reminder.Vehicle = this;
+        }
+
+        // Called during a remove operation
+        private void detach_Reminder(ReminderModel reminder)
+        {
+            NotifyPropertyChanging("Vehicle");
+            reminder.Vehicle = null;
         }
 
         #region INotifyPropertyChanged Members
@@ -283,6 +314,179 @@ namespace car_pal.Models
                     NotifyPropertyChanging("VolReading");
                     _volReading = value;
                     NotifyPropertyChanged("VolReading");
+                }
+            }
+        }
+
+        [Column]
+        internal int _vehicleId;
+
+        private EntityRef<VehicleModel> _vehicle;
+
+        // Association, to describe the relationship between this key and that "storage" table
+        [Association(Storage = "_vehicle", ThisKey = "_vehicleId", OtherKey = "VehicleId", IsForeignKey = true)]
+        public VehicleModel Vehicle
+        {
+            get { return _vehicle.Entity; }
+            set
+            {
+                NotifyPropertyChanging("Vehicle");
+                _vehicle.Entity = value;
+
+                if (value != null)
+                {
+                    _vehicleId = value.VehicleId;
+                }
+
+                NotifyPropertyChanging("Vehicle");
+            }
+        }
+
+        // Version column aids update performance.
+        [Column(IsVersion = true)]
+        private Binary _version;
+
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        // Used to notify the page that a data context property changed
+        private void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        #endregion
+
+        #region INotifyPropertyChanging Members
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        // Used to notify the data context that a data context property is about to change
+        private void NotifyPropertyChanging(string propertyName)
+        {
+            if (PropertyChanging != null)
+            {
+                PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
+            }
+        }
+
+        #endregion
+    }
+
+    [Table]
+    public class ReminderModel : INotifyPropertyChanged, INotifyPropertyChanging
+    {
+        private int _reminderId;
+        [Column(IsPrimaryKey = true, IsDbGenerated = true, DbType = "INT NOT NULL Identity", CanBeNull = false, AutoSync = AutoSync.OnInsert)]
+        public int ReminderId
+        {
+            get
+            {
+                return _reminderId;
+            }
+            set
+            {
+                NotifyPropertyChanging("ReminderId");
+                _reminderId = value;
+                NotifyPropertyChanged("ReminderId");
+            }
+        }
+
+        private string _reminderType = "";
+        [Column]
+        public string ReminderType
+        {
+            get
+            {
+                return _reminderType;
+            }
+            set
+            {
+                if (_reminderType != value)
+                {
+                    NotifyPropertyChanging("ReminderType");
+                    _reminderType = value;
+                    NotifyPropertyChanged("ReminderType");
+                }
+            }
+        }
+
+        private bool _remindDate;
+        [Column]
+        public bool RemindDate
+        {
+            get
+            {
+                return _remindDate;
+            }
+            set
+            {
+                if (_remindDate != value)
+                {
+                    NotifyPropertyChanging("RemindDate");
+                    _remindDate = value;
+                    NotifyPropertyChanged("RemindDate");
+                }
+            }
+        }
+
+        private DateTime _remindDateValue;
+        [Column]
+        public DateTime RemindDateValue
+        {
+            get
+            {
+                return _remindDateValue;
+            }
+            set
+            {
+                if (_remindDateValue != value)
+                {
+                    NotifyPropertyChanging("RemindDateValue");
+                    _remindDateValue = value;
+                    NotifyPropertyChanged("RemindDateValue");
+                }
+            }
+        }
+
+        private bool _remindOdo;
+        [Column]
+        public bool RemindOdo
+        {
+            get
+            {
+                return _remindOdo;
+            }
+            set
+            {
+                if (_remindOdo != value)
+                {
+                    NotifyPropertyChanging("RemindOdo");
+                    _remindOdo = value;
+                    NotifyPropertyChanged("RemindOdo");
+                }
+            }
+        }
+
+        private double _remindOdoValue;
+        [Column]
+        public double RemindOdoValue
+        {
+            get
+            {
+                return _remindOdoValue;
+            }
+            set
+            {
+                if (_remindOdoValue != value)
+                {
+                    NotifyPropertyChanging("RemindOdoValue");
+                    _remindOdoValue = value;
+                    NotifyPropertyChanged("RemindOdoValue");
                 }
             }
         }

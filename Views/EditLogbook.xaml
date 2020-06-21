@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:car_pal.Models"
+	xmlns:car_pal_Views_Converters="clr-namespace:car_pal.Views.Converters" 
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" 
     x:Class="car_pal.Views.EditLogbook"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
@@ -15,12 +16,10 @@
     mc:Ignorable="d" d:DesignHeight="728" d:DesignWidth="480"
     shell:SystemTray.IsVisible="False">
 	<phone:PhoneApplicationPage.ApplicationBar>
-		<shell:ApplicationBar>
-			<shell:ApplicationBarIconButton x:Name="HomeAppBarButton" IconUri="/icons/appbar.home.png" Text="home" Click="HomeAppBarButton_Click"/>
-			<shell:ApplicationBarIconButton x:Name="GarageAppBarButton" IconUri="/icons/appbar.feature.settings.rest.png" IsEnabled="True" Text="garage" Click="GarageAppBarButton_Click"/>
-		</shell:ApplicationBar>
+		<shell:ApplicationBar/>
 	</phone:PhoneApplicationPage.ApplicationBar>
     <phone:PhoneApplicationPage.Resources>
+		<car_pal_Views_Converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <Style TargetType="toolkit:DatePicker">
             <!--<Setter Property="Background" Value="{StaticResource PhoneTextBoxBrush}"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -56,42 +55,41 @@
             <TextBlock x:Name="PageTitle" Text="reminder" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
         <StackPanel x:Name="ContentPanel" Margin="12,0,12,0" Grid.Row="1" >
-        	<StackPanel x:Name="Welcome_Panel" Margin="0,0,9,0" Visibility="Collapsed">
-        		<TextBlock x:Name="Welcome_Message" TextWrapping="Wrap" Text="Welcome!" FontSize="48" Foreground="Silver" FontFamily="Segoe WP Light"/>
-        		<TextBlock TextWrapping="Wrap" Margin="0,20,0,0" FontSize="26.667" FontFamily="Segoe WP Light" Foreground="Silver" Text="To start tracking your fill-up history, click on the garage icon below and add a new vehicle."/>
-        	</StackPanel>
-        	<StackPanel x:Name="Form_Panel" Margin="0,0,9,0">
+        	<StackPanel x:Name="Form_Panel" Margin="9,0">
         		<StackPanel x:Name="VehicleNameContainer" Orientation="Horizontal">
-        			<TextBlock x:Name="VehicleNameLabel" TextWrapping="Wrap" Text="Reminder for:" FontSize="24" FontFamily="Segoe WP Light"/>
+        			<TextBlock x:Name="VehicleNameLabel" TextWrapping="Wrap" Text="reminder for: " FontSize="24" FontFamily="Segoe WP Light" Padding="0"/>
         			<TextBlock x:Name="VehicleName" TextWrapping="Wrap"  Text="{Binding DefaultVehicle.VehicleName}" FontSize="24" >
         				<TextBlock.Foreground>
         					<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
         				</TextBlock.Foreground>
         			</TextBlock>
         		</StackPanel>
-        		<Grid Margin="0,15,0,0">
-        			<Grid.RowDefinitions>
-        				<RowDefinition Height="Auto" MinHeight="72"/>
-        				<RowDefinition Height="Auto" MinHeight="72"/>
-        				<RowDefinition Height="Auto" MinHeight="90"/>
-        				<RowDefinition Height="Auto" MinHeight="90"/>
-        				<RowDefinition Height="Auto" MinHeight="81"/>
-        			</Grid.RowDefinitions>
-        			<Grid.ColumnDefinitions>
-        				<ColumnDefinition Width="0.501*"/>
-        				<ColumnDefinition Width="0.499*"/>
-        			</Grid.ColumnDefinitions>
-        			<toolkit:ToggleSwitch Header="Date Reminder" d:LayoutOverrides="Width, Height" Grid.ColumnSpan="2"/>
-        			<toolkit:DatePicker x:Name="FillupDate" Grid.Column="1" FontSize="26.667" HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" Margin="0" VerticalAlignment="Bottom" Grid.Row="1" HorizontalAlignment="Right"/>
-        			<TextBlock x:Name="FillupDateLabel" Margin="0,0,8,8" TextWrapping="Wrap" Text="Date Due" VerticalAlignment="Bottom" FontSize="26.667" Grid.Row="1"/>
-        			<toolkit:ToggleSwitch Header="Milage Reminder" Margin="0" d:LayoutOverrides="Width, Height" Grid.Row="2" Grid.ColumnSpan="2"/>
-        			<TextBlock x:Name="MilageLabel" Margin="0,0,8,8" Grid.Row="3" TextWrapping="Wrap" Text="Milage Due" FontSize="26.667"/>
-        			<TextBox x:Name="MilageInput" Grid.Column="1" Grid.Row="3" TextWrapping="Wrap" Height="90" InputScope="Number" TextAlignment="Right" BorderThickness="0" FontSize="40"/>
-        			<StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" d:LayoutOverrides="GridBox" HorizontalAlignment="Center">
-        				<Button x:Name="FillupSaveButton" Content="Save" Click="fillup_save_Click" Height="81" Margin="0"/>
-        				<Button x:Name="FillupCancelButton" Content="Cancel" Click="fillup_cancel_Click" Height="81" Margin="0"/>
+        		<StackPanel x:Name="ReminderTypeContainer" Orientation="Horizontal">
+        			<TextBlock x:Name="ReminderNameLabel" TextWrapping="Wrap" Text="reminder type:" FontSize="24" FontFamily="Segoe WP Light" Padding="0"/>
+        			<TextBlock x:Name="ReminderName" TextWrapping="Wrap" FontSize="24" >
+        				<TextBlock.Foreground>
+        					<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
+        				</TextBlock.Foreground>
+        			</TextBlock>
+        		</StackPanel>
+        		<StackPanel>
+        			<toolkit:ToggleSwitch x:Name="ReminderDate" Header="Date Reminder" d:LayoutOverrides="Width" Margin="0"/>
+        			<StackPanel Margin="44,0,0,0" Visibility="{Binding IsChecked, Converter={StaticResource BoolToVisibilityConverter}, ElementName=ReminderDate}">
+        				<TextBlock x:Name="ReminderDateLabel" Margin="0" TextWrapping="Wrap" Text="Date Due" VerticalAlignment="Bottom" FontSize="18.667" Foreground="Gray"/>
+        				<toolkit:DatePicker x:Name="ReminderDateValue" FontSize="26.667" HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" Margin="0,0,8,0" VerticalAlignment="Bottom"/>
         			</StackPanel>
-        		</Grid>
+        		</StackPanel>
+        		<StackPanel>
+        			<toolkit:ToggleSwitch x:Name="ReminderOdo" Header="Mileage Reminder" d:LayoutOverrides="Width" Margin="0"/>
+        			<StackPanel Margin="44,0,0,0" Visibility="{Binding IsChecked, Converter={StaticResource BoolToVisibilityConverter}, ElementName=ReminderOdo}">
+        				<TextBlock x:Name="ReminderOdoLabel" Margin="0" TextWrapping="Wrap" Text="Mileage Due" VerticalAlignment="Bottom" FontSize="18.667" Foreground="Gray"/>
+        				<TextBox x:Name="ReminderOdoValue" TextWrapping="Wrap" Height="90" InputScope="Number" TextAlignment="Right" BorderThickness="0" FontSize="40" d:LayoutOverrides="Height"/>
+        			</StackPanel>
+        		</StackPanel>
+        		<StackPanel Orientation="Horizontal" d:LayoutOverrides="GridBox" HorizontalAlignment="Center" Height="81">
+        			<Button x:Name="SaveButton" Content="Save" Click="SaveButton_Click" Height="81" Margin="0"/>
+        			<Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Height="81" Margin="0"/>
+        		</StackPanel>
         	</StackPanel>
         </StackPanel>
     </Grid>

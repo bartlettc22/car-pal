@@ -84,7 +84,7 @@
             	<StackPanel Margin="0,-21,0,0">
             		<StackPanel x:Name="Welcome_Panel" Height="330" Background="#BC3D3D3D" Visibility="Collapsed">
             			<TextBlock Height="79" TextWrapping="Wrap" Margin="10,10,0,0" FontSize="37.333" FontFamily="Segoe WP Light" Text="Welcome to car-pal+!"/>
-            			<TextBlock TextWrapping="Wrap" Margin="10,0" FontSize="21.333"><Run FontFamily="Segoe WP Light" Text="In order for us to help you keep track of your mileage history and maintenance reminders, start by adding a new vehicle."/><LineBreak/><Run FontFamily="Segoe WP Light" Text="profile."/></TextBlock>
+            			<TextBlock TextWrapping="Wrap" Margin="10,0" FontSize="21.333"><Run FontFamily="Segoe WP Light" Text="In order for us to help you keep track of your mileage history and maintenance reminders, start by adding a new vehicle"/><LineBreak/><Run FontFamily="Segoe WP Light" Text="profile."/></TextBlock>
             			<Button x:Name="WelcomeAddVehicleButton" Content="add vehicle" Width="200" Margin="0,20,0,0" BorderThickness="2" FontFamily="Segoe WP Light" BorderBrush="White" Foreground="White" Click="WelcomeAddVehicleButton_Click"/>
             		</StackPanel>
             		<StackPanel x:Name="DashboardVehicleNameDisplay" Orientation="Horizontal" Background="#BF000000">

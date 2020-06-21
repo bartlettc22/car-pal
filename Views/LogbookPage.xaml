@@ -6,6 +6,7 @@
 	xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:model="clr-namespace:car_pal.Models"
 	mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
 	x:Class="car_pal.LogbookPage"
 	FontFamily="{StaticResource PhoneFontFamilyNormal}"
@@ -13,6 +14,39 @@
 	Foreground="{StaticResource PhoneForegroundBrush}"
 	SupportedOrientations="Portrait" Orientation="Portrait"
 	shell:SystemTray.IsVisible="True">
+	<phone:PhoneApplicationPage.Resources>
+		<DataTemplate x:Key="ReminderTemplate">
+			<Grid Width="450">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="0.333*"/>
+					<RowDefinition Height="0.212*"/>
+					<RowDefinition Height="0.455*"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="0.009*"/>
+					<ColumnDefinition Width="0.528*"/>
+					<ColumnDefinition Width="0.463*"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Grid.Column="1" Margin="8,0" TextWrapping="Wrap" Text="{Binding ReminderTitle, FallbackValue=No value}" VerticalAlignment="Bottom" FontSize="37.333"/>
+				<TextBlock Grid.Column="1" Margin="8,0,0,0" TextWrapping="Wrap" Grid.Row="1" FontSize="18.667" Foreground="#FFB8B8B8" Text="{Binding DueDate}"/>
+				<TextBlock Grid.Column="2" TextWrapping="Wrap" Margin="0" Foreground="White" FontSize="16" Grid.Row="1" TextAlignment="Right" VerticalAlignment="Bottom"/>
+				<Rectangle Fill="#FF3A89D2" HorizontalAlignment="Left" Margin="0" Grid.RowSpan="2" Stroke="Black" Width="5"/>
+				<Button x:Name="EditButton" Content="" Margin="0" BorderThickness="0" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Width="72" Height="72" Click="EditButton_Click">
+					<Button.Foreground>
+						<SolidColorBrush Color="{StaticResource PhoneContrastForegroundColor}"/>
+					</Button.Foreground>
+					<Button.Background>
+						<SolidColorBrush Color="{StaticResource PhoneContrastBackgroundColor}"/>
+					</Button.Background>
+					<Button.OpacityMask>
+						<ImageBrush Stretch="None" ImageSource="/car_pal;component/icons/edit.rest.large.png"/>
+					</Button.OpacityMask>
+				</Button>
+				<TextBlock TextWrapping="Wrap" TextAlignment="Right" FontSize="26.667" Margin="0" Grid.Column="2" VerticalAlignment="Bottom" Text="{Binding DueRemaining}"/>
+				<TextBlock TextWrapping="Wrap" Margin="0" Foreground="White" FontSize="18.667" Text="{Binding DueStatus}" TextAlignment="Right" Grid.Column="2" Grid.Row="1" d:LayoutOverrides="Height" VerticalAlignment="Top"/>
+			</Grid>
+		</DataTemplate>
+	</phone:PhoneApplicationPage.Resources>
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar>
 			<shell:ApplicationBarIconButton x:Name="HomeAppBarButton" Text="home" Click="HomeAppBarButton_Click" IconUri="/icons/appbar.home.png"/>
@@ -26,135 +60,24 @@
 		<controls:Pivot Title="LOGBOOK">
 			<!--Pivot item one-->
 			<controls:PivotItem Header="reminders">
-				<ScrollViewer Margin="8">
-					<ListBox>
-						<ListBoxItem>
-							<Grid Width="429">
-								<Grid.RowDefinitions>
-									<RowDefinition Height="0.333*"/>
-									<RowDefinition Height="0.212*"/>
-									<RowDefinition Height="0.455*"/>
-								</Grid.RowDefinitions>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="0.009*"/>
-									<ColumnDefinition Width="0.528*"/>
-									<ColumnDefinition Width="0.463*"/>
-								</Grid.ColumnDefinitions>
-								<TextBlock Grid.Column="1" Margin="8,0" TextWrapping="Wrap" Text="oil change" VerticalAlignment="Bottom" FontSize="37.333"/>
-								<TextBlock Grid.Column="1" Margin="8,0,0,0" TextWrapping="Wrap" Grid.Row="1" FontSize="18.667" Foreground="#FFB8B8B8" Text="due on: 3/21/2011"/>
-								<TextBlock Grid.Column="2" TextWrapping="Wrap" Margin="0" Foreground="White" FontSize="16" Grid.Row="1" TextAlignment="Right" VerticalAlignment="Bottom"/>
-								<Rectangle Fill="#FF3A89D2" HorizontalAlignment="Left" Margin="0" Grid.RowSpan="2" Stroke="Black" Width="5"/>
-								<StackPanel Grid.Column="1" Margin="0" Grid.Row="2" Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Center" d:LayoutOverrides="GridBox">
-									<Image HorizontalAlignment="Left" Source="/car_pal;component/Images/circle_edit.png" Stretch="Fill" Width="51" Margin="5,0,0,0" Height="51"/>
-								</StackPanel>
-								<TextBlock TextWrapping="Wrap" TextAlignment="Right" FontSize="26.667" Margin="0" Grid.Column="2" VerticalAlignment="Bottom"><Run Text="1">
-										<Run.Foreground>
-											<SolidColorBrush Color="Red">
-												<SolidColorBrush.RelativeTransform>
-													<MatrixTransform Matrix="Identity"/>
-												</SolidColorBrush.RelativeTransform>
-												<SolidColorBrush.Transform>
-													<MatrixTransform Matrix="Identity"/>
-												</SolidColorBrush.Transform>
-											</SolidColorBrush>
-										</Run.Foreground>
-									</Run><Run Text="y "/><Run Text="3">
-										<Run.Foreground>
-											<SolidColorBrush Color="Red">
-												<SolidColorBrush.RelativeTransform>
-													<MatrixTransform Matrix="Identity"/>
-												</SolidColorBrush.RelativeTransform>
-												<SolidColorBrush.Transform>
-													<MatrixTransform Matrix="Identity"/>
-												</SolidColorBrush.Transform>
-											</SolidColorBrush>
-										</Run.Foreground>
-									</Run><Run Text="m"/><Run Text=" 29">
-										<Run.Foreground>
-											<SolidColorBrush Color="#FFF90202">
-												<SolidColorBrush.RelativeTransform>
-													<MatrixTransform Matrix="Identity"/>
-												</SolidColorBrush.RelativeTransform>
-												<SolidColorBrush.Transform>
-													<MatrixTransform Matrix="Identity"/>
-												</SolidColorBrush.Transform>
-											</SolidColorBrush>
-										</Run.Foreground>
-									</Run><Run Text="d"/></TextBlock>
-								<TextBlock TextWrapping="Wrap" Margin="0" Foreground="White" FontSize="18.667" Text="overdue" TextAlignment="Right" Grid.Column="2" Grid.Row="1" d:LayoutOverrides="Height" VerticalAlignment="Top"/>
-							</Grid>
-						</ListBoxItem>
-						<ListBoxItem>
-							<Grid Width="429">
-								<Grid.RowDefinitions>
-									<RowDefinition Height="0.333*"/>
-									<RowDefinition Height="0.212*"/>
-									<RowDefinition Height="0.455*"/>
-								</Grid.RowDefinitions>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="0.019*"/>
-									<ColumnDefinition Width="0.492*"/>
-									<ColumnDefinition Width="0.489*"/>
-								</Grid.ColumnDefinitions>
-								<TextBlock Grid.Column="1" Margin="8,0" TextWrapping="Wrap" Text="rotate tires" FontSize="37.333"/>
-								<TextBlock Grid.Column="1" Margin="8,0,0,0" TextWrapping="Wrap" Text="due at: 112,234 mi." Grid.Row="1" FontSize="18.667" Foreground="#FFB8B8B8"/>
-								<TextBlock Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="26.667" TextAlignment="Right"><Run Foreground="#FF48AB3B" Text="289"/><Run Text=" "/><Run Text="miles"/></TextBlock>
-								<TextBlock Grid.Column="2" TextWrapping="Wrap" Margin="0" Foreground="White" FontSize="18.667" Text="remaining" Grid.Row="1" d:LayoutOverrides="Height" TextAlignment="Right"/>
-								<Rectangle Fill="#FF3A89D2" HorizontalAlignment="Left" Margin="0" Grid.RowSpan="2" Stroke="Black" Width="5"/>
-								<StackPanel Grid.Column="1" Margin="100,8,8,8" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-									<Image HorizontalAlignment="Left" Source="/car_pal;component/Images/circle_edit.png" Stretch="Fill" Width="29" d:LayoutOverrides="VerticalMargin"/>
-								</StackPanel>
-							</Grid>
-						</ListBoxItem>
-						<ListBoxItem>
-							<Grid Width="429">
-								<Grid.RowDefinitions>
-									<RowDefinition Height="0.333*"/>
-									<RowDefinition Height="0.212*"/>
-									<RowDefinition Height="0.455*"/>
-								</Grid.RowDefinitions>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="0.015*"/>
-									<ColumnDefinition Width="0.608*"/>
-									<ColumnDefinition Width="0.25*"/>
-									<ColumnDefinition Width="0.127*"/>
-								</Grid.ColumnDefinitions>
-								<TextBlock Grid.Column="1" Margin="8,0" TextWrapping="Wrap" Text="check fluids" VerticalAlignment="Bottom" FontSize="37.333"/>
-								<TextBlock Grid.Column="1" Margin="8,0,0,0" TextWrapping="Wrap" Text="last completed: 9/21/2011" Grid.Row="1" FontSize="21.333" Foreground="#FFB8B8B8"/>
-								<TextBlock Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Bottom"><Run Text="1">
-										<Run.Foreground>
-											<SolidColorBrush Color="#FFDAFF00">
-												<SolidColorBrush.RelativeTransform>
-													<MatrixTransform Matrix="Identity"/>
-												</SolidColorBrush.RelativeTransform>
-												<SolidColorBrush.Transform>
-													<MatrixTransform Matrix="Identity"/>
-												</SolidColorBrush.Transform>
-											</SolidColorBrush>
-										</Run.Foreground>
-									</Run><Run Text=" "/><Run FontSize="8" Text="months"/><Run Text=" "/><Run Text="12">
-										<Run.Foreground>
-											<SolidColorBrush Color="#FFA1B624">
-												<SolidColorBrush.RelativeTransform>
-													<MatrixTransform Matrix="Identity"/>
-												</SolidColorBrush.RelativeTransform>
-												<SolidColorBrush.Transform>
-													<MatrixTransform Matrix="Identity"/>
-												</SolidColorBrush.Transform>
-											</SolidColorBrush>
-										</Run.Foreground>
-									</Run><Run Text=" "/><Run FontSize="8" Text="days"/></TextBlock>
-								<TextBlock Grid.Column="3" TextWrapping="Wrap" Margin="0,0,8,0" Foreground="White" FontSize="10.667" Text="remaining" VerticalAlignment="Bottom"/>
-								<TextBlock Grid.Column="3" TextWrapping="Wrap" Margin="5,8,0,0" Foreground="White" FontSize="10.667" Grid.Row="1" HorizontalAlignment="Left" Text="due"/>
-								<TextBlock Grid.Column="2" TextWrapping="Wrap" Margin="0,8,4,0" Foreground="White" FontSize="10.667" Grid.Row="1" Text="12 mo./10,000 mi" HorizontalAlignment="Right" Width="99" TextAlignment="Right"/>
-								<Rectangle Fill="#FF3A89D2" HorizontalAlignment="Left" Margin="0" Grid.RowSpan="2" Stroke="Black" Width="5"/>
-								<StackPanel Grid.Column="1" Margin="100,8,8,8" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-									<Image HorizontalAlignment="Left" Source="/car_pal;component/Images/circle_edit.png" Stretch="Fill" Width="29" d:LayoutOverrides="VerticalMargin"/>
-								</StackPanel>
-							</Grid>
-						</ListBoxItem>
-					</ListBox>
-				</ScrollViewer>
+				<StackPanel>
+					<StackPanel x:Name="Welcome_Panel" Margin="0,0,9,0" Visibility="Collapsed">
+						<TextBlock TextWrapping="Wrap" Margin="0,20,0,0" FontSize="26.667" FontFamily="Segoe WP Light" Foreground="Silver" Text="To start tracking your reminders, click on the garage icon below and add a new vehicle."/>
+					</StackPanel>
+					<StackPanel x:Name="Form_Panel">
+						<StackPanel x:Name="VehicleNameContainer" Orientation="Horizontal" Margin="0,0,0,20">
+							<TextBlock x:Name="VehicleNameLabel" TextWrapping="Wrap" Text="Reminders for: " FontSize="24" FontFamily="Segoe WP Light"/>
+							<TextBlock x:Name="VehicleName" TextWrapping="Wrap"  Text="{Binding DefaultVehicle.VehicleName}" FontSize="24" >
+								<TextBlock.Foreground>
+									<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
+								</TextBlock.Foreground>
+							</TextBlock>
+						</StackPanel>
+						<ScrollViewer Margin="0" Height="519">
+							<ListBox x:Name="ResultsList" ItemTemplate="{StaticResource ReminderTemplate}"/>
+						</ScrollViewer>
+					</StackPanel>
+				</StackPanel>
 			</controls:PivotItem>
 
  			<!--Pivot item two-->
