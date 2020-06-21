@@ -13,6 +13,13 @@ namespace car_pal.ViewModel
     {
         // LINQ to SQL data context for the local database. Also, init local datastore
         private DatabaseContext _db;
+        private VehicleModel _defaultVehicle;
+        private ObservableCollection<FillupModel> _defaultFillups;
+        private int _statSampleSize;
+        private double _overallMPG;
+        private double _overallCostMile;
+        private double _overallMileFill;
+        private double _overallDaysFill;
 
         // Class constructor, create the data context object.
         public MainViewModel()
@@ -25,17 +32,9 @@ namespace car_pal.ViewModel
         private ObservableCollection<VehicleModel> _allVehicles;
         public ObservableCollection<VehicleModel> AllVehicles
         {
-            get 
+            get
             {
-                /*if (_allVehicles != null)
-                {
-                    Debug.WriteLine("Number of Vehicles: " + _allVehicles.Count());
-                }
-                else
-                {
-                    Debug.WriteLine("No vehicles found.");
-                }*/
-                return _allVehicles; 
+                return _allVehicles;
             }
             set
             {
@@ -44,66 +43,204 @@ namespace car_pal.ViewModel
             }
         }
 
+        // Get all vehicles from db
+        public void LoadCollectionsFromDatabase()
+        {
+            // Specify the query for all to-do items in the database.
+            var vehiclesInDB = from VehicleModel vehicle in _db.Vehicles
+                               select vehicle;
+
+            // Query the database and load all to-do items.
+            AllVehicles = new ObservableCollection<VehicleModel>(vehiclesInDB);
+            _allVehicles.CollectionChanged += delegate { Debug.WriteLine("AllVehicles Changed!"); NotifyPropertyChanged("AllVehicles"); };
+
+            initDefault();
+        }
+
         public VehicleModel DefaultVehicle
         {
             get
+            {
+                return _defaultVehicle;
+            }
+            set
+            {
+                if (_defaultVehicle != value)
+                {
+                    if (_defaultVehicle != null)
+                    {
+                        Debug.WriteLine("Changing Default Vehicle from \"" + _defaultVehicle.VehicleName + "\" to \"" + value.VehicleName + "\"");
+                    }
+
+                    _defaultVehicle = value;
+                    saveDefault();
+                    calcDefault();
+                    NotifyPropertyChanged("DefaultVehicle");
+                }
+            }
+        }
+
+        public ObservableCollection<FillupModel> DefaultFillups
+        {
+            get
+            {
+                return _defaultFillups;
+            }
+            set
+            {
+                if (_defaultFillups != value)
+                {
+                    _defaultFillups = value;
+                    NotifyPropertyChanged("DefaultFillups");
+                }
+            }
+        }
+
+        public double OverallMPG
+        {
+            get
+            {
+                return _overallMPG;
+            }
+            set
+            {
+                _overallMPG = value;
+                NotifyPropertyChanged("OverallMPG");
+            }
+        }
+
+        public double OverallCostMile
+        {
+            get
+            {
+                return _overallCostMile;
+            }
+            set
+            {
+                _overallCostMile = value;
+                NotifyPropertyChanged("OverallCostMile");
+            }
+        }
+
+        public double OverallMileFill
+        {
+            get
+            {
+                return _overallMileFill;
+            }
+            set
+            {
+                _overallMileFill = value;
+                NotifyPropertyChanged("OverallMileFill");
+            }
+        }
+
+        public double OverallDaysFill
+        {
+            get
+            {
+                return _overallDaysFill;
+            }
+            set
+            {
+                _overallDaysFill = value;
+                NotifyPropertyChanged("OverallDaysFill");
+            }
+        }
+
+        // Initializes and cleans up default vehicle
+        public void initDefault()
+        {
+            if (DefaultVehicle == null)
             {
                 if (AllVehicles.Count > 0)
                 {
                     if (AllVehicles.Count(v => v.IsDefaultVehicle == true) == 1)
                     {
-                        return AllVehicles.First(v => v.IsDefaultVehicle == true);
+                        DefaultVehicle = AllVehicles.First(v => v.IsDefaultVehicle == true);
                     }
                     else
                     {
-                        // reset to 1 default???
                         DefaultVehicle = AllVehicles.First();
-                        return AllVehicles.First();
                     }
-                    
                 }
-
-                return null;
             }
-            set
+        }
+
+        // Save default car to database
+        public void saveDefault()
+        {
+            foreach (VehicleModel vehicle in AllVehicles)
             {
-                Debug.WriteLine("Changing Default Vehicle from \"" + this.DefaultVehicle.VehicleName +"\" to \"" + value.VehicleName +"\"");
-                
-                foreach (VehicleModel vehicle in (from v in _db.Vehicles select v))
+                if (vehicle.VehicleId == _defaultVehicle.VehicleId)
                 {
-                    if(vehicle.VehicleId == value.VehicleId)
-                    {
-                        vehicle.IsDefaultVehicle = true;
-                    }
-                    else
-                    {
-                        vehicle.IsDefaultVehicle = false;
-                    }
+                    vehicle.IsDefaultVehicle = true;
                 }
-
-                // Submit the changes to the database.
-                try
+                else
                 {
-                    _db.SubmitChanges();
+                    vehicle.IsDefaultVehicle = false;
                 }
-                catch (Exception e)
-                {
-                    // Provide for exceptions.
-                }
-
-                NotifyPropertyChanged("DefaultVehicle");
-                
             }
+
+            // Submit the changes to the database.
+            try
+            {
+                _db.SubmitChanges();
+            }
+            catch (Exception e)
+            {
+                // Provide for exceptions.
+            }
+        }
+
+        // Called when default vehicle is set, calculates MPGs and other stats
+        public void calcDefault()
+        {
+            FillupModel previousFillup = new FillupModel();
+
+            DefaultFillups = new ObservableCollection<FillupModel>();
+            int i = 0;
+            double statMileDiff = 0;
+            double statTotalVol = 0;
+            TimeSpan statDayDiff = new TimeSpan();
+            double statTotalCost = 0;
+            foreach(FillupModel f in (from fu in DefaultVehicle.Fillups orderby fu.FillupDate descending select fu))
+            {
+                DefaultFillups.Add(f);
+                if (previousFillup.OdoReading != 0.0D && previousFillup.VolReading != 0)
+                {
+                    previousFillup.FillupMPG = (previousFillup.OdoReading - f.OdoReading) / previousFillup.VolReading;
+
+                    if (i <= 7)
+                    {
+                        statMileDiff += (previousFillup.OdoReading - f.OdoReading);
+                        statTotalVol += (f.VolReading);
+                        statDayDiff += (previousFillup.FillupDate - f.FillupDate);
+                        statTotalCost += (previousFillup.PriceReading * previousFillup.VolReading);
+                        i++;
+                    }
+                }
+
+                previousFillup = f;
+            }
+
+            if (statTotalVol > 0 && statMileDiff > 0)
+            {
+                OverallMPG = statMileDiff / statTotalVol;
+                OverallCostMile = statTotalCost / statMileDiff;
+                OverallMileFill = statMileDiff / i;
+                OverallDaysFill = statDayDiff.Days / i;
+            }
+            _statSampleSize = i;
         }
 
         // Add vehicle to database
         public void AddVehicle(VehicleModel vehicle)
         {
-
             // Check if this is first vehicle... if so, make it default
             if (_db.Vehicles.Count() == 0)
             {
-                vehicle.IsDefaultVehicle = true;
+                vehicle.IsDefaultVehicle = true; DefaultVehicle = vehicle;
             }
 
             _db.Vehicles.InsertOnSubmit(vehicle);
@@ -111,6 +248,7 @@ namespace car_pal.ViewModel
 
             // Add the vehicle to the "all" observable collection.
             AllVehicles.Add(vehicle);
+
             Debug.WriteLine("Added Vehicle: (" + vehicle.VehicleId + ", \"" + vehicle.VehicleName + "\", "+ vehicle.IsDefaultVehicle +")");
         }
 
@@ -123,6 +261,12 @@ namespace car_pal.ViewModel
                 NewDefaultVehicle.IsDefaultVehicle = true;
             }
 
+            // Check if the vehicle has fillups and remove those
+            foreach (FillupModel f in vehicle.Fillups)
+            {
+                _db.Fillups.DeleteOnSubmit(f);
+            }
+
             // Remove the vehicle from the "all" observable collection.
             Debug.WriteLine("Removed Vehicle: (" + vehicle.VehicleId + ", \"" + vehicle.VehicleName + "\")");
             AllVehicles.Remove(vehicle);
@@ -131,19 +275,13 @@ namespace car_pal.ViewModel
             _db.SubmitChanges();
         }
 
-        // Query database and load the collections and list used by the pivot pages.
-        public void LoadCollectionsFromDatabase()
+        public void AddFillup(FillupModel fillup)
         {
-            // Specify the query for all to-do items in the database.
-            var vehiclesInDB = from VehicleModel vehicle in _db.Vehicles
-                               select vehicle;
-
-            // Query the database and load all to-do items.
-            AllVehicles = new ObservableCollection<VehicleModel>(vehiclesInDB);
+            App.ViewModel.DefaultVehicle.Fillups.Add(fillup);
+            App.ViewModel.SaveChangesToDB();
+            calcDefault();
+            NotifyPropertyChanged("DefaultVehicle");
         }
-        //
-        // TODO: Add collections, list, and methods here.
-        //
 
         // Write changes in the data context to the database.
         public void SaveChangesToDB()

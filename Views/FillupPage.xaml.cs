@@ -82,6 +82,12 @@ namespace car_pal.Views
             // change focus because they are not Silverlight controls. 
 			// TODO: ONLY NEEDED IF SAVE BUTTON CHANGED TO APPLICATION BAR
             //CommitTextBoxWithFocus();
+
+            // Everything checks out, lets do it!
+            DateTime dT = (DateTime)FillupDate.Value;
+            dT = dT.AddHours(FillupTime.Value.Value.Hour);
+            dT = dT.AddMinutes(FillupTime.Value.Value.Minute);
+
             if (FillupDate.Value == null)
             {
                 MessageBox.Show("Date value required.");
@@ -92,6 +98,12 @@ namespace car_pal.Views
                 MessageBox.Show("Time value required.");
                 return;
             }
+            if ((from f in App.ViewModel.DefaultFillups where f.FillupDate == dT select f.FillupId).Count() > 0)
+            {
+                MessageBox.Show("An entry for this time already exists");
+                return;
+            }
+
 			if (string.IsNullOrWhiteSpace(FillupOdoInput.Text))
             {
                 MessageBox.Show("The odometer reading is required.");
@@ -128,21 +140,27 @@ namespace car_pal.Views
                 MessageBox.Show("The price per gallon value could not be converted to a number.");
                 return;
             };
-
-            // Everything checks out, lets do it!
-            DateTime dT = (DateTime)FillupDate.Value;
-            dT = dT.AddHours(FillupTime.Value.Value.Hour);
-            dT = dT.AddMinutes(FillupTime.Value.Value.Minute);
+            if ((from f in App.ViewModel.DefaultFillups where f.FillupDate <= dT && f.OdoReading >= double.Parse(FillupOdoInput.Text) select f.FillupId).Count() > 0)
+            {
+                MessageBox.Show("A entry exists for a previous date with a higher odometer reading.  Please check entry and/or fillup history.");
+                return;
+            }
+            if ((from f in App.ViewModel.DefaultFillups where f.FillupDate >= dT && f.OdoReading <= double.Parse(FillupOdoInput.Text) select f.FillupId).Count() > 0)
+            {
+                MessageBox.Show("A entry exists for a future date with a lower odometer reading.  Please check entry and/or fillup history.");
+                return;
+            }
 
             FillupModel _newFillup = new FillupModel();
-            _newFillup.FillupDate = (DateTime)dT;
+            _newFillup.FillupDate = dT;
             _newFillup.PriceReading = double.Parse(FillupPriceInput.Text);
             _newFillup.VolReading = double.Parse(FillupVolInput.Text);
             _newFillup.OdoReading = double.Parse(FillupOdoInput.Text);
 
             // Need to add logic for editing...
-            App.ViewModel.DefaultVehicle.Fillups.Add(_newFillup);
-            App.ViewModel.SaveChangesToDB();
+
+            App.ViewModel.AddFillup(_newFillup);
+            
 
             //Debug.WriteLine("Date: " + dT.Value.Month + "/" + dT.Value.Day + "/" + dT.Value.Year + " " + dT.Value.Hour + ":" + dT.Value.Minute + ":" + dT.Value.Second);
 

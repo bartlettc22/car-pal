@@ -73,13 +73,13 @@
 					<RowDefinition Height="Auto" MinHeight="490"/>
 					<RowDefinition Height="Auto"/>
 				</Grid.RowDefinitions>
-				<StackPanel Margin="0">
+				<StackPanel Margin="0" Height="490">
 					<TextBlock x:Name="GarageEmptyNotice" TextWrapping="Wrap" Text="Add a vehicle to get started" FontSize="37.333" FontFamily="Segoe WP Light" Foreground="#C6FFFFFF"/>
 					<ScrollViewer Margin="0">
 						<ListBox x:Name="VehicleList" ItemsSource="{Binding AllVehicles}" ItemTemplate="{StaticResource VehicleListDataTemplate}" SelectionChanged="VehicleList_SelectionChanged" />
 					</ScrollViewer>
 				</StackPanel>
-				<Border BorderThickness="4,0,0,0" Margin="0,10,0,8" VerticalAlignment="Bottom" Grid.Row="1">
+				<Border x:Name="DefaultHelp" BorderThickness="4,0,0,0" Margin="0,10,0,8" VerticalAlignment="Bottom" Grid.Row="1">
 					<Border.BorderBrush>
 						<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
 					</Border.BorderBrush>

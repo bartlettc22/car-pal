@@ -29,14 +29,10 @@ namespace car_pal
             InitializeComponent();
 
             // Set the page DataContext property to the ViewModel.
-            this.DataContext = App.ViewModel.DefaultVehicle;
+            DataContext = App.ViewModel;
 
             // Keep the splash screen up for a bit
             //System.Threading.Thread.Sleep(2000);
-
-
-            // Notify this page when the default car is changed
-            //GarageModel.DefaultVehicleChanged += Garage_DefaultVehicleChanged;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -63,11 +59,15 @@ namespace car_pal
             {
                 //DataContext = DataStore.Garage.DefaultVehicle;
                 Welcome_Panel.Visibility = Visibility.Collapsed;
+                DashboardVehicleNameDisplay.Visibility = Visibility.Visible;
                 Dashboard_Panel.Visibility = Visibility.Visible;
+                FillupVehicleNameDisplay.Visibility = Visibility.Visible;
             }
             else
             {
+                DashboardVehicleNameDisplay.Visibility = Visibility.Collapsed;
                 Dashboard_Panel.Visibility = Visibility.Collapsed;
+                FillupVehicleNameDisplay.Visibility = Visibility.Collapsed;
                 Welcome_Panel.Visibility = Visibility.Visible;
             }
 
@@ -223,6 +223,18 @@ namespace car_pal
             }
 
             _fillupAlt = !_fillupAlt;
+        }
+
+        private void SettingsBarMenuItem_Click(object sender, System.EventArgs e)
+        {
+        	NavigationService.Navigate(new Uri("//Views/SettingsPage.xaml", UriKind.Relative));
+        }
+
+        private void FillupList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            FillupModel fillup = (sender as Button).DataContext as FillupModel;
+            NavigationService.Navigate(new Uri(string.Format("//Views/FillupPage.xaml?fillupId={0}", 
+                Uri.EscapeUriString(fillup.FillupId.ToString())), UriKind.Relative));
         }
     }
 }

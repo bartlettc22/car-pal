@@ -10,49 +10,18 @@ namespace car_pal.Models
 {
     public class DatabaseContext : DataContext, INotifyPropertyChanged
     {
-        // AppSetting info
-        //private const string DEFAULT_VEHICLE_KEY = "car_pal.DefaultVehicle";
-        //private readonly IsolatedStorageSettings _appSettings = IsolatedStorageSettings.ApplicationSettings;
-        //private int _defaultVehicleId = -1;
-
         // Specify the connection string as a static, used in main page and app.xaml.
         public static string DBConnectionString = "Data Source=isostore:/carpal.sdf";
 
         // Pass the connection string to the base class.
         public DatabaseContext(string connectionString) : base(connectionString) 
         { 
-            /*if (_appSettings.Contains(DEFAULT_VEHICLE_KEY))
-            {
-                _defaultVehicleId = (int)_appSettings[DEFAULT_VEHICLE_KEY];
-            }*/
-
             PropertyChanged += delegate(object sender, PropertyChangedEventArgs arg) { Debug.WriteLine("DatabaseContext Property Changed!: " + arg.PropertyName); };
         }
 
         // DB table models
         public Table<VehicleModel> Vehicles;
         public Table<FillupModel> Fillups;
-
-        /*public int DefaultVehicleId
-        {
-            get
-            {
-                return _defaultVehicleId;
-            }
-            set
-            {
-                try
-                {
-                    _appSettings[DEFAULT_VEHICLE_KEY] = value;
-                    _appSettings.Save();
-                    _defaultVehicleId = value;
-                }
-                catch (IsolatedStorageException)
-                {
-                    MessageBox.Show("Error saving data to device.");
-                }
-            }
-        }*/
 
         #region INotifyPropertyChanged Members
 
@@ -74,46 +43,20 @@ namespace car_pal.Models
     [Table]
     public class VehicleModel : INotifyPropertyChanged, INotifyPropertyChanging
     {
-        // Define Vehicle ID: private field, public property and database column.
-        private int _vehicleId;
-        //private bool _isDefault = false;
 
-        /*public bool isDefaultVehicle
+        // Assign handlers for the add and remove operations, respectively.
+        public VehicleModel()
         {
-            get
-            {
-                return _isDefault;
-            }
-            set
-            {
-                NotifyPropertyChanging("isDefaultVehicle");
-                _isDefault = value;
-                NotifyPropertyChanged("isDefaultVehicle");
-            }
-        }*/
-
-
-        /*public bool isDefaultVehicle
-        {
-            get
-            {
-                if (_vehicleId == DatabaseContext.DefaultVehicleId)
-                {
-                    return true;
-                }
-
-                return false;
-            }
+            _fillups = new EntitySet<FillupModel>(
+                new Action<FillupModel>(this.attach_Fillup),
+                new Action<FillupModel>(this.detach_Fillup)
+                );
+            _fillups.CollectionChanged += delegate { Debug.WriteLine("Fillups Changed!"); NotifyPropertyChanged("Fillups"); };
+            PropertyChanged += delegate(object sender, PropertyChangedEventArgs arg) { Debug.WriteLine("VehicleModel Property Changed!: " + arg.PropertyName); };
         }
 
-        public void setAsDefaultVehicle()
-        {
-            if (_vehicleId != DatabaseContext.DefaultVehicleId)
-            {
-                DatabaseContext.DefaultVehicleId = _vehicleId;
-            }
-        }*/
-
+        // Define Vehicle ID: private field, public property and database column.
+        private int _vehicleId;
         [Column(IsPrimaryKey = true, IsDbGenerated = true, DbType = "INT NOT NULL Identity", CanBeNull = false, AutoSync = AutoSync.OnInsert)]
         public int VehicleId
         {
@@ -134,7 +77,6 @@ namespace car_pal.Models
 
         // Define Vehicle name: private field, public property and database column.
         private string _vehicleName;
-
         [Column]
         public string VehicleName
         {
@@ -155,7 +97,6 @@ namespace car_pal.Models
 
         // Define Vehicle default: private field, public property and database column.
         private bool _isDefaultVehicle = false;
-
         [Column]
         public bool IsDefaultVehicle
         {
@@ -186,17 +127,6 @@ namespace car_pal.Models
         {
             get { return this._fillups; }
             set { this._fillups.Assign(value); }
-        }
-
-        // Assign handlers for the add and remove operations, respectively.
-        public VehicleModel()
-        {
-            _fillups = new EntitySet<FillupModel>(
-                new Action<FillupModel>(this.attach_Fillup),
-                new Action<FillupModel>(this.detach_Fillup)
-                );
-            _fillups.CollectionChanged += delegate { Debug.WriteLine("Fillups Changed!"); NotifyPropertyChanged("Fillups"); };
-            PropertyChanged += delegate(object sender, PropertyChangedEventArgs arg) { Debug.WriteLine("VehicleModel Property Changed!: " + arg.PropertyName); };
         }
 
         // Called during an add operation
@@ -248,15 +178,30 @@ namespace car_pal.Models
     [Table]
     public class FillupModel : INotifyPropertyChanged, INotifyPropertyChanging
     {
-
         public FillupModel()
         {
             PropertyChanged += delegate(object sender, PropertyChangedEventArgs arg) { Debug.WriteLine("FillupModel Property Changed!: " + arg.PropertyName); };
         }
 
-        // Define Fillup ID: private field, public property and database column.
-        private int _fillupId;
+        private double _fillupMPG;
+        public double FillupMPG
+        {
+            get
+            {
+                return _fillupMPG;
+            }
+            set
+            {
+                if(_fillupMPG != value)
+                {
+                    NotifyPropertyChanging("FillupMPG");
+                    _fillupMPG = value;
+                    NotifyPropertyChanged("FillupMPG");
+                }
+            }
+        }
 
+        private int _fillupId;
         [Column(IsPrimaryKey = true, IsDbGenerated = true, DbType = "INT NOT NULL Identity", CanBeNull = false, AutoSync = AutoSync.OnInsert)]
         public int FillupId
         {
@@ -348,11 +293,9 @@ namespace car_pal.Models
             }
         }
 
-        // Internal column for the associated ToDoCategory ID value
         [Column]
         internal int _vehicleId;
 
-        // Entity reference, to identify the ToDoCategory "storage" table
         private EntityRef<VehicleModel> _vehicle;
 
         // Association, to describe the relationship between this key and that "storage" table

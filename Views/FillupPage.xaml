@@ -69,7 +69,7 @@
         				</TextBlock.Foreground>
         			</TextBlock>
         		</StackPanel>
-        		<Grid>
+        		<Grid Margin="0,15,0,0">
         			<Grid.RowDefinitions>
         				<RowDefinition Height="Auto" MinHeight="72"/>
         				<RowDefinition Height="Auto" MinHeight="90"/>
@@ -82,7 +82,7 @@
         				<ColumnDefinition Width="0.673*"/>
         			</Grid.ColumnDefinitions>
         			<toolkit:DatePicker x:Name="FillupDate" Grid.Column="1" FontSize="26.667" HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" Margin="0,0,143,0" VerticalAlignment="Bottom"/>
-        			<toolkit:TimePicker x:Name="FillupTime" Grid.Column="1" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Bottom" Width="143"/>
+        			<toolkit:TimePicker x:Name="FillupTime" Grid.Column="1" Margin="148,0,0,0" VerticalAlignment="Bottom"/>
         			<TextBlock x:Name="FillupDateLabel" Margin="0,0,8,8" TextWrapping="Wrap" Text="Date/Time" VerticalAlignment="Bottom" TextAlignment="Right" FontSize="26.667"/>
         			<TextBlock x:Name="FillupPriceLabel" Margin="8,0,8,8" Grid.Row="1" TextWrapping="Wrap" Text="Price" VerticalAlignment="Bottom" TextAlignment="Right" FontSize="26.667"/>
         			<TextBox x:Name="FillupPriceInput" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" d:LayoutOverrides="VerticalAlignment" FontSize="40" BorderThickness="0" TextAlignment="Right" Height="90" InputScope="Number" LostFocus="FillupPriceInput_LostFocus"/>

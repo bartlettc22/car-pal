@@ -15,14 +15,15 @@
 	shell:SystemTray.IsVisible="True">
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar>
-			<shell:ApplicationBarIconButton x:Name="HomeAppBarButton" IconUri="/icons/appbar.transport.play.rest.png" Text="home" Click="HomeAppBarButton_Click"/>
+			<shell:ApplicationBarIconButton x:Name="HomeAppBarButton" Text="home" Click="HomeAppBarButton_Click" IconUri="/icons/appbar.home.png"/>
+			<shell:ApplicationBarIconButton x:Name="GarageAppBarButton" IconUri="/icons/appbar.feature.settings.rest.png" Text="garage" Click="GarageAppBarButton_Click"/>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
 
 	<!--LayoutRoot is the root grid where all page content is placed-->
 	<Grid x:Name="LayoutRoot" Background="Transparent">
 		<!--Pivot Control-->
-		<controls:Pivot Title="logbook">
+		<controls:Pivot Title="LOGBOOK">
 			<!--Pivot item one-->
 			<controls:PivotItem Header="reminders">
 				<ScrollViewer Margin="8">
@@ -44,7 +45,6 @@
 								<TextBlock Grid.Column="2" TextWrapping="Wrap" Margin="0" Foreground="White" FontSize="16" Grid.Row="1" TextAlignment="Right" VerticalAlignment="Bottom"/>
 								<Rectangle Fill="#FF3A89D2" HorizontalAlignment="Left" Margin="0" Grid.RowSpan="2" Stroke="Black" Width="5"/>
 								<StackPanel Grid.Column="1" Margin="0" Grid.Row="2" Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Center" d:LayoutOverrides="GridBox">
-									<Image Margin="0,0,5,0" Source="/car_pal;component/Images/circle_fav.png" Stretch="Fill" Width="51" Height="51"/>
 									<Image HorizontalAlignment="Left" Source="/car_pal;component/Images/circle_edit.png" Stretch="Fill" Width="51" Margin="5,0,0,0" Height="51"/>
 								</StackPanel>
 								<TextBlock TextWrapping="Wrap" TextAlignment="Right" FontSize="26.667" Margin="0" Grid.Column="2" VerticalAlignment="Bottom"><Run Text="1">
@@ -102,7 +102,6 @@
 								<TextBlock Grid.Column="2" TextWrapping="Wrap" Margin="0" Foreground="White" FontSize="18.667" Text="remaining" Grid.Row="1" d:LayoutOverrides="Height" TextAlignment="Right"/>
 								<Rectangle Fill="#FF3A89D2" HorizontalAlignment="Left" Margin="0" Grid.RowSpan="2" Stroke="Black" Width="5"/>
 								<StackPanel Grid.Column="1" Margin="100,8,8,8" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-									<Image Margin="0,0,15,0" Source="/car_pal;component/Images/circle_fav.png" Stretch="Fill" Width="29"/>
 									<Image HorizontalAlignment="Left" Source="/car_pal;component/Images/circle_edit.png" Stretch="Fill" Width="29" d:LayoutOverrides="VerticalMargin"/>
 								</StackPanel>
 							</Grid>
@@ -120,7 +119,7 @@
 									<ColumnDefinition Width="0.25*"/>
 									<ColumnDefinition Width="0.127*"/>
 								</Grid.ColumnDefinitions>
-								<TextBlock Grid.Column="1" Margin="8,0" TextWrapping="Wrap" Text="air filter" VerticalAlignment="Bottom" FontSize="37.333"/>
+								<TextBlock Grid.Column="1" Margin="8,0" TextWrapping="Wrap" Text="check fluids" VerticalAlignment="Bottom" FontSize="37.333"/>
 								<TextBlock Grid.Column="1" Margin="8,0,0,0" TextWrapping="Wrap" Text="last completed: 9/21/2011" Grid.Row="1" FontSize="21.333" Foreground="#FFB8B8B8"/>
 								<TextBlock Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Bottom"><Run Text="1">
 										<Run.Foreground>
@@ -150,7 +149,6 @@
 								<TextBlock Grid.Column="2" TextWrapping="Wrap" Margin="0,8,4,0" Foreground="White" FontSize="10.667" Grid.Row="1" Text="12 mo./10,000 mi" HorizontalAlignment="Right" Width="99" TextAlignment="Right"/>
 								<Rectangle Fill="#FF3A89D2" HorizontalAlignment="Left" Margin="0" Grid.RowSpan="2" Stroke="Black" Width="5"/>
 								<StackPanel Grid.Column="1" Margin="100,8,8,8" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-									<Image Margin="0,0,15,0" Source="/car_pal;component/Images/circle_fav.png" Stretch="Fill" Width="29"/>
 									<Image HorizontalAlignment="Left" Source="/car_pal;component/Images/circle_edit.png" Stretch="Fill" Width="29" d:LayoutOverrides="VerticalMargin"/>
 								</StackPanel>
 							</Grid>
@@ -160,9 +158,6 @@
 			</controls:PivotItem>
 
  			<!--Pivot item two-->
-			<controls:PivotItem Header="maintenance">
-				<Grid/>
-			</controls:PivotItem>
 		</controls:Pivot>
 	</Grid>
 </phone:PhoneApplicationPage>

@@ -10,24 +10,14 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
-using car_pal.Models;
-using System.Collections.ObjectModel;
 
 namespace car_pal
 {
-    public partial class DebugPage : PhoneApplicationPage
+    public partial class SettingsPage : PhoneApplicationPage
     {
-        public DebugPage()
+        public SettingsPage()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            using (DatabaseContext db = new DatabaseContext(DatabaseContext.DBConnectionString))
-            {
-                db.DeleteDatabase();
-            }
         }
     }
 }

@@ -24,5 +24,10 @@ namespace car_pal
         {
         	NavigationService.Navigate(new Uri("//Views/MainPage.xaml", UriKind.Relative));
         }
+
+        private void GarageAppBarButton_Click(object sender, System.EventArgs e)
+        {
+        	NavigationService.Navigate(new Uri("//Views/GaragePage.xaml", UriKind.Relative));
+        }
     }
 }

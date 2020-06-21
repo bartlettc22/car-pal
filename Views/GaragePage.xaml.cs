@@ -30,8 +30,12 @@ namespace car_pal
             if (App.ViewModel.AllVehicles.Count > 0)
             {
                 GarageEmptyNotice.Visibility = Visibility.Collapsed;
-                //App.ViewModel.DefaultVehicle.IsDefaultVehicle = true;
-                //Debug.WriteLine("Default Vehicle: " + App.ViewModel.DefaultVehicle.VehicleName);
+                DefaultHelp.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                GarageEmptyNotice.Visibility = Visibility.Visible;
+                DefaultHelp.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -65,10 +69,10 @@ namespace car_pal
             if (MessageBox.Show("Are you sure?", "Delete \"" + vehicle.VehicleName + "\"", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
                 App.ViewModel.DeleteVehicle(vehicle);
-                if (App.ViewModel.AllVehicles.Count == 0)
+                /*if (App.ViewModel.AllVehicles.Count == 0)
                 {
                     GarageEmptyNotice.Visibility = Visibility.Visible;
-                }
+                }*/
             }
         }
     }

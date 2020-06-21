@@ -14,6 +14,7 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using car_pal.Models;
 using car_pal.ViewModel;
+using System.Diagnostics;
 
 namespace car_pal
 {
@@ -30,6 +31,7 @@ namespace car_pal
         public static MainViewModel ViewModel
         {
             get { return _viewModel; }
+            set { _viewModel = value; }
         }
 
         /// <summary>
@@ -63,8 +65,78 @@ namespace car_pal
                 // application's PhoneApplicationService object to Disabled.
                 // Caution:- Use this under debug mode only. Application that disables user idle detection will continue to run
                 // and consume battery power when the user is not using the phone.
-                PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
+                //PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
+        }
+
+        // Code to execute when the application is launching (eg, from Start)
+        // This code will not execute when the application is reactivated
+        private void Application_Launching(object sender, LaunchingEventArgs e)
+        {
+            Debug.WriteLine("Launching");
+
+            LoadViewModelFromIsolatedStorage();
+
+            // if the view model is not loaded, create a new one
+            if (ViewModel == null)
+            {
+                //ViewModel = new FeedViewModel();
+                //ViewModel.Update();
+            }
+
+            // set the frame DataContext
+            RootFrame.DataContext = ViewModel;
+        }
+
+        // Code to execute when the application is activated (brought to foreground)
+        // This code will not execute when the application is first launched
+        private void Application_Activated(object sender, ActivatedEventArgs e)
+        {
+            if (e.IsApplicationInstancePreserved)
+            {
+                Debug.WriteLine("Activated From Dormant State");
+            }
+            else
+            {
+                Debug.WriteLine("Activated From Tombstoned State");
+                LoadViewModelFromAppState();
+                RootFrame.DataContext = ViewModel;
+            } 
+        }
+
+        // Code to execute when the application is deactivated (sent to background)
+        // This code will not execute when the application is closing
+        private void Application_Deactivated(object sender, DeactivatedEventArgs e)
+        {
+            Debug.WriteLine("Deactivated");
+            SaveViewModelToAppState();
+            SaveViewModelToIsolatedStorage();
+        }
+
+        // Code to execute when the application is closing (eg, user hit Back)
+        // This code will not execute when the application is deactivated
+        private void Application_Closing(object sender, ClosingEventArgs e)
+        {
+            Debug.WriteLine("Closing");
+            SaveViewModelToIsolatedStorage();
+        }
+
+        private void SaveViewModelToAppState()
+        {
+            PhoneApplicationService.Current.State["MainViewModel"] = ViewModel;
+        }
+
+        private void LoadViewModelFromAppState()
+        {
+            if (PhoneApplicationService.Current.State.ContainsKey("MainViewModel"))
+            {
+                ViewModel = PhoneApplicationService.Current.State["MainViewModel"] as MainViewModel;
+            }
+        }
+
+        private void LoadViewModelFromIsolatedStorage()
+        {
+            // load the view model from isolated storage
 
             // Create the database if it does not exist.
             using (DatabaseContext db = new DatabaseContext(DatabaseContext.DBConnectionString))
@@ -78,36 +150,24 @@ namespace car_pal
             }
 
             // Create the ViewModel object.
-            _viewModel = new MainViewModel();
+            ViewModel = new MainViewModel();
 
             // Query the local database and load observable collections.
-            _viewModel.LoadCollectionsFromDatabase();
+            ViewModel.LoadCollectionsFromDatabase();
         }
 
-        // Code to execute when the application is launching (eg, from Start)
-        // This code will not execute when the application is reactivated
-        private void Application_Launching(object sender, LaunchingEventArgs e)
+        private void SaveViewModelToIsolatedStorage()
         {
-        }
-
-        // Code to execute when the application is activated (brought to foreground)
-        // This code will not execute when the application is first launched
-        private void Application_Activated(object sender, ActivatedEventArgs e)
-        {
-
-        }
-
-        // Code to execute when the application is deactivated (sent to background)
-        // This code will not execute when the application is closing
-        private void Application_Deactivated(object sender, DeactivatedEventArgs e)
-        {
-            // Ensure that required application state is persisted here.
-        }
-
-        // Code to execute when the application is closing (eg, user hit Back)
-        // This code will not execute when the application is deactivated
-        private void Application_Closing(object sender, ClosingEventArgs e)
-        {
+            // persist the data using isolated storage
+            /*using (var store = IsolatedStorageFile.GetUserStoreForApplication())
+            using (var stream = new IsolatedStorageFileStream("data.txt",
+                                                              FileMode.Create,
+                                                              FileAccess.Write,
+                                                              store))
+            {
+                var serializer = new XmlSerializer(typeof(FeedViewModel));
+                serializer.Serialize(stream, ViewModel);
+            }*/
         }
 
         // Code to execute if a navigation fails
