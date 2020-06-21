@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using car_pal.Models;
 using Microsoft.Phone.Controls;
-using System.Diagnostics;
 
 namespace car_pal.Views
 {
@@ -39,19 +30,26 @@ namespace car_pal.Views
 
                 if (!State.ContainsKey("WentToDatePicker") && NavigationContext.QueryString.ContainsKey("fillupId"))
                 {
-                    _editFillup = App.ViewModel.DefaultFillups.First(f => f.FillupId == int.Parse(NavigationContext.QueryString["fillupId"]));
-                    if (_editFillup != null)
+                    if (App.ViewModel.DefaultFillups.Count(f => f.FillupId == int.Parse(NavigationContext.QueryString["fillupId"])) == 1)
                     {
-                        // Editing vehicle...
-                        _editMode = true;
-                        PageTitle_Edit.Visibility = Visibility.Visible;
-                        PageTitle_Add.Visibility = Visibility.Collapsed;
-                        FillupDeleteButton.Visibility = Visibility.Visible;
-                        FillupDate.Value = new DateTime(_editFillup.FillupDate.Year, _editFillup.FillupDate.Month, _editFillup.FillupDate.Day);
-                        FillupTime.Value = new DateTime(_editFillup.FillupDate.Year, _editFillup.FillupDate.Month, _editFillup.FillupDate.Day, _editFillup.FillupDate.Hour, _editFillup.FillupDate.Minute, _editFillup.FillupDate.Second);
-                        FillupPriceInput.Text = _editFillup.PriceReading.ToString();
-                        FillupVolInput.Text = _editFillup.VolReading.ToString();
-                        FillupOdoInput.Text = _editFillup.OdoReading.ToString();
+                        _editFillup = App.ViewModel.DefaultFillups.First(f => f.FillupId == int.Parse(NavigationContext.QueryString["fillupId"]));
+                        if (_editFillup != null)
+                        {
+                            // Editing vehicle...
+                            _editMode = true;
+                            PageTitle_Edit.Visibility = Visibility.Visible;
+                            PageTitle_Add.Visibility = Visibility.Collapsed;
+                            FillupDeleteButton.Visibility = Visibility.Visible;
+                            FillupDate.Value = new DateTime(_editFillup.FillupDate.Year, _editFillup.FillupDate.Month, _editFillup.FillupDate.Day);
+                            FillupTime.Value = new DateTime(_editFillup.FillupDate.Year, _editFillup.FillupDate.Month, _editFillup.FillupDate.Day, _editFillup.FillupDate.Hour, _editFillup.FillupDate.Minute, _editFillup.FillupDate.Second);
+                            FillupPriceInput.Text = _editFillup.PriceReading.ToString();
+                            FillupVolInput.Text = _editFillup.VolReading.ToString();
+                            FillupOdoInput.Text = _editFillup.OdoReading.ToString();
+                        }
+                    } 
+                    else if(NavigationContext.QueryString["fillupId"] != null)
+                    {
+                        NavigationService.Navigate(new Uri("//Views/MainPage.xaml", UriKind.Relative));
                     }
                 }
             }
@@ -146,12 +144,12 @@ namespace car_pal.Views
             }
             if ((from f in App.ViewModel.DefaultFillups where f.FillupDate <= dT && f.OdoReading >= double.Parse(FillupOdoInput.Text) && f.FillupId != editId select f.FillupId).Count() > 0)
             {
-                MessageBox.Show("A entry exists for a previous date with a higher odometer reading.  Please check entry and/or fillup history.");
+                MessageBox.Show("An entry exists for a previous date with a higher odometer reading.  Please check entry and/or fillup history.");
                 return;
             }
             if ((from f in App.ViewModel.DefaultFillups where f.FillupDate >= dT && f.OdoReading <= double.Parse(FillupOdoInput.Text) && f.FillupId != editId select f.FillupId).Count() > 0)
             {
-                MessageBox.Show("A entry exists for a future date with a lower odometer reading.  Please check entry and/or fillup history.");
+                MessageBox.Show("An entry exists for a future date with a lower odometer reading.  Please check entry and/or fillup history.");
                 return;
             }
 

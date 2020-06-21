@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.IO.IsolatedStorage;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
-using System.IO.IsolatedStorage;
-using System.Diagnostics;
 
 namespace car_pal
 {
@@ -31,11 +20,9 @@ namespace car_pal
             if(appSettings.Contains(LOCATION_SWITCH_KEY))
             {
                 LocationSwitch.IsChecked = (bool?)appSettings[LOCATION_SWITCH_KEY];
-                Debug.WriteLine("Init: loading value from storage:"+LocationSwitch.ToString());
             } else 
             {
                 LocationSwitch.IsChecked = false;
-                Debug.WriteLine("Init: no value... setting to default:" + LocationSwitch.ToString());
             }
         }
 
@@ -49,7 +36,6 @@ namespace car_pal
             {
                 locationAllowed = true;
             }
-            Debug.WriteLine("Saving value: " + LocationSwitch.ToString());
 
             try
             {

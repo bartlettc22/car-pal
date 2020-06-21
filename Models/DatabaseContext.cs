@@ -2,9 +2,6 @@
 using System.ComponentModel;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
-using System.IO.IsolatedStorage;
-using System.Windows;
-using System.Diagnostics;
 
 namespace car_pal.Models
 {

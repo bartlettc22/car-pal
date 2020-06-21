@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using car_pal.Models;
 using Microsoft.Phone.Controls;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Windows;
 
 namespace car_pal
 {

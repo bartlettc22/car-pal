@@ -1,11 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using car_pal.Models;
-using System;
-using System.IO.IsolatedStorage;
-using System.Windows;
 
 namespace car_pal.ViewModel
 {
@@ -52,7 +49,7 @@ namespace car_pal.ViewModel
 
             // Query the database and load all to-do items.
             AllVehicles = new ObservableCollection<VehicleModel>(vehiclesInDB);
-            _allVehicles.CollectionChanged += delegate { Debug.WriteLine("AllVehicles Changed!"); NotifyPropertyChanged("AllVehicles"); };
+            _allVehicles.CollectionChanged += delegate { NotifyPropertyChanged("AllVehicles"); };
 
             initDefault();
         }
@@ -67,11 +64,6 @@ namespace car_pal.ViewModel
             {
                 if (_defaultVehicle != value)
                 {
-                    if (_defaultVehicle != null)
-                    {
-                        Debug.WriteLine("Changing Default Vehicle from \"" + _defaultVehicle.VehicleName + "\" to \"" + value.VehicleName + "\"");
-                    }
-
                     _defaultVehicle = value;
                     saveDefault();
                     calcDefault();
@@ -289,8 +281,6 @@ namespace car_pal.ViewModel
 
             // Add the vehicle to the "all" observable collection.
             AllVehicles.Add(vehicle);
-
-            Debug.WriteLine("Added Vehicle: (" + vehicle.VehicleId + ", \"" + vehicle.VehicleName + "\", "+ vehicle.IsDefaultVehicle +")");
         }
 
         public void DeleteVehicle(VehicleModel vehicle)

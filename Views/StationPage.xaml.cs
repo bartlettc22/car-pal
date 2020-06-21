@@ -1,24 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+using System.Collections.ObjectModel;
+using System.Device.Location;
+using System.IO.IsolatedStorage;
+using System.Net.NetworkInformation;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using Microsoft.Phone.Controls;
-using System.Device.Location;
-using Microsoft.Phone.Controls.Maps.Platform;
-using System.Collections.ObjectModel;
-using Microsoft.Phone.Controls.Maps;
 using car_pal.BingService;
 using car_pal.ViewModel;
-using System.Diagnostics;
-using System.Net.NetworkInformation;
-using System.IO.IsolatedStorage;
+using Microsoft.Phone.Controls;
+using Microsoft.Phone.Controls.Maps;
 
 namespace car_pal.Views
 {
@@ -26,14 +17,11 @@ namespace car_pal.Views
     {
 
         GeoCoordinateWatcher watcher;
-        bool _initialized = false;
 
         GeoPositionStatus _gpsStatus;
         double _currentLatitude;
         double _currentLongitude;
         GeoCoordinate _currentLocation;
-        //StationItemViewModel _currentlySelectedItem;
-        ListBoxItem _currentlySelectedItem;
 
         public StationPage()
         {
@@ -326,18 +314,6 @@ namespace car_pal.Views
 
             if (station != null)
             {
-                if (_currentlySelectedItem != null)
-                {
-                    //_currentlySelectedItem.TitleColor = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
-                    //_currentlySelectedItem.Title
-                    //Item.BorderThickness = new Thickness(0,0,0,0);
-                    //Item.BorderBrush = new SolidColorBrush();
-                }
-                //station.TitleColor = new SolidColorBrush(Color.FromArgb(0xFF, 0x64, 0x3C, 0x77));
-                //Item.BorderThickness = new Thickness(2, 2, 2, 2);
-                //Item.BorderBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x64, 0x3C, 0x77));
-                //_currentlySelectedItem = Item;
-
                 miniMap.SetView(station.Coordinates, 16);
             }
         }

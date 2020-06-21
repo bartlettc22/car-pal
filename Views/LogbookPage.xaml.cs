@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using Microsoft.Phone.Controls;
 using System.Windows.Navigation;
-using System.Diagnostics;
 using car_pal.Models;
-using System.Collections.ObjectModel;
 using car_pal.ViewModel;
+using Microsoft.Phone.Controls;
 
 namespace car_pal
 {
@@ -92,10 +84,8 @@ namespace car_pal
         private void ResultsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             ReminderItemViewModel reminder = (sender as ListBox).SelectedItem as ReminderItemViewModel;
-            Debug.WriteLine("changing");
             if (reminder != null)
             {
-                Debug.WriteLine("showing alt");
                 // unset the selection
                 (sender as ListBox).SelectedItem = null;
                 reminder.ShowAlt();

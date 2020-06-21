@@ -3,9 +3,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Microsoft.Phone.Controls;
-using car_pal.Models;
 using System.Windows.Navigation;
+using car_pal.Models;
+using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
 namespace car_pal
@@ -72,6 +72,7 @@ namespace car_pal
                 Dashboard_Panel.Visibility = Visibility.Collapsed;
                 FillupVehicleNameDisplay.Visibility = Visibility.Collapsed;
                 Welcome_Panel.Visibility = Visibility.Visible;
+                NoFillupMsg.Visibility = Visibility.Visible;
             }
         }
 

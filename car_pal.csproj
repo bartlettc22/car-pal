@@ -100,9 +100,6 @@
     <Compile Include="Views\Converters\FormatCurrency.cs" />
     <Compile Include="Views\Converters\RoundDecimalConverter.cs" />
     <Compile Include="Views\Converters\NullToVisibilityConverter.cs" />
-    <Compile Include="Views\DebugPage.xaml.cs">
-      <DependentUpon>DebugPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\EditVehicle.xaml.cs">
       <DependentUpon>EditVehicle.xaml</DependentUpon>
     </Compile>
@@ -141,10 +138,6 @@
     <Page Include="Views\MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DebugPage.xaml">
-      <Generator>MSBuild:MarkupCompilePass1</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\EditVehicle.xaml">
       <SubType>Designer</SubType>

@@ -97,14 +97,14 @@
         						<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
         					</toolkit:TimePicker.BorderBrush>
         				</toolkit:TimePicker>
-        				<TextBlock x:Name="FillupDateLabel" Margin="0,0,8,8" TextWrapping="Wrap" Text="Date/Time of Fill-up" VerticalAlignment="Bottom" TextAlignment="Right" FontSize="24"/>
-        				<TextBlock x:Name="FillupPriceLabel" Margin="8,0,8,8" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Bottom" TextAlignment="Right" FontSize="24"><Run Text="Price "/><LineBreak/><Run Text="(per Gal.)"/></TextBlock>
+        				<TextBlock x:Name="FillupDateLabel" Margin="0,0,8,8" TextWrapping="Wrap" Text="Date/Time of fill-up" VerticalAlignment="Bottom" TextAlignment="Right" FontSize="24"/>
+        				<TextBlock x:Name="FillupPriceLabel" Margin="8,0,8,8" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Bottom" TextAlignment="Right" FontSize="24"><Run Text="Price "/><LineBreak/><Run Text="(per gal.)"/></TextBlock>
         				<TextBox x:Name="FillupPriceInput" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" d:LayoutOverrides="VerticalAlignment" FontSize="40" BorderThickness="2" TextAlignment="Right" Height="90" InputScope="Number">
         					<TextBox.BorderBrush>
         						<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
         					</TextBox.BorderBrush>
         				</TextBox>
-        				<TextBlock x:Name="FillupVolLabel" Margin="0,0,8,8" Grid.Row="2" TextWrapping="Wrap" Text="Volume (Gal.)" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="128" TextAlignment="Right" FontSize="24"/>
+        				<TextBlock x:Name="FillupVolLabel" Margin="0,0,8,8" Grid.Row="2" TextWrapping="Wrap" Text="Volume (gal.)" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="128" TextAlignment="Right" FontSize="24"/>
         				<TextBox x:Name="FillupVolInput" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" Height="90" TextAlignment="Right" FontSize="40" BorderThickness="2" InputScope="Number">
         					<TextBox.BorderBrush>
         						<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
@@ -118,7 +118,7 @@
         				</TextBox>
         				<StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" d:LayoutOverrides="GridBox" HorizontalAlignment="Center">
         					<Button x:Name="FillupSaveButton" Content="Save" Click="fillupSave_Click" Height="81" Margin="0"/>
-        					<Button x:Name="FillupDeleteButton" Content="Delete" Click="FillupDeleteButton_Click" Visibility="Collapsed"/>
+        					<Button x:Name="FillupDeleteButton" Content="Delete" Click="FillupDeleteButton_Click" Height="81" Visibility="Collapsed"/>
         					<Button x:Name="FillupCancelButton" Content="Cancel" Click="fillupCancel_Click" Height="81" Margin="0"/>
         				</StackPanel>
         				<Rectangle Margin="0" Grid.Row="5" Grid.ColumnSpan="2" Height="300"/>
