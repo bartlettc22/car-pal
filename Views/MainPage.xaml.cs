@@ -137,11 +137,6 @@ namespace car_pal
         	NavigationService.Navigate(new Uri("//Views/LogbookPage.xaml", UriKind.Relative));
         }
 
-        private void ApplicationBarMenuItem_Click(object sender, System.EventArgs e)
-        {
-        	NavigationService.Navigate(new Uri("//Views/DebugPage.xaml", UriKind.Relative));
-        }
-
         private void PinTile_Click(object sender, System.EventArgs e)
         {
             MenuItem item = (MenuItem)sender;

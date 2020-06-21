@@ -18,6 +18,10 @@ namespace car_pal.Views.Converters
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            if ((string)parameter == "dashzero" && (double)value == 0)
+            {
+                return "$--.-";
+            }
             return "$" + String.Format("{0:0.00}", value);
         }
 

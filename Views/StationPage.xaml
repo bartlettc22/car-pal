@@ -67,41 +67,17 @@
             <!--Pivot item one-->
             <controls:PivotItem Header="by location">
                 <StackPanel>
-            		<Microsoft_Phone_Controls_Maps:Map Height="137" CredentialsProvider="ApnhK03M5oUXUrgPWrlLdFh_Tjkss5XkQusvWd7KPt9q5qJIrQx400CVgu9Im1TS" x:Name="miniMap"/>
-            		<StackPanel Height="467" Visibility="Collapsed">
-            			<TextBlock x:Name="statusTextBlock" TextWrapping="Wrap" Text="asdf" Foreground="#FF0AB761" Height="71" Visibility="Collapsed"/>
-            			<TextBlock x:Name="latText" TextWrapping="Wrap" Text="Lat" Height="61" Visibility="Collapsed"/>
-            			<TextBlock x:Name="longText" TextWrapping="Wrap" Text="TextBlocka" Height="67" Visibility="Collapsed"/>
-            			<StackPanel Height="99" Orientation="Horizontal" Margin="0,20,0,0">
-            				<Image Height="35" Source="/car_pal;component/Images/map_marker.png" Stretch="Fill" Width="19" VerticalAlignment="Top" Margin="0,8,16,0"/>
-            				<StackPanel Margin="0,0,0,8" Width="302">
-            					<TextBlock Height="32" Margin="8,0" TextWrapping="Wrap" Text="East Colfax Gas &amp; Food"/>
-            					<TextBlock Height="58" Margin="8,0" TextWrapping="Wrap" FontSize="13.333"><Run Text="6390 E. Colfax Ave. Denver, CO 80202"/><LineBreak/><Run Text="(303) 399-8849"/><LineBreak/><Run Text="0.11 mi."/></TextBlock>
-            				</StackPanel>
-            			</StackPanel>
-            			<StackPanel Height="99" Orientation="Horizontal" Margin="0,5,0,0">
-            				<Image Height="35" Source="/car_pal;component/Images/map_marker.png" Stretch="Fill" Width="19" VerticalAlignment="Top" Margin="0,8,16,0"/>
-            				<StackPanel Margin="0,0,0,8" Width="302">
-            					<TextBlock Height="32" Margin="8,0" TextWrapping="Wrap" Text="Gas Plus"/>
-            					<TextBlock Height="58" Margin="8,0" TextWrapping="Wrap" FontSize="13.333"><Run Text="6390 E. Colfax Ave. Denver, CO 80202"/><LineBreak/><Run Text="(303) 399-8849"/><LineBreak/><Run Text="0.11 mi."/></TextBlock>
-            				</StackPanel>
-            			</StackPanel>
-            			<StackPanel Height="99" Orientation="Horizontal" Margin="0,5,0,0">
-            				<Image Height="35" Source="/car_pal;component/Images/map_marker.png" Stretch="Fill" Width="19" VerticalAlignment="Top" Margin="0,8,16,0"/>
-            				<StackPanel Margin="0,0,0,8" Width="302">
-            					<TextBlock Height="32" Margin="8,0" TextWrapping="Wrap" Text="Waterway Gas &amp; Wash Co."/>
-            					<TextBlock Height="58" Margin="8,0" TextWrapping="Wrap" FontSize="13.333"><Run Text="6390 E. Colfax Ave. Denver, CO 80202"/><LineBreak/><Run Text="(303) 399-8849"/><LineBreak/><Run Text="0.11 mi."/></TextBlock>
-            				</StackPanel>
-            			</StackPanel>
-            			<StackPanel Height="99" Orientation="Horizontal" Margin="0,5,0,0">
-            				<Image Height="35" Source="/car_pal;component/Images/map_marker.png" Stretch="Fill" Width="19" VerticalAlignment="Top" Margin="0,8,16,0"/>
-            				<StackPanel Margin="0,0,0,8" Width="302">
-            					<TextBlock Height="32" Margin="8,0" TextWrapping="Wrap" Text="Short Stop Food &amp; Gas"/>
-            					<TextBlock Height="58" Margin="8,0" TextWrapping="Wrap" FontSize="13.333"><Run Text="6390 E. Colfax Ave. Denver, CO 80202"/><LineBreak/><Run Text="(303) 399-8849"/><LineBreak/><Run Text="0.11 mi."/></TextBlock>
-            				</StackPanel>
-            			</StackPanel>
+            		<StackPanel x:Name="MapPanel" Height="535" Visibility="Collapsed">
+            			<Microsoft_Phone_Controls_Maps:Map Height="137" CredentialsProvider="Ao2AxOV-Wfz-ItCAI5vIm8thxsRb1ZCGmEVjRlfLE_VnpuxIICzegBapVa_kBTdJ" x:Name="miniMap"/>
+            			<TextBlock x:Name="SearchLoading" TextWrapping="Wrap" Height="137" Margin="0,100,0,0" TextAlignment="Center" Foreground="#CAFFFFFF" FontSize="26.667"/>
+            			<ListBox x:Name="SearchResults" Height="379" ItemTemplate="{StaticResource DataTemplate1}" Margin="0,10,0,0" SelectionChanged="SearchResults_SelectionChanged"/>
             		</StackPanel>
-            		<ListBox x:Name="SearchResults" Height="379" ItemTemplate="{StaticResource DataTemplate1}" Margin="0,10,0,0" SelectionChanged="SearchResults_SelectionChanged"/>
+            		<StackPanel x:Name="MessagePanel" Visibility="Collapsed">
+            			<TextBlock x:Name="MessageText" TextWrapping="Wrap" FontSize="37.333" FontFamily="Segoe WP Light" Foreground="#C6FFFFFF" Text="Loading..."/>
+            		</StackPanel>
+            		<RichTextBox x:Name="AppLocationDisabledMessage" Foreground="#C6FFFFFF" FontSize="32" Visibility="Collapsed">
+            			<Paragraph><Run Text="Location services disabled in application settings.  To use this feature, turn on location services from the "/><Hyperlink NavigateUri="//Views/SettingsPage.xaml"><Run Text="application settings menu"/></Hyperlink><Run Text="."/></Paragraph>
+            		</RichTextBox>
             	</StackPanel>
             </controls:PivotItem>
 

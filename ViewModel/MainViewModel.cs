@@ -148,6 +148,19 @@ namespace car_pal.ViewModel
             }
         }
 
+        public int OverallFillupCount
+        {
+            get
+            {
+                return _statSampleSize;
+            }
+            set
+            {
+                _statSampleSize = value;
+                NotifyPropertyChanged("OverallFillupCount");
+            }
+        }
+
         // Initializes and cleans up default vehicle
         public void initDefault()
         {
@@ -231,7 +244,7 @@ namespace car_pal.ViewModel
                 OverallMileFill = statMileDiff / i;
                 OverallDaysFill = statDayDiff.Days / i;
             }
-            _statSampleSize = i;
+            OverallFillupCount = i;
         }
 
         // Add vehicle to database
@@ -273,6 +286,7 @@ namespace car_pal.ViewModel
             
             _db.Vehicles.DeleteOnSubmit(vehicle);
             _db.SubmitChanges();
+            calcDefault();
         }
 
         public void AddFillup(FillupModel fillup)

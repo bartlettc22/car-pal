@@ -17,6 +17,8 @@ using Microsoft.Phone.Controls.Maps;
 using car_pal.BingService;
 using car_pal.ViewModel;
 using System.Diagnostics;
+using System.Net.NetworkInformation;
+using System.IO.IsolatedStorage;
 
 namespace car_pal.Views
 {
@@ -35,18 +37,36 @@ namespace car_pal.Views
         public StationPage()
         {
             InitializeComponent();
-            
-            // The watcher variable was previously declared as type GeoCoordinateWatcher. 
+
+            Loaded += new RoutedEventHandler(InitializePage);
+        }
+
+        private void InitializePage(object sender, RoutedEventArgs e)
+        {
+            refresh();
+        }
+
+        private void StartWatcher()
+        {
             if (watcher == null)
             {
                 watcher = new GeoCoordinateWatcher(GeoPositionAccuracy.Default);
                 watcher.MovementThreshold = 20; // use MovementThreshold to ignore noise in the signal
 
                 watcher.StatusChanged += new EventHandler<GeoPositionStatusChangedEventArgs>(watcher_StatusChanged);
-                watcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(watcher_PositionChanged);
+                //watcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(watcher_PositionChanged);
             }
-
+            
             watcher.Start();
+        }
+
+        private bool InternetIsAvailable()
+        {
+             if (!NetworkInterface.GetIsNetworkAvailable())
+             {
+                 return false;
+             }
+             return true;
         }
 
         // Event handler for the GeoCoordinateWatcher.StatusChanged event.
@@ -63,34 +83,49 @@ namespace car_pal.Views
                     if (watcher.Permission == GeoPositionPermission.Denied)
                     {
                         // The user has disabled the Location Service on their device.
-                        Debug.WriteLine("Location service disabled.");
+                        MessageText.Text = "Location services disabled. To use this feature, turn on location from the phone settings menu.";
+                        MapPanel.Visibility = Visibility.Collapsed;
+                        AppLocationDisabledMessage.Visibility = Visibility.Collapsed;
+                        MessagePanel.Visibility = Visibility.Visible;
+                        MessageBox.Show("Location services disabled.");
+                        watcher.Stop();
                     }
                     else
                     {
-                        Debug.WriteLine("Location service not functioning.");
+                        // Location service is not functioning (not supported?)
+                        MessageText.Text = "Location services disabled. To use this feature, turn on location from the phone settings menu.";
+                        MapPanel.Visibility = Visibility.Collapsed;
+                        AppLocationDisabledMessage.Visibility = Visibility.Collapsed;
+                        MessagePanel.Visibility = Visibility.Visible;
+                        MessageBox.Show("Location services disabled.");
+                        watcher.Stop();
                     }
                     break;
 
                 case GeoPositionStatus.Initializing:
                     // The Location Service is initializing.
-                    Debug.WriteLine("Location service intitializing.");
                     break;
 
                 case GeoPositionStatus.NoData:
                     // The Location Service is working, but it cannot get location data.
-                    Debug.WriteLine("Location service data not currently available.");
+                    MessageText.Text = "Location cannot be aquired. Please try again.";
+                    MapPanel.Visibility = Visibility.Collapsed;
+                    AppLocationDisabledMessage.Visibility = Visibility.Collapsed;
+                    MessagePanel.Visibility = Visibility.Visible;
+                    MessageBox.Show("Location cannot be aquired.");
+                    watcher.Stop();
                     break;
 
                 case GeoPositionStatus.Ready:
                     // The Location Service is working and is receiving location data.
-                    Debug.WriteLine("Location service data available.");
+                    refreshData();
                     break;
             }
         }
 
-        void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
+       /* void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
-            Debug.WriteLine("GPS Position Changed (" + e.Position.Location.Latitude.ToString("0.000") + "," + e.Position.Location.Longitude.ToString("0.000") + ")");
+            //Debug.WriteLine("GPS Position Changed (" + e.Position.Location.Latitude.ToString("0.000") + "," + e.Position.Location.Longitude.ToString("0.000") + ")");
             //latText.Text = e.Position.Location.Latitude.ToString("0.000");
             //longText.Text = e.Position.Location.Longitude.ToString("0.000");
             //double zoomLevel = double.Parse(s[2], NumberStyles.Float, CultureInfo.InvariantCulture);
@@ -100,23 +135,74 @@ namespace car_pal.Views
 
             if (!_initialized)
             {
+                _currentLocation = new GeoCoordinate(_currentLatitude, _currentLongitude);
+                miniMap.SetView(_currentLocation, 12);
                 _initialized = true;
                 refresh();                
             }
+            
+        }*/
+        private void refreshData()
+        {
+            MessagePanel.Visibility = Visibility.Collapsed;
+            MapPanel.Visibility = Visibility.Visible;
+            GeoPosition<GeoCoordinate> geoPosition = watcher.Position;
+            _currentLocation = geoPosition.Location;
+            _currentLatitude = geoPosition.Location.Latitude;
+            _currentLongitude = geoPosition.Location.Longitude;
+            miniMap.SetView(geoPosition.Location, 12);
+            search();
         }
 
         private void refresh()
         {
-            Debug.WriteLine("Refreshing gas station display");
-            _currentLocation = new GeoCoordinate(_currentLatitude, _currentLongitude);
-            miniMap.SetView(_currentLocation, 12);
-            search();
-        }
-
-        // Click the event handler for the “Start Location” button.
-        private void stopLocationButton_Click(object sender, RoutedEventArgs e)
-        {
-            watcher.Stop();
+            if (!SettingsPage.appSettings.Contains(SettingsPage.LOCATION_SWITCH_KEY))
+            {
+                if (MessageBox.Show("car-pal+ requires your location to provide nearby gas station locations.\n\nAllow car-pal+ to access and use your location?", "Allow this application to use your location?",
+                MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                {
+                    try
+                    {
+                        SettingsPage.appSettings[SettingsPage.LOCATION_SWITCH_KEY] = true;
+                        SettingsPage.appSettings.Save();
+                    }
+                    catch (IsolatedStorageException)
+                    {
+                        MessageBox.Show("Error saving data to device.");
+                    }
+                }
+            }
+            if (!SettingsPage.appSettings.Contains(SettingsPage.LOCATION_SWITCH_KEY) ||
+                (bool)SettingsPage.appSettings[SettingsPage.LOCATION_SWITCH_KEY] == false)
+            {
+                MessageText.Text = "Location services disabled in application settings. To use this feature, turn on location from the applications settings menu.";
+                MapPanel.Visibility = Visibility.Collapsed;
+                MessagePanel.Visibility = Visibility.Collapsed;
+                AppLocationDisabledMessage.Visibility = Visibility.Visible;
+                MessageBox.Show("Location services disabled in application settings.");
+            }
+            else
+            {
+                if (InternetIsAvailable())
+                {
+                    if (watcher != null && watcher.Status == GeoPositionStatus.Ready)
+                    {
+                        refreshData();
+                    }
+                    else
+                    {
+                        StartWatcher();
+                    }
+                }
+                else
+                {
+                    MessageText.Text = "No internet connection available. Please connect to mobile or Wi-Fi network and try again.";
+                    MapPanel.Visibility = Visibility.Collapsed;
+                    AppLocationDisabledMessage.Visibility = Visibility.Collapsed;
+                    MessagePanel.Visibility = Visibility.Visible;
+                    MessageBox.Show("No internet connection available.  Try again later.");
+                }
+            }
         }
 
         private void search()
@@ -124,11 +210,10 @@ namespace car_pal.Views
             miniMap.Focus();
 
             SearchRequest request = new SearchRequest();
-            request.AppId = "FA93274CE521C318F2046C747A9E70B70111E284";
+            request.AppId = "18125912B7049CCC5E6F484E5617E5D834983119";
             request.Sources = new SourceType[] { SourceType.Phonebook };
             request.Query = "gas station";
 
-            
             request.Market = "en-us";
             request.UILanguage = "en";
             request.Longitude = _currentLocation.Longitude;
@@ -143,42 +228,29 @@ namespace car_pal.Views
 
             BingPortTypeClient bingClient = new BingPortTypeClient();
             bingClient.SearchCompleted += doneSearching;
+            SearchLoading.Text = "Loading...";
+            SearchResults.Visibility = Visibility.Collapsed;
+            SearchLoading.Visibility = Visibility.Visible;
             bingClient.SearchAsync(request);
-       
-            /*string query_string = "1670 Broadway";
-            //GeocodeServiceClient _svc = new GeocodeServiceClient();
-
-            GeocodeRequest geocodeRequest = new GeocodeRequest
-            {
-                Credentials = new Credentials
-                {
-                    
-                    ApplicationId =
-                        "ApnhK03M5oUXUrgPWrlLdFh_Tjkss5XkQusvWd7KPt9q5qJIrQx400CVgu9Im1TS"
-                },
-                Query = query_string
-            };
-
-            var filters = new FilterBase[1];
-            filters[0] = new ConfidenceFilter { MinimumConfidence = Confidence.High };
-            var geocodeOptions = new GeocodeOptions { Filters = new ObservableCollection<FilterBase>(filters) };
-            geocodeRequest.Options = geocodeOptions;
-            var geocodeService = new GeocodeServiceClient("BasicHttpBinding_IGeocodeService");
-            geocodeService.GeocodeCompleted += doneSearching;
-            geocodeService.GeocodeAsync(geocodeRequest);*/
-
-            //Geocoder geocoder = new Geocoder(BingToken);
         }
 
         private void doneSearching(object sender, SearchCompletedEventArgs e)
         {
-            /*ObservableCollection<GeocodeResult> r = new ObservableCollection<GeocodeResult>();
-            
-            GeocodeResponse geocodeResponse = e.Result;
-            r = geocodeResponse.Results;
-            SearchResults.ItemsSource = r;*/
 
+            if (e.Result.Errors != null)
+            {
+                SearchLoading.Text = "Error fetching data...";
+                return;
+            }
+            
+            
             miniMap.Children.Clear();
+
+            if (e.Result.Phonebook == null)
+            {
+                SearchLoading.Text = "No results nearby...";
+                return;
+            }
 
             ObservableCollection<StationItemViewModel> resultsModel = new ObservableCollection<StationItemViewModel>();
             PhonebookResult[] r = e.Result.Phonebook.Results;
@@ -207,8 +279,9 @@ namespace car_pal.Views
                 resultsModel.Add(station);
             }
 
-
             SearchResults.ItemsSource = resultsModel;
+            SearchLoading.Visibility = Visibility.Collapsed;
+            SearchResults.Visibility = Visibility.Visible;
         }
 
         private double distanceApart(GeoCoordinate p1, GeoCoordinate p2)
@@ -245,14 +318,17 @@ namespace car_pal.Views
         private void SearchResults_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             StationItemViewModel station = (sender as ListBox).SelectedItem as StationItemViewModel;
-            if (_currentlySelectedItem != null)
+            if (station != null)
             {
-                _currentlySelectedItem.TitleColor = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
-            }
-            station.TitleColor = new SolidColorBrush(Color.FromArgb(0xFF, 0x64, 0x3C, 0x77));
-            _currentlySelectedItem = station;
+                if (_currentlySelectedItem != null)
+                {
+                    _currentlySelectedItem.TitleColor = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
+                }
+                station.TitleColor = new SolidColorBrush(Color.FromArgb(0xFF, 0x64, 0x3C, 0x77));
+                _currentlySelectedItem = station;
 
-            miniMap.SetView(station.Coordinates, 16);
+                miniMap.SetView(station.Coordinates, 16);
+            }
         }
     }
 }

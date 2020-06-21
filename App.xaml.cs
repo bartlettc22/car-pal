@@ -138,6 +138,10 @@ namespace car_pal
         {
             // load the view model from isolated storage
 
+            // Delete local storage
+            SettingsPage.appSettings.Clear();
+            SettingsPage.appSettings.Save();
+
             // Create the database if it does not exist.
             using (DatabaseContext db = new DatabaseContext(DatabaseContext.DBConnectionString))
             {
