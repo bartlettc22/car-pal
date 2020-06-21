@@ -70,8 +70,32 @@ namespace car_pal.Models
         public void addFillup(FillupModel fillup)
         {
 
-            _fillupHistory.Insert(0, fillup);
+            _fillupHistory.Insert(_fillupHistory.Count, fillup);
+            reCalculate();
             DataStore.SaveGarage(); 
+        }
+
+        public void reCalculate()
+        {
+
+            float prev_odo = 0;
+            FillupModel f;
+
+            for (int i = 0; i < _fillupHistory.Count; i++)
+            {
+                f = _fillupHistory[i];
+
+                if (i == 0)
+                {
+                    f.MPG = 0;
+                   
+                }
+                else
+                {
+                    f.MPG = (f.OdometerReading - prev_odo) / f.FuelVolume;
+                }
+                prev_odo = f.OdometerReading;
+            }
         }
 
         #region INotifyPropertyChanged

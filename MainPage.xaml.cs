@@ -20,6 +20,9 @@ namespace car_pal
 {
     public partial class MainPage : PhoneApplicationPage
     {
+
+        bool _fillupAlt = false;
+
         // Constructor
         public MainPage()
         {
@@ -39,21 +42,31 @@ namespace car_pal
         {
             base.OnNavigatedTo(e);
 
+            GarageModel garage = DataStore.Garage;
+            _fillupAlt = false;
+            if (garage.GarageSize > 0)
+            {
+                DataContext = DataStore.Garage.DefaultVehicle;
+                Welcome_Panel.Visibility = Visibility.Collapsed;
+                Dashboard_Panel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                Dashboard_Panel.Visibility = Visibility.Collapsed;
+                Welcome_Panel.Visibility = Visibility.Visible;
+            }
+
             // Initialize the page state only if it is not already initialized,
             // and not when the application was deactivated but not tombstoned (returning from being dormant).
             if (DataContext == null)
             {
-                InitializePageState();
+                //InitializePageState();
             }
         }
 
         private void InitializePageState()
         {
-            GarageModel garage = DataStore.Garage;
-            if (garage.GarageSize > 0)
-            {
-                DataContext = DataStore.Garage.DefaultVehicle;
-            }
+
         }
 
         void Garage_DefaultVehicleChanged(object sender, EventArgs e)
@@ -126,5 +139,19 @@ namespace car_pal
         	NavigationService.Navigate(new Uri("//Views/DebugPage.xaml", UriKind.Relative));
         }
 
+        private void HistoryItem_Loaded(object sender, RoutedEventArgs e)
+        {
+
+            Grid ItemRef = sender as Grid;    
+
+            //SolidColorBrush brush1 = new SolidColorBrush(Color.FromArgb(200,221,121,100));
+
+            if (_fillupAlt)
+            {
+                ItemRef.Background.Opacity -= 0.2;
+            }
+
+            _fillupAlt = !_fillupAlt;
+        }
     }
 }

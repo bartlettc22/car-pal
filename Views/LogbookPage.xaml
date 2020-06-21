@@ -22,22 +22,22 @@
 			<controls:PivotItem Header="reminders">
 				<ScrollViewer Margin="8">
 					<ListBox>
-						<ListBoxItem Height="99">
-							<Grid Height="99" Width="429">
+						<ListBoxItem>
+							<Grid Width="429">
 								<Grid.RowDefinitions>
 									<RowDefinition Height="0.333*"/>
 									<RowDefinition Height="0.212*"/>
 									<RowDefinition Height="0.455*"/>
 								</Grid.RowDefinitions>
 								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="0.015*"/>
-									<ColumnDefinition Width="0.608*"/>
-									<ColumnDefinition Width="0.25*"/>
-									<ColumnDefinition Width="0.127*"/>
+									<ColumnDefinition Width="0.014*"/>
+									<ColumnDefinition Width="0.506*"/>
+									<ColumnDefinition Width="0.308*"/>
+									<ColumnDefinition Width="0.172*"/>
 								</Grid.ColumnDefinitions>
-								<TextBlock Grid.Column="1" Margin="8,0" TextWrapping="Wrap" Text="oil change" VerticalAlignment="Bottom"/>
-								<TextBlock Grid.Column="1" Margin="8,0,0,0" TextWrapping="Wrap" Text="last completed: 9/21/2011" Grid.Row="1" FontSize="12" Foreground="#FFB8B8B8"/>
-								<TextBlock Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Bottom"><Run Text="3">
+								<TextBlock Grid.Column="1" Margin="8,0" TextWrapping="Wrap" Text="oil change" VerticalAlignment="Bottom" FontSize="26.667"/>
+								<TextBlock Grid.Column="1" Margin="8,0,0,0" TextWrapping="Wrap" Text="last completed: 9/21/2011" Grid.Row="1" FontSize="16" Foreground="#FFB8B8B8" VerticalAlignment="Bottom"/>
+								<TextBlock Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Bottom" TextAlignment="Right"><Run Text="3">
 										<Run.Foreground>
 											<SolidColorBrush Color="Red">
 												<SolidColorBrush.RelativeTransform>
@@ -48,7 +48,7 @@
 												</SolidColorBrush.Transform>
 											</SolidColorBrush>
 										</Run.Foreground>
-									</Run><Run Text=" "/><Run FontSize="8" Text="months"/><Run Text=" "/><Run Text="29">
+									</Run><Run Text=" "/><Run FontSize="13.333" Text="mo."/><Run Text=" "/><Run Text="29">
 										<Run.Foreground>
 											<SolidColorBrush Color="#FFF90202">
 												<SolidColorBrush.RelativeTransform>
@@ -59,12 +59,12 @@
 												</SolidColorBrush.Transform>
 											</SolidColorBrush>
 										</Run.Foreground>
-									</Run><Run Text=" "/><Run FontSize="8" Text="days"/></TextBlock>
-								<TextBlock Grid.Column="3" TextWrapping="Wrap" Margin="0,0,8,0" Foreground="White" FontSize="10.667" Text="overdue" VerticalAlignment="Bottom"/>
-								<TextBlock Grid.Column="3" TextWrapping="Wrap" Margin="5,8,0,0" Foreground="White" FontSize="10.667" Grid.Row="1" HorizontalAlignment="Left" Text="due"/>
-								<TextBlock Grid.Column="2" TextWrapping="Wrap" Margin="0,8,4,0" Foreground="White" FontSize="10.667" Grid.Row="1" Text="11/23/2011" HorizontalAlignment="Right" Width="61" TextAlignment="Right"/>
+									</Run><Run FontSize="16" Text=" days"/></TextBlock>
+								<TextBlock Grid.Column="3" TextWrapping="Wrap" Margin="8,0" Foreground="White" FontSize="16" Text="overdue" VerticalAlignment="Bottom"/>
+								<TextBlock Grid.Column="3" TextWrapping="Wrap" Margin="8,0,0,0" Foreground="White" FontSize="16" Grid.Row="1" HorizontalAlignment="Left" Text="due"/>
+								<TextBlock Grid.Column="2" TextWrapping="Wrap" Margin="0" Foreground="White" FontSize="16" Grid.Row="1" Text="11/23/2011" TextAlignment="Right" VerticalAlignment="Bottom"/>
 								<Rectangle Fill="#FF3A89D2" HorizontalAlignment="Left" Margin="0" Grid.RowSpan="2" Stroke="Black" Width="5"/>
-								<StackPanel Grid.Column="1" Margin="100,8,8,8" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+								<StackPanel Grid.Column="1" Margin="8" Grid.Row="2" Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Center">
 									<Image Margin="0,0,15,0" Source="/car_pal;component/Images/circle_fav.png" Stretch="Fill" Width="29"/>
 									<Image HorizontalAlignment="Left" Source="/car_pal;component/Images/circle_edit.png" Stretch="Fill" Width="29" d:LayoutOverrides="VerticalMargin"/>
 								</StackPanel>

@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:model="clr-namespace:car_pal.Models"
+	xmlns:car_pal_Views_Converters="clr-namespace:car_pal.Views.Converters" 
     xmlns:es="clr-namespace:Microsoft.Expression.Shapes;assembly=Microsoft.Expression.Drawing" 
     xmlns:Microsoft_Phone_Controls_Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps" 
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" 
@@ -16,8 +17,11 @@
     shell:SystemTray.IsVisible="True"
 	toolkit:TiltEffect.IsTiltEnabled="True">
 	<phone:PhoneApplicationPage.Resources>
+		<car_pal_Views_Converters:FormatDate x:Key="FormatDate"/>
+		<car_pal_Views_Converters:FormatNumber x:Key="FormatNumber"/>
+		<car_pal_Views_Converters:FormatCurrency x:Key="FormatCurrency"/>
 		<DataTemplate x:Key="FillupListItemTemplate">
-			<Grid Background="#C8E7793C" Height="71" Width="420" Margin="0">
+			<Grid Background="#C8E7793C" Height="71" Width="420" Margin="0,0,0,2" Loaded="HistoryItem_Loaded">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="0.592*"/>
 					<RowDefinition Height="0.408*"/>
@@ -29,15 +33,15 @@
 					<ColumnDefinition Width="0.176*"/>
 					<ColumnDefinition Width="0.274*"/>
 				</Grid.ColumnDefinitions>
-				<TextBlock x:Name="mpg_value" HorizontalAlignment="Right" Margin="8,0,0,0" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="32" Height="42" Width="52" TextAlignment="Right" FontWeight="Bold" Text="{Binding MPG}"/>
-				<TextBlock x:Name="mpg_label" Grid.Column="1" Margin="5,8,4,0" TextWrapping="Wrap" Text="mpg" VerticalAlignment="Bottom" FontSize="16"/>
-				<TextBlock x:Name="price_value" TextWrapping="Wrap" Text="{Binding PricePerUnit}" VerticalAlignment="Bottom" FontSize="32" Grid.Column="2" TextAlignment="Right" FontWeight="Bold"/>
-				<TextBlock x:Name="price_label" Grid.Column="3" Margin="5,0,0,0" TextWrapping="Wrap" Text="regular" FontSize="16" VerticalAlignment="Bottom"/>
-				<TextBlock x:Name="date" HorizontalAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="21.333" Height="42" Grid.Column="4" Width="81" TextAlignment="Right" Margin="0,0,5,0" Text="{Binding FillupDate}"/>
-				<TextBlock x:Name="odo_value" HorizontalAlignment="Right" TextWrapping="Wrap" Text="{Binding OdometerReading, FallbackValue=100\,000}" VerticalAlignment="Bottom" FontSize="16" Height="29" Width="60" TextAlignment="Right" Grid.Row="1" FontWeight="Bold"/>
-				<TextBlock x:Name="odo_label" Grid.Column="1" Margin="5,0,4,-1" TextWrapping="Wrap" Text="miles" FontSize="16" d:LayoutOverrides="VerticalAlignment" Grid.Row="1"/>
-				<TextBlock x:Name="vol_value" TextWrapping="Wrap" Text="{Binding FuelVolume}" FontSize="16" TextAlignment="Right" Grid.Row="1" FontWeight="Bold" Grid.Column="2"/>
-				<TextBlock x:Name="vol_label" Grid.Column="3" Margin="5,0,4,-1" TextWrapping="Wrap" Text="gallons" FontSize="16" Grid.Row="1" d:LayoutOverrides="VerticalAlignment"/>
+				<TextBlock x:Name="mpg_value" HorizontalAlignment="Right" Margin="8,0,0,0" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="32" Height="42" Width="52" TextAlignment="Right" FontWeight="Bold" Text="{Binding MPG}" Foreground="White"/>
+				<TextBlock x:Name="mpg_label" Grid.Column="1" Margin="5,8,4,0" TextWrapping="Wrap" Text="mpg" VerticalAlignment="Bottom" FontSize="16" Foreground="White"/>
+				<TextBlock x:Name="price_value" TextWrapping="Wrap" Text="{Binding PricePerUnit, Converter={StaticResource FormatCurrency}}" VerticalAlignment="Bottom" FontSize="32" Grid.Column="2" TextAlignment="Right" FontWeight="Bold" Foreground="White"/>
+				<TextBlock x:Name="price_label" Grid.Column="3" Margin="5,0,0,0" TextWrapping="Wrap" Text="regular" FontSize="16" VerticalAlignment="Bottom" Foreground="White"/>
+				<TextBlock x:Name="date" HorizontalAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="14.667" Height="42" Grid.Column="4" Width="81" TextAlignment="Right" Margin="0,0,5,0" Text="{Binding FillupDate, Converter={StaticResource FormatDate}}" Foreground="White" FontWeight="Bold"/>
+				<TextBlock x:Name="odo_value" HorizontalAlignment="Right" TextWrapping="Wrap" Text="{Binding OdometerReading, Converter={StaticResource FormatNumber}, FallbackValue=100\,000}" VerticalAlignment="Bottom" FontSize="16" Height="29" Width="60" TextAlignment="Right" Grid.Row="1" FontWeight="Bold" Foreground="White"/>
+				<TextBlock x:Name="odo_label" Grid.Column="1" Margin="5,0,4,-1" TextWrapping="Wrap" Text="miles" FontSize="16" d:LayoutOverrides="VerticalAlignment" Grid.Row="1" Foreground="White"/>
+				<TextBlock x:Name="vol_value" TextWrapping="Wrap" Text="{Binding FuelVolume}" FontSize="16" TextAlignment="Right" Grid.Row="1" FontWeight="Bold" Grid.Column="2" Foreground="White"/>
+				<TextBlock x:Name="vol_label" Grid.Column="3" Margin="5,0,4,-1" TextWrapping="Wrap" Text="gallons" FontSize="16" Grid.Row="1" d:LayoutOverrides="VerticalAlignment" Foreground="White"/>
 			</Grid>
 		</DataTemplate>
 	</phone:PhoneApplicationPage.Resources>
@@ -74,7 +78,11 @@
             <!--Panorama item one-->
             <controls:PanoramaItem Header="dashboard">
             	<StackPanel Margin="0,-21,0,0">
-            		<Grid Background="#81000000" Margin="0,25,0,0">
+            		<StackPanel x:Name="Welcome_Panel" Height="291" Background="#BC3D3D3D" Visibility="Collapsed">
+            			<TextBlock Height="79" TextWrapping="Wrap" Margin="10,10,0,0" FontSize="37.333" FontFamily="Segoe WP Light"><Run Text="Welcome!"/><LineBreak/><Run/></TextBlock>
+            			<TextBlock TextWrapping="Wrap" Margin="10,0"><Run FontFamily="Segoe WP Light" Text="In order for us to help you keep track of your mileage history and maintenance log, pull up the application menu bar below and go to the garage to add a vehicle."/><LineBreak/><Run/></TextBlock>
+            		</StackPanel>
+            		<Grid x:Name="Dashboard_Panel" Background="#81000000" Margin="0,25,0,0">
             			<Grid.RowDefinitions>
             				<RowDefinition Height="Auto" MinHeight="62"/>
             				<RowDefinition Height="Auto" MinHeight="62"/>
@@ -86,17 +94,17 @@
             				<ColumnDefinition/>
             				<ColumnDefinition/>
             			</Grid.ColumnDefinitions>
-            			<TextBlock x:Name="stat1_value" Margin="0" Text="28" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Foreground="#FF00C161"/>
+            			<TextBlock x:Name="stat1_value" Margin="0" Text="--" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Foreground="#FF00C161"/>
             			<TextBlock x:Name="stat1_label" Margin="5,0,0,0" TextWrapping="Wrap" Text="mpg" d:LayoutOverrides="GridBox" Grid.Column="1" FontSize="48" FontFamily="Segoe WP Light"/>
-            			<TextBlock x:Name="stat2_value" TextWrapping="Wrap" Text="$0.10" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Grid.Row="1" Foreground="#FF00C161"/>
+            			<TextBlock x:Name="stat2_value" TextWrapping="Wrap" Text="$-.--" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Grid.Row="1" Foreground="#FF00C161"/>
             			<TextBlock x:Name="stat2_label" TextWrapping="Wrap" Text="cost/mi." Grid.Column="1" FontSize="48" d:LayoutOverrides="GridBox" Grid.Row="1" FontFamily="Segoe WP Light" Margin="5,0,0,0"/>
-            			<TextBlock x:Name="stat3_value" TextWrapping="Wrap" Text="345" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Grid.Row="2" Foreground="#FF00C161"/>
+            			<TextBlock x:Name="stat3_value" TextWrapping="Wrap" Text="---" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Grid.Row="2" Foreground="#FF00C161"/>
             			<TextBlock x:Name="stat3_label" Margin="5,0,0,0" TextWrapping="Wrap" Text="mi./fill" Grid.Column="1" FontSize="48" Grid.Row="2" FontFamily="Segoe WP Light" d:LayoutOverrides="GridBox"/>
-            			<TextBlock x:Name="stat4_value" Text="17" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Grid.Row="3" Foreground="#FF00C161" RenderTransformOrigin="0.514,0.248"/>
+            			<TextBlock x:Name="stat4_value" Text="--" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Grid.Row="3" Foreground="#FF00C161" RenderTransformOrigin="0.514,0.248"/>
             			<TextBlock x:Name="stat4_label" Margin="5,0,0,0" TextWrapping="Wrap" Text="days/fill" Grid.Column="1" FontSize="48" Grid.Row="3" FontFamily="Segoe WP Light" d:LayoutOverrides="GridBox"/>
-            			<TextBlock x:Name="notice" Margin="0" TextWrapping="Wrap" Text="averages based on last 8 fillups" FontSize="18.667" Grid.Row="4" FontFamily="Segoe WP Light" Grid.ColumnSpan="2" TextAlignment="Center" FontStyle="Italic"/>
+            			<TextBlock x:Name="notice" Margin="0" TextWrapping="Wrap" Text="stats will show up after your first fill-up" FontSize="18.667" Grid.Row="4" FontFamily="Segoe WP Light" Grid.ColumnSpan="2" TextAlignment="Center" FontStyle="Italic"/>
             		</Grid>
-            		<StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0">
+            		<StackPanel x:Name="Tile_Panel" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0">
             			<Button x:Name="FillupLink" Padding="0" BorderThickness="0" Foreground="White" BorderBrush="Transparent" Width="145" Click="FillupLink_Click" Height="145" d:LayoutOverrides="Height" VerticalAlignment="Center">
             				<Canvas Height="125" Width="125">
             					<toolkit:HubTile IsFrozen="True" VerticalAlignment="Top" DisplayNotification="True" HorizontalAlignment="Left" Height="125" Width="125" Background="#FF00C161" />

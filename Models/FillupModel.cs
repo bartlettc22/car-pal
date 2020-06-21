@@ -20,6 +20,7 @@ namespace car_pal.Models
         private float _fuelVolume;
         private float _odometerReading;
         private float _pricePerUnit;
+        private float _mpg;
 
         public FillupModel()
         {
@@ -78,12 +79,11 @@ namespace car_pal.Models
         {
             get
             {
-                if (_fuelVolume != null && _odometerReading != null && _fuelVolume > 0 && _odometerReading > 0)
-                {
-                    return _odometerReading / _fuelVolume;
-                }
-
-                return 0;
+                return _mpg;
+            }
+            set
+            {
+                _mpg = value;
             }
         }
 

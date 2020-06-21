@@ -7,15 +7,55 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:Microsoft_Phone_Controls_Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps" 
+    xmlns:car_pal_BingService="clr-namespace:car_pal.BingService" 
+    xmlns:car_pal_ViewModel="clr-namespace:car_pal.ViewModel" 
     x:Class="car_pal.Views.StationPage" 
     mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="696"
-    FontFamily="{StaticResource PhoneFontFamilyNormal}"
-    FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
+	<phone:PhoneApplicationPage.Resources>
+		<car_pal_ViewModel:StationItemViewModel x:Key="StationItemViewModelDataSource" d:IsDataSource="True"/>
+		<car_pal_BingService:PhonebookResult x:Key="PhonebookResultDataSource" d:IsDataSource="True"/>
+		<DataTemplate x:Key="DataTemplate1">
+			<StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+				<Canvas Width="20">
+					<Image x:Name="MapMarker" Height="35" Source="/car_pal;component/Images/map_marker.png" Stretch="Fill" Width="19" VerticalAlignment="Top" HorizontalAlignment="Left" Canvas.Top="8"/>
+					<TextBlock x:Name="PinIndicator" TextWrapping="Wrap" Text="{Binding ItemNumber, FallbackValue=1}" Width="19" TextAlignment="Center" FontSize="16" Height="25" Canvas.Top="6" Padding="0,0,0,4"/>
+				</Canvas>
+				<StackPanel Margin="10,0,0,0">
+					<TextBlock x:Name="StationName" Margin="0" TextWrapping="Wrap" Text="{Binding Title, FallbackValue=Conoco}" FontSize="24"/>
+					<TextBlock x:Name="Address" Margin="0" TextWrapping="Wrap" FontSize="18.667" Text="{Binding Address, FallbackValue=1234 S. Broadway St.\, Denver\, CO}"/>
+					<TextBlock x:Name="Phone" Margin="0" TextWrapping="Wrap" FontSize="18.667" Text="{Binding PhoneNumber, FallbackValue=(303) 555 - 5555}"/>
+					<TextBlock x:Name="Distance" Margin="0" TextWrapping="Wrap" FontSize="18.667" Text="{Binding Distance, FallbackValue=2.40 mi.}"/>
+				</StackPanel>
+			</StackPanel>
+		</DataTemplate>
+	</phone:PhoneApplicationPage.Resources>
+
+    <!--Sample code showing usage of ApplicationBar-->
+    <!--<phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton x:Name="appbar_button1" IconUri="/Images/appbar_button1.png" Text="Button 1"/>
+            <shell:ApplicationBarIconButton x:Name="appbar_button2" IconUri="/Images/appbar_button2.png" Text="Button 2"/>
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem x:Name="menuItem1" Text="MenuItem 1"/>
+                <shell:ApplicationBarMenuItem x:Name="menuItem2" Text="MenuItem 2"/>
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>-->
+    
+	<phone:PhoneApplicationPage.FontFamily>
+		<StaticResource ResourceKey="PhoneFontFamilyNormal"/>
+	</phone:PhoneApplicationPage.FontFamily>
+	<phone:PhoneApplicationPage.FontSize>
+		<StaticResource ResourceKey="PhoneFontSizeNormal"/>
+	</phone:PhoneApplicationPage.FontSize>
+	<phone:PhoneApplicationPage.Foreground>
+		<StaticResource ResourceKey="PhoneForegroundBrush"/>
+	</phone:PhoneApplicationPage.Foreground>
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar>
+			<shell:ApplicationBarIconButton x:Name="RefreshButton" IconUri="/icons/appbar.refresh.rest.png" Text="refresh" Click="RefreshButton_Click"/>
 			<shell:ApplicationBarIconButton IconUri="/icons/appbar.feature.search.rest.png" Text="search"/>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
@@ -27,8 +67,8 @@
             <!--Pivot item one-->
             <controls:PivotItem Header="location">
                 <StackPanel>
-            		<Microsoft_Phone_Controls_Maps:Map Height="101" CredentialsProvider="ApnhK03M5oUXUrgPWrlLdFh_Tjkss5XkQusvWd7KPt9q5qJIrQx400CVgu9Im1TS" x:Name="miniMap"/>
-            		<StackPanel Height="467">
+            		<Microsoft_Phone_Controls_Maps:Map Height="137" CredentialsProvider="ApnhK03M5oUXUrgPWrlLdFh_Tjkss5XkQusvWd7KPt9q5qJIrQx400CVgu9Im1TS" x:Name="miniMap"/>
+            		<StackPanel Height="467" Visibility="Collapsed">
             			<TextBlock x:Name="statusTextBlock" TextWrapping="Wrap" Text="asdf" Foreground="#FF0AB761" Height="71" Visibility="Collapsed"/>
             			<TextBlock x:Name="latText" TextWrapping="Wrap" Text="Lat" Height="61" Visibility="Collapsed"/>
             			<TextBlock x:Name="longText" TextWrapping="Wrap" Text="TextBlocka" Height="67" Visibility="Collapsed"/>
@@ -61,22 +101,11 @@
             				</StackPanel>
             			</StackPanel>
             		</StackPanel>
+            		<ListBox x:Name="SearchResults" Height="379" ItemTemplate="{StaticResource DataTemplate1}" Margin="0,10,0,0"/>
             	</StackPanel>
             </controls:PivotItem>
 
         </controls:Pivot>
     </Grid>
-
-    <!--Sample code showing usage of ApplicationBar-->
-    <!--<phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
-            <shell:ApplicationBarIconButton x:Name="appbar_button1" IconUri="/Images/appbar_button1.png" Text="Button 1"/>
-            <shell:ApplicationBarIconButton x:Name="appbar_button2" IconUri="/Images/appbar_button2.png" Text="Button 2"/>
-            <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem x:Name="menuItem1" Text="MenuItem 1"/>
-                <shell:ApplicationBarMenuItem x:Name="menuItem2" Text="MenuItem 2"/>
-            </shell:ApplicationBar.MenuItems>
-        </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>-->
     
 </phone:PhoneApplicationPage>

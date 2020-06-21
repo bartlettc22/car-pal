@@ -30,13 +30,7 @@
 
 		<!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" BorderThickness="0" Foreground="White" BorderBrush="Transparent" Width="146" Height="146" >
-            	<Canvas Height="125" Width="125">
-            		<toolkit:HubTile IsFrozen="True" VerticalAlignment="Top" DisplayNotification="True" Hold="HubTile_Hold" HorizontalAlignment="Left" Height="125" Width="125" Background="#FF00C161" />
-            		<Image Height="63" Width="109" Source="/car_pal;component/Images/fill_up.png" Canvas.Left="8" Canvas.Top="8"/>
-            		<TextBlock TextWrapping="Wrap" Text="fill-up" Canvas.Left="8" Canvas.Top="95" RenderTransformOrigin="0.489,0.486" Foreground="White" FontSize="18.667"/>
-            	</Canvas>
-            </Button>
-        </Grid>
+			<Button Content="Clear Fillup History" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Button_Click"/>
+		</Grid>
 	</Grid>
 </phone:PhoneApplicationPage>
