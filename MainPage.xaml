@@ -1,0 +1,122 @@
+﻿<phone:PhoneApplicationPage
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:model="clr-namespace:car_pal.Models"
+    xmlns:es="clr-namespace:Microsoft.Expression.Shapes;assembly=Microsoft.Expression.Drawing" 
+    xmlns:Microsoft_Phone_Controls_Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps" 
+    x:Class="car_pal.MainPage" 
+    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768" 
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait"  Orientation="Portrait"
+    shell:SystemTray.IsVisible="True">
+	<phone:PhoneApplicationPage.ApplicationBar>
+		<shell:ApplicationBar IsVisible="True" IsMenuEnabled="False" Opacity="0.795" Mode="Minimized">
+			<shell:ApplicationBarIconButton x:Name="GarageAppBarButton" IconUri="/icons/appbar.feature.settings.rest.png" IsEnabled="True" Text="garage" Click="GarageAppBarButton_Click"/>
+		</shell:ApplicationBar>
+	</phone:PhoneApplicationPage.ApplicationBar>
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent"
+          d:DataContext="{d:DesignInstance Type=model:VehicleModel}">
+ 
+        <!--Panorama control-->
+        <controls:Panorama Title="car-pal+">
+            <controls:Panorama.Background>
+                <ImageBrush ImageSource="Images/PanoramaBackground.png"/>
+            </controls:Panorama.Background>
+ 
+            <!--Panorama item one-->
+            <controls:PanoramaItem Header="dashboard">
+            	<StackPanel>
+            		<Grid Background="#81000000" Height="312">
+            			<Grid.RowDefinitions>
+            				<RowDefinition Height="Auto" MinHeight="78"/>
+            				<RowDefinition Height="Auto" MinHeight="78"/>
+            				<RowDefinition Height="Auto" MinHeight="62"/>
+            				<RowDefinition Height="Auto" MinHeight="67"/>
+            				<RowDefinition MinHeight="59" Height="Auto"/>
+            			</Grid.RowDefinitions>
+            			<Grid.ColumnDefinitions>
+            				<ColumnDefinition/>
+            				<ColumnDefinition/>
+            			</Grid.ColumnDefinitions>
+            			<TextBlock x:Name="stat1_value" Margin="0" Text="28" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Foreground="#FF00C161"/>
+            			<TextBlock x:Name="stat1_label" Margin="5,0,0,0" TextWrapping="Wrap" Text="mpg" d:LayoutOverrides="GridBox" Grid.Column="1" FontSize="48" FontFamily="Segoe WP Light"/>
+            			<TextBlock x:Name="stat2_value" Margin="0" TextWrapping="Wrap" Text="$0.10" Width="202" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Grid.Row="1" Foreground="#FF00C161"/>
+            			<TextBlock x:Name="stat2_label" Margin="5,0,0,0" TextWrapping="Wrap" Text="cost/mi." Grid.Column="1" FontSize="48" d:LayoutOverrides="GridBox" Grid.Row="1" FontFamily="Segoe WP Light"/>
+            			<TextBlock x:Name="stat3_value" TextWrapping="Wrap" Text="345" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Grid.Row="2" Foreground="#FF00C161" Margin="0"/>
+            			<TextBlock x:Name="stat3_label" Margin="5,0,0,0" TextWrapping="Wrap" Text="mi./fill" Grid.Column="1" FontSize="48" Grid.Row="2" FontFamily="Segoe WP Light" d:LayoutOverrides="GridBox"/>
+            			<TextBlock x:Name="stat4_value" Text="17" FontSize="48" TextAlignment="Right" Padding="0,0,5,0" Grid.Row="3" Foreground="#FF00C161" RenderTransformOrigin="0.514,0.248"/>
+            			<TextBlock x:Name="stat4_label" Margin="5,0,0,0" TextWrapping="Wrap" Text="days/fill" Grid.Column="1" FontSize="48" Grid.Row="3" FontFamily="Segoe WP Light" d:LayoutOverrides="GridBox"/>
+            			<TextBlock x:Name="notice" Margin="0" TextWrapping="Wrap" Text="averages based on last 8 fillups" FontSize="18.667" Grid.Row="4" FontFamily="Segoe WP Light" Grid.ColumnSpan="2" TextAlignment="Center" FontStyle="Italic"/>
+            		</Grid>
+            		<StackPanel Orientation="Horizontal" Height="128" VerticalAlignment="Center" HorizontalAlignment="Center">
+            			<Button x:Name="FillupLink" Background="#FF00C161" BorderBrush="Transparent" Width="135" Height="135" Margin="0" BorderThickness="0" Click="FillupLink_Click">
+            				<StackPanel Width="92" Height="94">
+            					<Image Height="48" Source="Images/icon_fuel_indicator.png" Stretch="Fill" Margin="0,0,8,0"/>
+            					<TextBlock TextWrapping="Wrap" FontSize="14.667" Height="46" Margin="0,0,11,0" Opacity="0.8"><Run Text="fill-up"/><LineBreak/><Run/></TextBlock>
+            				</StackPanel>
+            			</Button>
+            			<Button x:Name="GasStationLink" BorderBrush="Transparent" Background="#FF00C161" Width="135" FontSize="24" Height="135" Margin="0" BorderThickness="0">
+            				<StackPanel Width="92" Height="94">
+            					<Image Height="48" Source="Images/icon_fuel_indicator.png" Stretch="Fill" Margin="0,0,8,0"/>
+            					<TextBlock TextWrapping="Wrap" FontSize="14.667" Height="46" Margin="0,0,11,0" Opacity="0.8"><Run Text="nearby "/><LineBreak/><Run Text="gas stations"/><LineBreak/><Run/></TextBlock>
+            				</StackPanel>
+            			</Button>
+            			<Button x:Name="LogbookLink" BorderBrush="Transparent" Background="#FF00C161" Width="135" Height="135" BorderThickness="0">
+            				<StackPanel Width="92" Height="94">
+            					<Image Height="48" Source="Images/icon_fuel_indicator.png" Stretch="Fill" Margin="0,0,8,0"/>
+            					<TextBlock TextWrapping="Wrap" FontSize="14.667" Height="46" Margin="0,0,11,0" Opacity="0.8" VerticalAlignment="Bottom"><Run Text="logbook"/><LineBreak/><Run/></TextBlock>
+            				</StackPanel>
+            			</Button>
+            		</StackPanel>
+            	</StackPanel>
+            </controls:PanoramaItem>
+ 
+            <!--Panorama item two-->
+            <!--Use 'Orientation="Horizontal"' to enable a panel that lays out horizontally-->
+            <controls:PanoramaItem Header="fill-up history">
+            	<StackPanel Height="498">
+            		<StackPanel.Background>
+            			<ImageBrush Stretch="Fill"/>
+            		</StackPanel.Background>
+            		<Grid Height="71" Background="#C8E7793C">
+            			<Grid.RowDefinitions>
+            				<RowDefinition Height="0.592*"/>
+            				<RowDefinition Height="0.408*"/>
+            			</Grid.RowDefinitions>
+            			<Grid.ColumnDefinitions>
+            				<ColumnDefinition Width="0.148*"/>
+            				<ColumnDefinition Width="0.143*"/>
+            				<ColumnDefinition Width="0.26*"/>
+            				<ColumnDefinition Width="0.176*"/>
+            				<ColumnDefinition Width="0.274*"/>
+            			</Grid.ColumnDefinitions>
+            			<TextBlock x:Name="mpg_value" HorizontalAlignment="Right" Margin="8,0,0,0" TextWrapping="Wrap" Text="28" VerticalAlignment="Bottom" FontSize="32" Height="42" Width="52" TextAlignment="Right" FontWeight="Bold"/>
+            			<TextBlock x:Name="mpg_label" Grid.Column="1" Margin="5,8,4,0" TextWrapping="Wrap" Text="mpg" VerticalAlignment="Bottom" FontSize="16"/>
+            			<TextBlock x:Name="price_value" HorizontalAlignment="Right" TextWrapping="Wrap" Text="$4.07" VerticalAlignment="Bottom" FontSize="32" Height="42" Grid.Column="2" Width="109" TextAlignment="Right" FontWeight="Bold"/>
+            			<TextBlock x:Name="price_label" Grid.Column="3" Margin="5,0,0,0" TextWrapping="Wrap" Text="regular" FontSize="16" VerticalAlignment="Bottom"/>
+            			<TextBlock x:Name="date" HorizontalAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="21.333" Height="42" Grid.Column="4" Width="81" TextAlignment="Right" Margin="0,0,5,0"><Run FontSize="14.667" Text="23 - Nov"/><LineBreak/><Run FontSize="13.333" Text="2011"/><LineBreak/><Run/></TextBlock>
+            			<TextBlock x:Name="odo_value" HorizontalAlignment="Right" TextWrapping="Wrap" Text="119,321" VerticalAlignment="Bottom" FontSize="16" Height="29" Width="60" TextAlignment="Right" Grid.Row="1" FontWeight="Bold"/>
+            			<TextBlock x:Name="odo_label" Grid.Column="1" Margin="5,0,4,-1" TextWrapping="Wrap" Text="miles" FontSize="16" d:LayoutOverrides="VerticalAlignment" Grid.Row="1"/>
+            			<TextBlock x:Name="vol_value" HorizontalAlignment="Right" TextWrapping="Wrap" Text="10.00" VerticalAlignment="Bottom" FontSize="16" Height="29" Width="60" TextAlignment="Right" Grid.Row="1" FontWeight="Bold" Grid.Column="2"/>
+            			<TextBlock x:Name="vol_label" Grid.Column="3" Margin="5,0,4,-1" TextWrapping="Wrap" Text="gallons" FontSize="16" Grid.Row="1" d:LayoutOverrides="VerticalAlignment"/>
+            		</Grid>
+            		<Grid Height="71" Background="#96E7793C"/>
+            	</StackPanel>
+                <!--Double line list with image placeholder and text wrapping-->
+            </controls:PanoramaItem>
+            <controls:PanoramaItem Header="road alerts">
+                <TextBlock x:Name="VehicleName" TextWrapping="Wrap" Height="43"  Text="{Binding Name, Mode=OneWay}" FontSize="32" />
+            </controls:PanoramaItem>
+        </controls:Panorama>
+    </Grid>
+</phone:PhoneApplicationPage>
